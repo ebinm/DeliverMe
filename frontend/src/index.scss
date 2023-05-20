@@ -1,0 +1,23 @@
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+
+html, body, main {
+  width: 100%;
+  height: 100%;
+}
+
+header img{
+  padding: 12px;
+}
+
+.vl {
+  width: 0;
+  outline: 1px solid;
+  flex-grow: 1;
+  margin: 0 1em;
+}

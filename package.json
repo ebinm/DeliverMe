@@ -1,0 +1,26 @@
+{
+  "name": "deliverme",
+  "version": "0.0.1",
+  "description": "DeliverMe is a C2C grocery delivery platform which facilitates the delivery from any local shop to the mass markets using independent contractors as Personal Shoppers.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.lrz.de:seba-master-2023/team-06/prototype.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/jest": "^29.5.1",
+    "@types/node": "^20.1.7",
+    "@types/react": "^18.2.6",
+    "@types/react-dom": "^18.2.4",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.4"
+  }
+}
