@@ -13,7 +13,5 @@ const credentials = {key: privateKey, cert: certificate};
 
 app.get("/", (req, res) => res.send("Hello There!"))
 
-
-
 const httpsServer = https.createServer(credentials, app);
 httpsServer.listen(PORT, () => console.log(`Listening on port: ${PORT}.`));
