@@ -41,9 +41,11 @@
     ]
   },
   "devDependencies": {
-    "react-scripts": "^5.0.1",
     "@babel/core": "^7.21.0",
     "@babel/preset-env": "^7.1.0",
-    "@babel/preset-react": "^7.0.0"
+    "@babel/preset-react": "^7.0.0",
+    "@mui/types": "^7.2.4",
+    "@types/react": "^18.2.6",
+    "react-scripts": "^5.0.1"
   }
 }
