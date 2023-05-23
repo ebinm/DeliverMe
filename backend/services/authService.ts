@@ -7,7 +7,10 @@ import bcrypt from "bcrypt";
 
 export async function signup(req: Request, res: Response, document: Model<CustomerType>) {
     // In large parts based on https://dev.to/jeffreythecoder/setup-jwt-authentication-in-mern-from-scratch-ib4
-    const {firstName, lastName, email, password} = req.body;
+
+    // Note: the password used here is the actual password. The password stored in the Buyer/Shopper Document
+    // is obviously hashed
+    const {firstName, lastName, email, password}: Partial<CustomerType> = req.body;
     // TODO validate email
 
     const existingUser = await document.findOne({email})
@@ -30,7 +33,7 @@ export async function signup(req: Request, res: Response, document: Model<Custom
 }
 
 export async function login(req: Request, res: Response, document: Model<CustomerType>) {
-    const {email, password} = req.body
+    const {email, password}: {email: string, password: string} = req.body
 
     const customer = await document.findOne({email})
     if (!customer) {
@@ -45,11 +48,9 @@ export async function login(req: Request, res: Response, document: Model<Custome
     sendJWT(res, customer.id)
 }
 
-function sendJWT(res, customerId) {
+function sendJWT(res: Response, customerId: number) {
     const jwtPayload = {
-        user: {
-            id: customerId
-        }
+        customerId: customerId
     }
 
     jsonwebtoken.sign(
@@ -60,7 +61,7 @@ function sendJWT(res, customerId) {
             if (err) {
                 res.status(500).send("Could not create authentication")
             }
-            res.cookie(token).send("Successfully authenticated")
+            res.cookie("jwt", token).send("Successfully authenticated")
         }
     )
 }
