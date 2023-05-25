@@ -9,6 +9,8 @@ export default function Header() {
     const navigate = useNavigate()
     const theme = useTheme()
 
+    // creat a methode that says hi to the user
+
     return (
         <header>
             <Box bgcolor={theme.palette.primary.main} display={"flex"} flexDirection={"row"} justifyContent={"space-between"} alignItems={"center"} height={"90px"} width={"100%"} padding={"8px"}>
