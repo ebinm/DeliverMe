@@ -1,7 +1,14 @@
 import jwt from "jsonwebtoken"
 import {NextFunction, Request, Response} from "express";
+import {JWTPayload} from "../services/authService";
+import {CustomerType} from "../models/customer";
 
-export function authenticated(req: Request & {userId? : number}, res: Response, next: NextFunction){
+type AuthenticatedRequest = Request & {
+    customerId: number,
+    customerType: CustomerType
+}
+
+function authenticated(req: AuthenticatedRequest, res: Response, next: NextFunction){
     const jwtToken = req.cookies?.["jwt"]
 
     if(!jwtToken){
@@ -9,13 +16,17 @@ export function authenticated(req: Request & {userId? : number}, res: Response, 
         return res.status(401).send("Not authenticated")
     }
 
-    jwt.verify(jwtToken, process.env.JWT_SECRET, (err, decoded) => {
+    jwt.verify(jwtToken, process.env.JWT_SECRET, (err, decoded: JWTPayload) => {
         if(err){
             return res.status(401).send("Invalid token")
         }
-        req.userId = decoded.userId
+        req.customerId = decoded.id
+        req.customerType = decoded.type
         next()
     })
+}
 
-
+export {
+    AuthenticatedRequest,
+    authenticated
 }

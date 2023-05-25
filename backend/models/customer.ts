@@ -1,13 +1,24 @@
 import mongoose from "mongoose";
 
-type CustomerType = {
+type Customer = {
     email: string,
     firstName: string,
     lastName: string,
     password: string
 }
 
-const CustomerSchema = new mongoose.Schema<CustomerType>({
+type CustomerType = "BUYER" | "SHOPPER"
+
+
+
+/**
+ * A type to be used in a type union with the CustomerType to distinguish buyers from shoppers.
+ */
+type Typed = {
+    type: CustomerType
+}
+
+const CustomerSchema = new mongoose.Schema<Customer>({
     email: {
         type: String,
         unique: true
@@ -27,7 +38,9 @@ const Shopper = mongoose.model('Buyer', CustomerSchema);
 const Buyer = mongoose.model('Shopper', CustomerSchema);
 
 export {
+    Typed,
     CustomerType,
+    Customer,
     Shopper,
     Buyer
 }
