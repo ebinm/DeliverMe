@@ -18,6 +18,7 @@ export default function Header() {
                     <div className={"vl"} style={{"outlineColor": theme.palette.text.primary}}/>
                     <Button variant={"text"} onClick={() => navigate("/login")} sx={{"color": "text.primary"}} >Login</Button>
                 </Box>
+                    
             </Box>
         </header>
     )
