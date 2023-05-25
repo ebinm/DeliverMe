@@ -8,17 +8,17 @@ type AuthenticatedRequest = Request & {
     customerType: CustomerType
 }
 
-function authenticated(req: AuthenticatedRequest, res: Response, next: NextFunction){
+function authenticated(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     const jwtToken = req.cookies?.["jwt"]
 
-    if(!jwtToken){
+    if (!jwtToken) {
         // TODO maybe redirect?
-        return res.status(401).send("Not authenticated")
+        return res.status(401).json({msg: "Not authenticated"})
     }
 
     jwt.verify(jwtToken, process.env.JWT_SECRET, (err, decoded: JWTPayload) => {
-        if(err){
-            return res.status(401).send("Invalid token")
+        if (err) {
+            return res.status(401).json({msg: "Invalid token"})
         }
         req.customerId = decoded.id
         req.customerType = decoded.type

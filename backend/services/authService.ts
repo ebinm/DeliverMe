@@ -17,14 +17,15 @@ async function signup(req: Request, res: Response, customerType: CustomerType) {
 
     // Note: the password used here is the actual password. The password stored in the Buyer/Shopper Document
     // is obviously hashed
-    const {firstName, lastName, email, password}: Partial<Customer> = req.body;
     // TODO validate email
+    const {firstName, lastName, email, password}: Partial<Customer> = req.body;
 
     const document = customerType === "BUYER" ? Buyer : Shopper
     const existingUser = await document.findOne({email})
 
     if (existingUser) {
-        return res.status(409).send(`The email '${email}' is not available.`)
+        res.status(409).json({msg: `The email '${email}' is not available.`})
+        return
     }
 
     const salt = await bcrypt.genSalt(16)
@@ -46,12 +47,14 @@ async function login(req: Request, res: Response, customerType: CustomerType) {
 
     const customer = await document.findOne({email})
     if (!customer) {
-        return res.status(400).send("Email or password incorrect")
+        res.status(400).json({msg: "Email or password incorrect"})
+        return
     }
 
     const correctPassword = await bcrypt.compare(password, customer.password)
     if (!correctPassword) {
-        return res.status(400).send("Email or password incorrect")
+        res.status(400).json({msg: "Email or password incorrect"})
+        return
     }
 
     sendJWT(res, customer.id, customerType)
@@ -69,9 +72,9 @@ function sendJWT(res: Response, customerId: number, type: CustomerType) {
         {expiresIn: '30 days'},
         (err, token) => {
             if (err) {
-                res.status(500).send("Could not create authentication")
+                res.status(500).json({msg: "Could not create authentication"})
             }
-            res.cookie("jwt", token).send("Successfully authenticated")
+            res.cookie("jwt", token).json({msg: "Successfully authenticated"})
         }
     )
 }

@@ -34,8 +34,8 @@ const CustomerSchema = new mongoose.Schema<Customer>({
     }
 });
 
-const Shopper = mongoose.model('Buyer', CustomerSchema);
-const Buyer = mongoose.model('Shopper', CustomerSchema);
+const Buyer = mongoose.model('Buyer', CustomerSchema);
+const Shopper = mongoose.model('Shopper', CustomerSchema);
 
 export {
     Typed,

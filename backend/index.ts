@@ -2,6 +2,7 @@ import fs from 'fs';
 import https from 'https';
 import dotenv from 'dotenv'
 import express from "express"
+import cors from "cors"
 import {signup, login} from "./services/authService";
 import {authenticated, AuthenticatedRequest} from "./middleware/auth";
 import mongoose from "mongoose";
@@ -21,12 +22,15 @@ const credentials = {key: privateKey, cert: certificate};
 app.use(express.json());
 app.use(cookieParser());
 
-// TODO api prefix
-app.get("/auth", authenticated, async (req: AuthenticatedRequest, res) => {
-    return res.send("hi")
-})
+// TODO I think this is only required in dev mode
+// TODO configure origon correctly
+app.use(cors({
+    credentials: true,
+    origin: 'https://localhost:3000',
 
-app.post("/personal-shopper/signup", async (req, res, next) => {
+}));
+
+app.post("/api/personal-shopper/signup", async (req, res, next) => {
     try {
         await signup(req, res, "SHOPPER")
     } catch (e) {
@@ -34,7 +38,7 @@ app.post("/personal-shopper/signup", async (req, res, next) => {
     }
 })
 
-app.post("/buyer/signup", async (req, res, next) => {
+app.post("/api/buyer/signup", async (req, res, next) => {
     try {
         await signup(req, res, "BUYER")
     } catch (e) {
@@ -42,7 +46,7 @@ app.post("/buyer/signup", async (req, res, next) => {
     }
 })
 
-app.post("/personal-shopper/login", async (req, res, next) => {
+app.post("/api/personal-shopper/login", async (req, res, next) => {
     try {
         await login(req, res, "SHOPPER")
     } catch (e) {
@@ -50,7 +54,7 @@ app.post("/personal-shopper/login", async (req, res, next) => {
     }
 })
 
-app.post("/buyer/login", async (req, res, next) => {
+app.post("/api/buyer/login", async (req, res, next) => {
     try {
         await login(req, res, "BUYER")
     } catch (e) {
@@ -58,17 +62,22 @@ app.post("/buyer/login", async (req, res, next) => {
     }
 })
 
-app.get("/me", authenticated, async (req: AuthenticatedRequest, res, next) => {
+app.get("/api/me", authenticated, async (req: AuthenticatedRequest, res, next) => {
     try {
         if (req.customerType === "BUYER") {
             res.json(await findBuyerById(req.customerId))
         } else {
-            res.json(findShopperById(req.customerId))
+            res.json(await findShopperById(req.customerId))
         }
     } catch (e) {
         next(e)
     }
 })
+
+app.use((err, req, res, next) => {
+    res.status(500).json({msg: err})
+})
+
 
 const httpsServer = https.createServer(credentials, app);
 httpsServer.listen(PORT, () => console.log(`Listening on port: ${PORT}.`));
