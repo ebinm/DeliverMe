@@ -24,10 +24,17 @@ app.use(cookieParser());
 
 // TODO I think this is only required in dev mode
 // TODO configure origin correctly
+const corsWhitelist = ['http://localhost:3000', 'https://localhost:3000']
+
 app.use(cors({
     credentials: true,
-    origin: 'https://localhost:3000',
-
+    origin: (origin, callback) => {
+        if (corsWhitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+        }else{
+            callback(new Error("Not allowed by CORS"))
+        }
+    },
 }));
 
 app.post("/api/shopper/signup", async (req, res, next) => {
