@@ -16,8 +16,6 @@ export function AuthenticationFormContainer({onSubmit, title, children, altText,
         <Box width={"600px"} padding={"20px"} boxShadow={1} borderRadius={"8px"} height={"min-content"}>
             <form onSubmit={async e => {
                 e.preventDefault()
-                console.log("Hi")
-                console.log(onSubmit)
 
                 setLoading(true)
                 const err = await onSubmit()
@@ -29,9 +27,13 @@ export function AuthenticationFormContainer({onSubmit, title, children, altText,
                     navigate("/")
                 }
             }}>
-                <h2>{title}</h2>
+                <Box sx={{"marginBottom": "8px"}}>
+                    <h2>{title}</h2>
+                </Box>
+
                 <FormGroup sx={{gap: "6px"}}>
                     {children}
+
 
                     <Button type={"submit"} variant={"outlined"} sx={{
                         width: "100%", color: "white", bgcolor: "primary.dark",

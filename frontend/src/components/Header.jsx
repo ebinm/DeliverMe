@@ -1,13 +1,5 @@
 import React, {useContext, useState} from "react";
-import {
-    Avatar,
-    Box,
-    Divider,
-    ListItemIcon,
-    ListItemText, Menu, MenuItem, MenuList
-} from "@mui/material"
-
-import {Button} from "@mui/material"
+import {Avatar, Box, Button, Divider, ListItemIcon, ListItemText, Menu, MenuItem, MenuList} from "@mui/material"
 import {useNavigate} from "react-router-dom";
 import {CustomerContext} from "../util/context/CustomerContext";
 import {Show} from "./util/SolidJS";
@@ -33,7 +25,7 @@ export default function Header() {
                 <Box display={"flex"} flexDirection={"row"}>
                     <Show when={customer} fallback={
                         <>
-                            <Button variant={"outlined"} onClick={() => navigate("/personal-shopper/signup")} sx={{
+                            <Button variant={"outlined"} onClick={() => navigate("/shopper/signup")} sx={{
                                 "borderRadius": "16px",
                                 "color": "text.primary",
                                 "border": "1px solid",

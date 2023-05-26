@@ -12,7 +12,6 @@ function authenticated(req: AuthenticatedRequest, res: Response, next: NextFunct
     const jwtToken = req.cookies?.["jwt"]
 
     if (!jwtToken) {
-        // TODO maybe redirect?
         return res.status(401).json({msg: "Not authenticated"})
     }
 

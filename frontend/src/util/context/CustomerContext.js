@@ -1,7 +1,5 @@
 import {createContext, useEffect, useState} from "react";
 
-
-// TODO logout
 // @type Context<{login: () => Promise<{msg: string}> | undefined, signup: () => Promise<{msg: string} | undefined, customer: {firstName: string, lastName: string, email: string, type: "BUYER" | "SHOPPER"} | undefined }>}>
 const CustomerContext = createContext({
     login: undefined,
@@ -33,7 +31,7 @@ function CustomerProvider({children}) {
     }, [])
 
 
-    // type: "personal-shopper" | "buyer"
+    // type: "shopper" | "buyer"
     // ...my god I miss TypeScript
     async function login(email, password, type) {
         const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/${type}/login`, {

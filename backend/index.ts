@@ -23,14 +23,14 @@ app.use(express.json());
 app.use(cookieParser());
 
 // TODO I think this is only required in dev mode
-// TODO configure origon correctly
+// TODO configure origin correctly
 app.use(cors({
     credentials: true,
     origin: 'https://localhost:3000',
 
 }));
 
-app.post("/api/personal-shopper/signup", async (req, res, next) => {
+app.post("/api/shopper/signup", async (req, res, next) => {
     try {
         await signup(req, res, "SHOPPER")
     } catch (e) {
@@ -46,7 +46,7 @@ app.post("/api/buyer/signup", async (req, res, next) => {
     }
 })
 
-app.post("/api/personal-shopper/login", async (req, res, next) => {
+app.post("/api/shopper/login", async (req, res, next) => {
     try {
         await login(req, res, "SHOPPER")
     } catch (e) {
