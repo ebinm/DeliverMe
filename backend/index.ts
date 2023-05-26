@@ -15,10 +15,6 @@ mongoose.connect(process.env.MONGO_URL).then(() => console.log("Connected to Mon
 const app = express();
 const PORT = process.env.PORT || 8443;
 
-const privateKey = fs.readFileSync('./frontend/.cert/deliver.me.key', 'utf8');
-const certificate = fs.readFileSync('./frontend/.cert/deliver.me.crt', 'utf8');
-const credentials = {key: privateKey, cert: certificate};
-
 app.use(express.json());
 app.use(cookieParser());
 
@@ -85,6 +81,13 @@ app.use((err, req, res, next) => {
     res.status(500).json({msg: err})
 })
 
+try {
+    const privateKey = fs.readFileSync('./frontend/.cert/deliver.me.key', 'utf8');
+    const certificate = fs.readFileSync('./frontend/.cert/deliver.me.crt', 'utf8');
+    const credentials = {key: privateKey, cert: certificate};
 
-const httpsServer = https.createServer(credentials, app);
-httpsServer.listen(PORT, () => console.log(`Listening on port: ${PORT}.`));
+    const httpsServer = https.createServer(credentials, app);
+    httpsServer.listen(PORT, () => console.log(`Listening on port: ${PORT}.`));
+}catch (e){
+    app.listen(PORT, () => console.log(`Listening on port: ${PORT}.`));
+}
