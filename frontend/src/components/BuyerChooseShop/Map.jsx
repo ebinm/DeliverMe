@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { GoogleMap, LoadScript, Autocomplete, Marker, InfoWindow } from '@react-google-maps/api';
-import { set } from 'mongoose';
+import { GoogleMap, LoadScript, Autocomplete, Marker, InfoWindow, OverlayView } from '@react-google-maps/api';
 
 
 const containerStyle = {
@@ -9,25 +8,24 @@ const containerStyle = {
 };
 
 const center = {
-    lat: 40.712776,
-    lng: -74.005974
+    lat: 48.137154,
+    lng: 11.576124
 };
 
 const MapWithSearch = () => {
     const [map, setMap] = useState(null);
     const [searchValue, setSearchValue] = useState('');
-    const [autocomplete, setAutocomplete] = useState(null);
     const [shops, setShops] = useState([]);
-    const [selectedPlace, setSelectedPlace] = useState(null);
     const [selectedShop, setSelectedShop] = useState(null);
+    const [mapCenter, setMapCenter] = useState(null);
 
     useEffect(() => {
-        if (autocomplete && map) {
+        if (map) {
             const placesService = new window.google.maps.places.PlacesService(map);
 
             const request = {
-                location: selectedPlace,
-                radius: 500,
+                location: mapCenter ? mapCenter : center,
+                radius: 1000,
                 type: 'grocery_or_supermarket'
             };
 
@@ -37,14 +35,12 @@ const MapWithSearch = () => {
                 }
             });
         }
-    }, [autocomplete, map, selectedPlace]);
-
-    useEffect(() => {
-        console.log(selectedShop);
-    }, [selectedShop]);
+    }, [map, mapCenter]);
 
     const handlePlaceSelect = () => {
-        if (autocomplete && map) {
+        console.log('Search Value:', searchValue);
+
+        if (map) {
             const placesService = new window.google.maps.places.PlacesService(map);
 
             const request = {
@@ -60,7 +56,7 @@ const MapWithSearch = () => {
                         if (status === window.google.maps.places.PlacesServiceStatus.OK) {
 
                             map.setCenter(place.geometry.location);
-                            setSelectedPlace(place.geometry.location);
+                            setMapCenter(place.geometry.location);
                             console.log(place.geometry.location);
                             // Additional logic with selected place information
                             console.log('Selected Place:', place);
@@ -71,12 +67,28 @@ const MapWithSearch = () => {
         }
     };
 
+    const handleInputChange = (event) => {
+        setSearchValue(event.target.value);
+    };
+
+    const handleInputKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            handlePlaceSelect();
+        }
+    };
+
+    const handleListEntryClick = (shop) => {
+        setSelectedShop(shop);
+        map.setCenter(shop.geometry.location);
+        setMapCenter(shop.geometry.location);
+    };
+
+
     const handleMarkerClick = (shop) => {
         setSelectedShop(shop);
-      };
-      const handleInfoWindowClose = () => { //kann weg
-        setSelectedShop(null);
-      };
+    };
+
+
 
     return (
         <LoadScript
@@ -84,23 +96,27 @@ const MapWithSearch = () => {
             libraries={["places"]}
         >
             <div>
-                <Autocomplete
-                    onLoad={autocomplete => setAutocomplete(autocomplete)}
-                    onPlaceChanged={handlePlaceSelect}
-                >
-                    <input
-                        type="text"
-                        placeholder="Search for a place"
-                        value={searchValue}
-                        onChange={e => setSearchValue(e.target.value)}
-                    />
-                </Autocomplete>
+                <input
+                    type="text"
+                    placeholder="Search for a place"
+                    value={searchValue}
+                    onChange={handleInputChange}
+                    onKeyDown={handleInputKeyDown}
+                />
                 <div>
-                    <h2>Shops Near You:</h2>
+                    <h2>Nearest Grocery Shops:</h2>
                     <ul>
-                        {shops.map(shop => (
-                            <li key={shop.place_id}>{shop.name}</li>
-                        ))}
+                        {shops
+                            .filter(shop => shop.types.includes('grocery_or_supermarket')) // Filter by grocery shops
+                            .map(shop => (
+                                <li
+                                    key={shop.place_id}
+                                    onClick={() => handleListEntryClick(shop)}
+                                    style={{ cursor: 'pointer' }}
+                                >
+                                    {shop.name}
+                                </li>
+                            ))}
                     </ul>
                 </div>
                 <GoogleMap
@@ -112,9 +128,9 @@ const MapWithSearch = () => {
                     {shops.map(shop => (
                         <Marker key={shop.place_id} position={shop.geometry.location} onClick={() => handleMarkerClick(shop)}>
                             {selectedShop === shop && (
-                                <InfoWindow position={shop.geometry.location} onCloseClick={handleInfoWindowClose}>
+                                <InfoWindow>
                                     <div>
-                                        <h3>{shop.name}ddd</h3>
+                                        <h3>{shop.name}</h3>
                                     </div>
                                 </InfoWindow>
                             )}
