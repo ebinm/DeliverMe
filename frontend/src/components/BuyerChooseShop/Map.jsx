@@ -1,46 +1,129 @@
-import React, { useState } from 'react';
-import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import React, { useEffect, useState } from 'react';
+import { GoogleMap, LoadScript, Autocomplete, Marker, InfoWindow } from '@react-google-maps/api';
+import { set } from 'mongoose';
 
 
-const defaultLocation = {
-    lat: 48.137154,
-    lng: 11.576124
+const containerStyle = {
+    width: '100%',
+    height: '400px'
 };
 
-const Map = () => {
-    const { isLoaded } = useJsApiLoader({
-        id: 'google-map-script',
-        googleMapsApiKey: "AIzaSyDtlTfWb_VyQaJfgkmuKG8qqSl0-1Cj_FQ"
-    })
+const center = {
+    lat: 40.712776,
+    lng: -74.005974
+};
 
-    const [map, setMap] = React.useState(null)
+const MapWithSearch = () => {
+    const [map, setMap] = useState(null);
+    const [searchValue, setSearchValue] = useState('');
+    const [autocomplete, setAutocomplete] = useState(null);
+    const [shops, setShops] = useState([]);
+    const [selectedPlace, setSelectedPlace] = useState(null);
+    const [selectedShop, setSelectedShop] = useState(null);
 
-    const onLoad = React.useCallback(function callback(map) {
-        // This is just an example of getting and using the map instance!!! don't just blindly copy!
-        const bounds = new window.google.maps.LatLngBounds(defaultLocation);
-        map.fitBounds(bounds);
+    useEffect(() => {
+        if (autocomplete && map) {
+            const placesService = new window.google.maps.places.PlacesService(map);
 
-        setMap(map)
-    }, [])
+            const request = {
+                location: selectedPlace,
+                radius: 500,
+                type: 'grocery_or_supermarket'
+            };
 
-    const onUnmount = React.useCallback(function callback(map) {
-        setMap(null)
-    }, [])
+            placesService.nearbySearch(request, (results, status) => {
+                if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+                    setShops(results);
+                }
+            });
+        }
+    }, [autocomplete, map, selectedPlace]);
 
-    return isLoaded ? (
-        <GoogleMap
-            mapContainerStyle={{
-                width: '100%',
-                height: '100%'
-            }}
-            center={defaultLocation}
-            zoom={10}
-            onLoad={onLoad}
-            onUnmount={onUnmount}
+    useEffect(() => {
+        console.log(selectedShop);
+    }, [selectedShop]);
+
+    const handlePlaceSelect = () => {
+        if (autocomplete && map) {
+            const placesService = new window.google.maps.places.PlacesService(map);
+
+            const request = {
+                input: searchValue,
+                fields: ['geometry']
+            };
+
+            const autocompleteService = new window.google.maps.places.AutocompleteService();
+            autocompleteService.getPlacePredictions(request, (predictions, status) => {
+                if (status === window.google.maps.places.PlacesServiceStatus.OK && predictions?.length > 0) {
+                    const placeId = predictions[0].place_id;
+                    placesService.getDetails({ placeId }, (place, status) => {
+                        if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+
+                            map.setCenter(place.geometry.location);
+                            setSelectedPlace(place.geometry.location);
+                            console.log(place.geometry.location);
+                            // Additional logic with selected place information
+                            console.log('Selected Place:', place);
+                        }
+                    });
+                }
+            });
+        }
+    };
+
+    const handleMarkerClick = (shop) => {
+        setSelectedShop(shop);
+      };
+      const handleInfoWindowClose = () => { //kann weg
+        setSelectedShop(null);
+      };
+
+    return (
+        <LoadScript
+            googleMapsApiKey="AIzaSyDtlTfWb_VyQaJfgkmuKG8qqSl0-1Cj_FQ"
+            libraries={["places"]}
         >
-            <></>
-        </GoogleMap>
-    ) : <></>
-}
+            <div>
+                <Autocomplete
+                    onLoad={autocomplete => setAutocomplete(autocomplete)}
+                    onPlaceChanged={handlePlaceSelect}
+                >
+                    <input
+                        type="text"
+                        placeholder="Search for a place"
+                        value={searchValue}
+                        onChange={e => setSearchValue(e.target.value)}
+                    />
+                </Autocomplete>
+                <div>
+                    <h2>Shops Near You:</h2>
+                    <ul>
+                        {shops.map(shop => (
+                            <li key={shop.place_id}>{shop.name}</li>
+                        ))}
+                    </ul>
+                </div>
+                <GoogleMap
+                    mapContainerStyle={containerStyle}
+                    center={center}
+                    zoom={14}
+                    onLoad={map => setMap(map)}
+                >
+                    {shops.map(shop => (
+                        <Marker key={shop.place_id} position={shop.geometry.location} onClick={() => handleMarkerClick(shop)}>
+                            {selectedShop === shop && (
+                                <InfoWindow position={shop.geometry.location} onCloseClick={handleInfoWindowClose}>
+                                    <div>
+                                        <h3>{shop.name}ddd</h3>
+                                    </div>
+                                </InfoWindow>
+                            )}
+                        </Marker>
+                    ))}
+                </GoogleMap>
+            </div>
+        </LoadScript>
+    );
+};
 
-export default Map;
+export default MapWithSearch;
