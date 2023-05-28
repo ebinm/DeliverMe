@@ -4,6 +4,8 @@ import {Route, Routes} from "react-router-dom";
 import {Signup} from "./components/authentication/Signup";
 import {CustomerProvider} from "./util/context/CustomerContext";
 import {Login} from "./components/authentication/Login";
+import {BuyerMyOrders} from "./components/MyOrders/BuyerMyOrders";
+import {ShopperMyOrders} from "./components/MyOrders/ShopperMyOrders";
 
 
 function App() {
@@ -16,6 +18,8 @@ function App() {
                     <Route path={"/shopper/signup"} element={<Signup type={"shopper"}/>}/>
                     <Route path={"/buyer/signup"} element={<Signup type={"buyer"}/>}/>
                     <Route path={"/login"} element={<Login/>}/>
+                    <Route path={"/buyer/my-orders"} element={<BuyerMyOrders/>}/>
+                    <Route path={"/shopper/my-orders"} element={<ShopperMyOrders/>}/>
                 </Routes>
             </main>
         </CustomerProvider>

@@ -5,7 +5,10 @@
 
 
 /**
- * A simple Ripoff of SolidJS's <Show/> Component
+ * A simple Ripoff of SolidJS's <Show/> Component.
+ *
+ * Problems: children are evaluate eagerly which might be a problem if there is
+ * a dependency on the when. Use function children to circumvent this problem
  *
  * @template T
  * @param children {JSX.Element | (resolved: T) => JSX.Element}
@@ -15,10 +18,8 @@
  * @constructor
  */
 function Show({children, when, fallback}) {
-    const isFunction = typeof children === "function"
-
     return <>{
-        when ? (isFunction ? children(when) : children) : fallback
+        when ? (typeof children === "function" ? children(when) : children) : fallback
     }</>
 }
 

@@ -1,14 +1,16 @@
-import {createContext, useEffect, useState} from "react";
+import {createContext} from "react";
+import {useFetch} from "../hooks";
 
 // @type Context<{login: () => Promise<{msg: string}> | undefined, signup: () => Promise<{msg: string} | undefined, customer: {firstName: string, lastName: string, email: string, type: "BUYER" | "SHOPPER"} | undefined }>}>
 const CustomerContext = createContext({
     login: undefined,
     signup: undefined,
     customer: undefined,
-    logout: undefined
+    logout: undefined,
+    ready: false
 })
 
-async function fetchUser(setCustomer){
+async function fetchUser(setCustomer) {
     return fetch(`${process.env.REACT_APP_BACKEND}/api/me`, {
         credentials: "include",
         withCredentials: true
@@ -22,13 +24,10 @@ async function fetchUser(setCustomer){
 
 function CustomerProvider({children}) {
 
-    const [customer, setCustomer] = useState()
-
-
-    useEffect(() => {
-        // This may well fail. One could first check if the jwt is set.
-        fetchUser(setCustomer)
-    }, [])
+    const [customer, setCustomer, loading,] = useFetch(`${process.env.REACT_APP_BACKEND}/api/me`, {
+        credentials: "include",
+        withCredentials: true
+    })
 
 
     // type: "shopper" | "buyer"
@@ -80,7 +79,8 @@ function CustomerProvider({children}) {
         login,
         signup,
         customer,
-        logout
+        logout,
+        ready: !loading
     }}>
         {children}
     </CustomerContext.Provider>

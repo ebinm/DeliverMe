@@ -9,7 +9,12 @@ const deliverMeTheme = createTheme({
             dark: "#AAC0AA"
         },
         text: {
-            primary: "#3F4B3F"
+            light: "#ACACAC",
+            main: "#3F4B3F"
+        },
+        selected: {
+            light: "#E3EEFF",
+            main: "#D8E7FF"
         }
     }
 })
