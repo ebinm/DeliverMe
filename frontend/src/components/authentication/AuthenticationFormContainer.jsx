@@ -1,12 +1,14 @@
 import {Box, Button, CircularProgress, FormGroup, Link, Typography} from "@mui/material";
 import React, {useState} from "react";
 import {Show} from "../util/ControlFlow";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
 
 
 export function AuthenticationFormContainer({onSubmit, title, children, altText, altLink, actionText}) {
 
     const navigate = useNavigate()
+
+    const [searchParams,] = useSearchParams()
 
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
@@ -24,7 +26,7 @@ export function AuthenticationFormContainer({onSubmit, title, children, altText,
                 if (err) {
                     setError(err)
                 } else {
-                    navigate("/")
+                    navigate(searchParams.get("ref") || "/")
                 }
             }}>
                 <Typography sx={{"marginBottom": "8px"}} variant={"h5"}>{title}</Typography>

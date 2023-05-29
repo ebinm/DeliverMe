@@ -26,7 +26,10 @@ function useFetch(endpoint, options) {
             setItem(res)
             setError(undefined)
             setLoading(false)
-        }).catch(err => setError(err))
+        }).catch(err => {
+            setLoading(false)
+            setError(err)
+        })
 
         return () => {
             setLoading(false)

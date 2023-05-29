@@ -1,4 +1,4 @@
-import {Navigate} from "react-router-dom";
+import {createSearchParams, Navigate, useLocation} from "react-router-dom";
 import React, {useContext, useState} from "react";
 import {CustomerContext} from "../../util/context/CustomerContext";
 import {Box, CircularProgress, Typography} from "@mui/material";
@@ -10,17 +10,22 @@ import {SingleOrderViewShopper} from "./SingleOrderViewShopper";
 export function ShopperMyOrders() {
     const {customer, ready} = useContext(CustomerContext)
     const [orders] = useState(mockedOrders.filter(o => o.selectedBid))
+    const location = useLocation()
 
     if (!ready) {
         return <CircularProgress/>
     }
 
     if (!customer) {
-        return <Navigate to={"/login"}/>
+        return <Navigate to={{
+            pathname: "/login",
+            search: createSearchParams({
+                "ref": location.pathname
+            }).toString()
+        }}/>
     }
 
     if (customer.type !== "SHOPPER") {
-        // TODO correct location
         return <Navigate to={"/buyer/my-orders"}/>
     }
 

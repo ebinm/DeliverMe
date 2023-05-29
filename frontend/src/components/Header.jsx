@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {forwardRef, useContext, useState} from "react";
 import {
     Avatar,
     Box,
@@ -11,7 +11,7 @@ import {
     MenuList,
     Typography
 } from "@mui/material"
-import {useNavigate} from "react-router-dom";
+import {createSearchParams, useLocation, useNavigate} from "react-router-dom";
 import {CustomerContext} from "../util/context/CustomerContext";
 import {Show} from "./util/ControlFlow";
 import ListIcon from '@mui/icons-material/List';
@@ -41,6 +41,7 @@ export default function Header() {
 
 function AuthenticationMenu() {
     const navigate = useNavigate()
+    const location = useLocation()
 
     return <Box display={"flex"} flexDirection={"row"}>
         <Button variant={"outlined"} onClick={() => navigate("/shopper/signup")} sx={{
@@ -56,7 +57,12 @@ function AuthenticationMenu() {
                      margin: "0 1em",
                      height: "auto"
                  }}/>
-        <Button variant={"text"} onClick={() => navigate("/login")}
+        <Button variant={"text"} onClick={() => navigate({
+            pathname: "/login",
+            search: createSearchParams({
+                ref: location.pathname
+            }).toString()
+        })}
                 sx={{"color": "text.main"}}>Login</Button>
     </Box>
 }
@@ -64,9 +70,12 @@ function AuthenticationMenu() {
 function LoggedInMenu({customer}) {
     const [dialogOpen, setDialogOpen] = useState(false)
 
+    const [anchorEl, setAnchorEl] = useState(null);
+
     return <>
         <Box display={"flex"} flexDirection={"row"} sx={{"cursor": "pointer"}}
-             onClick={() => {
+             onClick={(e) => {
+                 setAnchorEl(e.currentTarget)
                  setDialogOpen(b => !b)
              }}>
             <Avatar alt={customer.firstName + " " + customer.lastName}
@@ -81,25 +90,31 @@ function LoggedInMenu({customer}) {
             <Typography component={"span"} sx={{"alignSelf": "center"}}
                         variant={"h6"}>{customer.firstName} {customer.lastName}</Typography>
         </Box>
-        <AvatarDialog open={dialogOpen} close={() => setDialogOpen(false)}/>
+        <AvatarDialog open={dialogOpen} close={() => setDialogOpen(false)} ref={anchorEl}/>
     </>
 }
 
-function AvatarDialog({open, close}) {
+const AvatarDialog = forwardRef(AvatarDialogRaw)
+
+function AvatarDialogRaw({open, close}, ref) {
     const navigate = useNavigate()
 
-    const {logout} = useContext(CustomerContext)
+    const {logout, customer} = useContext(CustomerContext)
 
     const menuItemSx = {
         "bgcolor": "primary.main",
         "borderRadius": "8px",
-        "padding": "12px 20px",
-        "margin": "8px 0"
+        "padding": "12px 20px"
     }
 
     return (
         <Menu open={open} onClose={close}
+              anchorEl={ref}
               anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+              }}
+              transformOrigin={{
                   vertical: 'top',
                   horizontal: 'right',
               }}>
@@ -133,7 +148,7 @@ function AvatarDialog({open, close}) {
 
                 <MenuItem sx={menuItemSx} onClick={() => {
                     // TODO location
-                    navigate("/browseorders")
+                    navigate(`/${customer.type.toLowerCase()}/my-orders`)
                     close()
                 }}>
                     <ListItemIcon/>
