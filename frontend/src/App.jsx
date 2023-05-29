@@ -4,7 +4,6 @@ import {BuyerMyOrders} from "./components/MyOrders/BuyerMyOrders";
 import {ShopperMyOrders} from "./components/MyOrders/ShopperMyOrders";
 import {Route, Routes} from "react-router-dom";
 import MapWithList from "./components/BuyerChooseShop/BuyerChooseShopView";
-import {Box} from "@mui/material";
 import TestExample from "./components/BuyerChooseShop/TestExample";
 import {Signup} from "./components/authentication/Signup";
 import {CustomerProvider} from "./util/context/CustomerContext";
@@ -16,7 +15,6 @@ function App() {
         <CustomerProvider>
             <Header/>
             <main>
-              <Box sx={{ m: 10, maxHeight: "10%" }}>
                 <Routes>
                     <Route path={"/"} element={"Hi, I am home"}/>
                     <Route path={"/shopper/signup"} element={<Signup type={"shopper"}/>}/>
@@ -31,7 +29,6 @@ function App() {
                     <Route path={"/buyer/signup"} element={<Signup type={"buyer"} />} />
                     <Route path={"/login"} element={<Login />} />
                 </Routes>
-              </Box>
             </main>
         </CustomerProvider>
     );
