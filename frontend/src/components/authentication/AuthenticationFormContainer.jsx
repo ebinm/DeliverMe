@@ -15,7 +15,7 @@ export function AuthenticationFormContainer({onSubmit, title, children, altText,
 
     return <Box display={"flex"} justifyContent={"center"} alignItems={"center"} height={"100%"}
                 bgcolor={"primary.light"}>
-        <Box width={"600px"} padding={"20px"} boxShadow={1} borderRadius={"8px"} height={"min-content"}>
+        <Box width={"600px"} padding={"20px"} boxShadow={1} borderRadius={"8px"} height={"min-content"} backgroundColor={"white"}>
             <form onSubmit={async e => {
                 e.preventDefault()
 
