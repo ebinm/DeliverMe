@@ -8,6 +8,7 @@ import TestExample from "./components/BuyerChooseShop/TestExample";
 import {Signup} from "./components/authentication/Signup";
 import {CustomerProvider} from "./util/context/CustomerContext";
 import {Login} from "./components/authentication/Login";
+import {NotificationProvider} from "./util/context/NotificationContext";
 
 
 function App() {

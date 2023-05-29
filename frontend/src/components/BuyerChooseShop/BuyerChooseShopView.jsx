@@ -136,7 +136,7 @@ const MapWithList = () => {
 
 
     return (
-        <>
+        <Box sx={{ m: 10, maxHeight: "10%" }}>
             <DefineCustomShopModal
                 showModal={showModal}
                 handleCloseModal={handleCloseModal}
@@ -237,7 +237,7 @@ const MapWithList = () => {
                     <Button variant="contained">Select Shop</Button>
                 </Stack>
             </Box>
-        </>
+        </Box>
     );
 };
 
