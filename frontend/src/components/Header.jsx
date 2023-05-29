@@ -106,7 +106,8 @@ function AvatarDialogRaw({open, close}, ref) {
     const menuItemSx = {
         "bgcolor": "primary.main",
         "borderRadius": "8px",
-        "padding": "12px 20px"
+        "padding": "12px 20px",
+        "margin": "8px 0"
     }
 
     return (
