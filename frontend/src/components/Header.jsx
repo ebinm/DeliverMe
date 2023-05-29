@@ -22,6 +22,8 @@ export default function Header() {
     const navigate = useNavigate()
     const {customer} = useContext(CustomerContext)
 
+    // TODO create a methode that says hi to the user
+
     return (
 
         <header>
