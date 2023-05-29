@@ -13,7 +13,6 @@ export function SingleBidView({bid, selected = false, setSelected = () => undefi
     }), [bid.moneyBidWithFee.currency])
 
     const stars = Math.min(5, Math.floor(bid.createdBy.ratingStarAverage))
-    console.log(stars)
 
     return <Box onClick={() => setSelected(bid._id)}
                 margin={"8px 0"} flexGrow={1}
