@@ -190,7 +190,11 @@ const MapWithList = () => {
                                 .map(shop => (
                                     <ListItem key={shop.place_id} >
                                         <ListItemButton selected={selectedShop === shop} onClick={() => handleListEntryClick(shop)} sx={{ bgcolor: "white", borderRadius: '10px', boxShadow: 3 }} >
-                                            <ListItemText primary={shop.name} secondary={shop.opening_hours.weekday_text[currentDay]} />
+
+                                            <ListItemText primary={shop.name} secondary={
+                                                shop.opening_hours?.weekday_text?.[currentDay] || "No operating hours available"
+                                            } />
+
                                         </ListItemButton>
                                     </ListItem>
                                 ))}

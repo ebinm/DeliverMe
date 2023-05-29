@@ -14,7 +14,6 @@ function App() {
     <CustomerProvider>
       <Header />
       <main>
-
         <Box sx={{ m: 10, maxHeight: "10%" }}>
           <Routes >
             <Route path={"/"} element={"Hi, I am home"} />
@@ -28,5 +27,5 @@ function App() {
       </main>
     </CustomerProvider>
   );
-
+  }
 export default App;
