@@ -24,7 +24,7 @@ async function fetchUser(setCustomer) {
 
 function CustomerProvider({children}) {
 
-    const [customer, setCustomer, loading,] = useFetch(`${process.env.REACT_APP_BACKEND}/api/me`, {
+    const [customer, setCustomer, loading] = useFetch(`${process.env.REACT_APP_BACKEND}/api/me`, {
         credentials: "include",
         withCredentials: true
     })
@@ -74,6 +74,7 @@ function CustomerProvider({children}) {
         document.cookie = "jwt=;"
         window.location.reload()
     }
+
 
     return <CustomerContext.Provider value={{
         login,
