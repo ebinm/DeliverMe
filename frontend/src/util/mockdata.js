@@ -247,20 +247,20 @@ const mockedNotifications = [
     {
         _id: "u98oujao32ujdoa9j2",
         msg: "You can leave a rating for @Simon",
-        time: new Date(2000, 10, 10, 20, 9, 0).toUTCString(),
+        date: new Date(2023, 4, 10, 20, 9, 0).toUTCString(),
         type: "rating"
     },
     {
         _id: "u98oujao32ujdoa9jgsweges2",
         msg: "You received an invoice",
-        time: new Date(2000, 10, 10, 20, 10, 0).toUTCString(),
+        date: new Date(2023, 4, 10, 20, 10, 0).toUTCString(),
         type: "invoice"
     },
     {
         _id: "u9gweweg8oujao32ujdoa9j2",
         msg: "Your order has been completed",
-        time:  new Date(2000, 10, 9, 20, 10, 0).toUTCString(),
-        type: "orderCompleted"
+        date:  new Date(2022, 4, 9, 20, 10, 0).toUTCString(),
+        type: "purchaseCompleted"
     }
 ]
 

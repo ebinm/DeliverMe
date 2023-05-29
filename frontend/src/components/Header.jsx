@@ -19,6 +19,9 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import LogoutIcon from '@mui/icons-material/Logout';
 import {mockedNotifications} from "../util/mockdata";
 import GradeIcon from '@mui/icons-material/Grade';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import moment from "moment"
 
 export default function Header() {
     const navigate = useNavigate()
@@ -77,8 +80,7 @@ function LoggedInMenu({customer}) {
 
     return <>
         <Box display={"flex"} flexDirection={"row"} sx={{"cursor": "pointer"}}
-             onClick={(e) => {
-                 // setAnchorEl(e.currentTarget)
+             onClick={() => {
                  setDialogOpen(b => !b)
              }}>
             <Avatar alt={customer.firstName + " " + customer.lastName} ref={anchorEl}/>
@@ -190,7 +192,12 @@ function NotificationsRaw({open, close}, ref) {
     // TODO probably going to use a context which contains a socket
     const [notifications,] = useState(mockedNotifications)
 
-    const menuItemSx = {}
+    const menuItemSx = {
+        "margin": "8px 0",
+        "&:hover": {
+            "backgroundColor": "selected.light"
+        }
+    }
 
     return (
         <Menu open={open} onClose={close} elevation={10}
@@ -209,10 +216,13 @@ function NotificationsRaw({open, close}, ref) {
                 <Typography variant={"h6"} component={"span"}>Notifications</Typography>
                 <For each={notifications} fallback={<Typography>No notifications</Typography>}>{notification =>
                     <MenuItem key={notification._id} sx={menuItemSx}>
-                        <ListItemIcon>
-                            {notificationTypeToIcon(notification.type)}
-                        </ListItemIcon>
-                        <ListItemText>{notification.msg}</ListItemText>
+                        <Box display={"grid"} gridTemplateColumns={"min-content auto"} alignItems={"center"}>
+                            <ListItemIcon sx={{"gridRow": "span 2"}}>
+                                {notificationTypeToIcon(notification.type)}
+                            </ListItemIcon>
+                            <ListItemText>{notification.msg}</ListItemText>
+                            <ListItemText sx={{color: "text.light"}}>{moment(notification.date).fromNow()}</ListItemText>
+                        </Box>
                     </MenuItem>
                 }</For>
             </MenuList>
@@ -220,10 +230,14 @@ function NotificationsRaw({open, close}, ref) {
     )
 }
 
-function notificationTypeToIcon(type){
-    switch (type){
+function notificationTypeToIcon(type) {
+    switch (type) {
         case "rating":
-            return  <GradeIcon/>
+            return <GradeIcon/>
+        case "invoice":
+            return <ReceiptIcon/>
+        case "purchaseCompleted":
+            return <AssignmentTurnedInIcon/>
         default:
             return <></>
     }
