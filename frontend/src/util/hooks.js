@@ -3,10 +3,12 @@ import {useEffect, useState} from "react";
 
 function useFetch(endpoint, options) {
 
+    // A note on the loading state: We do not consider abortions to be errors as they trigger
+    // an instant refetch. This allows us to keep consistent state, even in the face of React's strict mode
+    // which forces useEffects cleanup to run.
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(undefined)
     const [item, setItem] = useState(undefined)
-
 
     useEffect(() => {
         const ac = new AbortController()
@@ -27,13 +29,16 @@ function useFetch(endpoint, options) {
             setError(undefined)
             setLoading(false)
         }).catch(err => {
-            setLoading(false)
             setError(err)
+            if(!ac.signal.aborted){
+                setLoading(false)
+            }
         })
 
         return () => {
-            setLoading(false)
             ac.abort()
+            setLoading(false)
+            setError({msg: "Aborted fetch"})
         }
     }, [endpoint, ...Object.values(options)])
 
