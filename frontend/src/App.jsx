@@ -2,14 +2,13 @@ import React from "react";
 import Header from "./components/Header";
 import {BuyerMyOrders} from "./components/MyOrders/BuyerMyOrders";
 import {ShopperMyOrders} from "./components/MyOrders/ShopperMyOrders";
-import { Route, Routes } from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 import MapWithList from "./components/BuyerChooseShop/BuyerChooseShopView";
-import { Box } from "@mui/material";
+import {Box} from "@mui/material";
 import TestExample from "./components/BuyerChooseShop/TestExample";
-import { Signup } from "./components/authentication/Signup";
-import { CustomerProvider } from "./util/context/CustomerContext";
-import { Login } from "./components/authentication/Login";
-
+import {Signup} from "./components/authentication/Signup";
+import {CustomerProvider} from "./util/context/CustomerContext";
+import {Login} from "./components/authentication/Login";
 
 
 function App() {
