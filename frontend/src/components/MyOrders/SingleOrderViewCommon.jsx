@@ -21,7 +21,7 @@ export function SingleOrderViewCommon({index, order, contact, buttons, bidView})
     }
 
     return <Box boxShadow={1} borderRadius={"8px"} padding={"16px"} mt={"16px"} display={"flex"}
-                flexDirection={"column"}>
+                flexDirection={"column"} backgroundColor={"white"}>
         <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"} alignItems={"center"}>
 
             <Box display={"flex"} flexDirection={"row"} gap={"32px"} alignItems={"center"}>
