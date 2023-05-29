@@ -8,6 +8,9 @@ import {authenticated, AuthenticatedRequest} from "./middleware/auth";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import {findBuyerById, findShopperById} from "./services/userService";
+import {WebSocketServer} from "ws";
+import * as http from "http";
+import {getMockNotification} from "./datamock/notifications";
 
 dotenv.config()
 mongoose.connect(process.env.MONGO_URL).then(() => console.log("Connected to MongoDB"))
@@ -27,7 +30,7 @@ app.use(cors({
     origin: (origin, callback) => {
         if (corsWhitelist.indexOf(origin) !== -1) {
             callback(null, true)
-        }else{
+        } else {
             callback(new Error("Not allowed by CORS"))
         }
     },
@@ -81,13 +84,34 @@ app.use((err, req, res, next) => {
     res.status(500).json({msg: err})
 })
 
+let server: http.Server | https.Server | undefined
+
 try {
     const privateKey = fs.readFileSync('./frontend/.cert/deliver.me.key', 'utf8');
     const certificate = fs.readFileSync('./frontend/.cert/deliver.me.crt', 'utf8');
     const credentials = {key: privateKey, cert: certificate};
 
-    const httpsServer = https.createServer(credentials, app);
-    httpsServer.listen(PORT, () => console.log(`Listening on port: ${PORT}.`));
-}catch (e){
-    app.listen(PORT, () => console.log(`Listening on port: ${PORT}.`));
+    server = https.createServer(credentials, app);
+} catch (e) {
+    server = http.createServer(app)
 }
+
+
+const wss = new WebSocketServer({server})
+
+
+
+
+wss.on("connection", (ws) => {
+    const tm = setInterval(() => {
+        ws.send(JSON.stringify(getMockNotification()))
+    }, 8000)
+
+    ws.on("error", () => {
+        clearTimeout(tm)
+    })
+})
+
+
+server.listen(PORT, () => console.log(`Listening on port: ${PORT}.`));
+

@@ -1,6 +1,7 @@
 import React, {forwardRef, useContext, useRef, useState} from "react";
 import {
     Avatar,
+    Badge,
     Box,
     Button,
     Divider,
@@ -17,17 +18,16 @@ import {For, Show} from "./util/ControlFlow";
 import ListIcon from '@mui/icons-material/List';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import LogoutIcon from '@mui/icons-material/Logout';
-import {mockedNotifications} from "../util/mockdata";
 import GradeIcon from '@mui/icons-material/Grade';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import moment from "moment"
+import {NotificationContext} from "../util/context/NotificationContext";
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 
 export default function Header() {
     const navigate = useNavigate()
     const {customer} = useContext(CustomerContext)
-
-    // TODO create a methode that says hi to the user
 
     return (
         <header>
@@ -78,12 +78,46 @@ function LoggedInMenu({customer}) {
 
     const anchorEl = useRef();
 
+    const {notifications} = useContext(NotificationContext)
+
     return <>
         <Box display={"flex"} flexDirection={"row"} sx={{"cursor": "pointer"}}
              onClick={() => {
                  setDialogOpen(b => !b)
              }}>
-            <Avatar alt={customer.firstName + " " + customer.lastName} ref={anchorEl}/>
+            <Badge
+                overlap="circular"
+                invisible={notifications.length === 0}
+                anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+                badgeContent={
+                    <NotificationsActiveIcon sx={{
+                        "backgroundColor": "orange",
+                        "color": "white",
+                        "borderRadius": "50%",
+                        "height": "22px",
+                        "width": "22px",
+                        "padding": "2px",
+                        "animation": "pulse 4s infinite ease-in-out",
+                        "@keyframes pulse": {
+                            "0%": {
+                                transform: 'scale(1) rotate(0)'
+                            },
+                            "5%": {
+                                transform: "rotate(-10deg)"
+                            },
+                            "10%": {
+                                transform: 'scale(1.2) rotate(10deg)'
+                            },
+                            "20%": {
+                                transform: 'scale(1) rotate(0)'
+                            }
+                        }
+                    }}/>
+                }
+            >
+                <Avatar alt={customer.firstName + " " + customer.lastName} ref={anchorEl}/>
+            </Badge>
+
             <Divider orientation={"vertical"}
                      sx={{
                          "borderColor": "text.main",
@@ -104,6 +138,9 @@ function AvatarDialogRaw({open, close}, ref) {
     const navigate = useNavigate()
 
     const {logout, customer} = useContext(CustomerContext)
+
+    // TODO mark if any notifications
+    const {notifications, markAsRead} = useContext(NotificationContext)
 
     // For anchoring
     const notificationRef = useRef();
@@ -153,7 +190,9 @@ function AvatarDialogRaw({open, close}, ref) {
                         setNotificationsOpen(true)
                     }}>
                         <ListItemIcon>
-                            <NotificationsIcon/>
+                            <NotificationsIcon sx={{
+                                "color": notifications.length !== 0 ? "orange" : undefined
+                            }}/>
                         </ListItemIcon>
                         <ListItemText>Notifications</ListItemText>
                     </MenuItem>
@@ -179,7 +218,10 @@ function AvatarDialogRaw({open, close}, ref) {
                     </MenuItem>
                 </MenuList>
             </Menu>
-            <Notifications close={() => setNotificationsOpen(false)} open={notificationsOpen}
+            <Notifications close={() => {
+                setNotificationsOpen(false)
+                markAsRead()
+            }} open={notificationsOpen}
                            ref={notificationRef?.current}/>
         </>
     )
@@ -189,8 +231,7 @@ const Notifications = forwardRef(NotificationsRaw)
 
 function NotificationsRaw({open, close}, ref) {
 
-    // TODO probably going to use a context which contains a socket
-    const [notifications,] = useState(mockedNotifications)
+    const {notifications} = useContext(NotificationContext)
 
     const menuItemSx = {
         "margin": "8px 0",
@@ -211,7 +252,8 @@ function NotificationsRaw({open, close}, ref) {
                   horizontal: 'right',
               }}>
             <MenuList sx={{
-                "padding": "16px"
+                "padding": "16px",
+                "maxHeight": "50vh"
             }}>
                 <Typography variant={"h6"} component={"span"}>Notifications</Typography>
                 <For each={notifications} fallback={<Typography>No notifications</Typography>}>{notification =>
@@ -221,7 +263,8 @@ function NotificationsRaw({open, close}, ref) {
                                 {notificationTypeToIcon(notification.type)}
                             </ListItemIcon>
                             <ListItemText>{notification.msg}</ListItemText>
-                            <ListItemText sx={{color: "text.light"}}>{moment(notification.date).fromNow()}</ListItemText>
+                            <ListItemText
+                                sx={{color: "text.light"}}>{moment(notification.date).fromNow()}</ListItemText>
                         </Box>
                     </MenuItem>
                 }</For>

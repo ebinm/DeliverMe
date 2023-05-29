@@ -77,7 +77,7 @@ function getStatusColor(status) {
         case "Being delivered":
             return "#D8E7FF"
         case "In Progress":
-            return "#FFAC33"
+            return "orange"
         default:
             return "#D8E7FF"
     }
