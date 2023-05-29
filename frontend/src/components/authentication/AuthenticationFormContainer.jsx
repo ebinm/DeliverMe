@@ -1,12 +1,14 @@
-import {Box, Button, CircularProgress, FormGroup, Link} from "@mui/material";
+import {Box, Button, CircularProgress, FormGroup, Link, Typography} from "@mui/material";
 import React, {useState} from "react";
-import {Show} from "../util/SolidJS";
-import {useNavigate} from "react-router-dom";
+import {Show} from "../util/ControlFlow";
+import {useNavigate, useSearchParams} from "react-router-dom";
 
 
 export function AuthenticationFormContainer({onSubmit, title, children, altText, altLink, actionText}) {
 
     const navigate = useNavigate()
+
+    const [searchParams,] = useSearchParams()
 
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
@@ -24,23 +26,20 @@ export function AuthenticationFormContainer({onSubmit, title, children, altText,
                 if (err) {
                     setError(err)
                 } else {
-                    navigate("/")
+                    navigate(searchParams.get("ref") || "/")
                 }
             }}>
-                <Box sx={{"marginBottom": "8px"}}>
-                    <h2>{title}</h2>
-                </Box>
+                <Typography sx={{"marginBottom": "8px"}} variant={"h5"}>{title}</Typography>
 
                 <FormGroup sx={{gap: "6px"}}>
                     {children}
-
 
                     <Button type={"submit"} variant={"outlined"} sx={{
                         width: "100%", color: "white", bgcolor: "primary.dark",
                         "margin": "12px 0",
                         "&:hover": {
-                            color: "text.primary",
-                            borderColor: "text.primary"
+                            color: "text.main",
+                            borderColor: "text.main"
                         }
                     }}>
 
@@ -50,7 +49,7 @@ export function AuthenticationFormContainer({onSubmit, title, children, altText,
                     </Button>
 
 
-                    <Link color={"text.primary"} alignSelf={"center"} href={altLink}>{altText}</Link>
+                    <Link color={"text.main"} alignSelf={"center"} href={altLink}>{altText}</Link>
 
                     <Show when={error}>
                         <Box marginTop={"16px"} alignSelf={"center"}><strong>{error}</strong></Box>

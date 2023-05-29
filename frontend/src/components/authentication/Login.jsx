@@ -62,8 +62,8 @@ export function Login() {
                     "color": "white"
                 },
                 "&:hover": {
-                    color: "text.primary",
-                    borderColor: "text.primary"
+                    color: "text.main",
+                    borderColor: "text.main"
                 }
             }}>Login as Buyer</ToggleButton>
 
@@ -74,8 +74,8 @@ export function Login() {
                     "color": "white"
                 },
                 "&:hover": {
-                    color: "text.primary",
-                    borderColor: "text.primary"
+                    color: "text.main",
+                    borderColor: "text.main"
                 }
             }}>Login as Shopper</ToggleButton>
         </ToggleButtonGroup>
