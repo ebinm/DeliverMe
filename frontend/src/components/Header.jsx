@@ -14,6 +14,8 @@ export default function Header() {
 
     const [dialogOpen, setDialogOpen] = useState(false)
 
+    // creat a methode that says hi to the user
+
     return (
 
         <header>

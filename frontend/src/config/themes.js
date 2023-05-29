@@ -11,7 +11,18 @@ const deliverMeTheme = createTheme({
         text: {
             primary: "#3F4B3F"
         }
-    }
+    },
+    components: {
+        MuiListItemButton: {
+          styleOverrides: {
+            root: {
+              '&.Mui-selected': {
+                backgroundColor: '#ECF2E3',
+              },
+            },
+          },
+        },
+      },
 })
 
 export {deliverMeTheme}
