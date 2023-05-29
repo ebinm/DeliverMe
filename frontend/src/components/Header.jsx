@@ -25,7 +25,6 @@ export default function Header() {
     // TODO create a methode that says hi to the user
 
     return (
-
         <header>
             <Box bgcolor={"primary.main"} display={"flex"} flexDirection={"row"} justifyContent={"space-between"}
                  alignItems={"center"} height={"90px"} width={"100%"} padding={"8px"}>
