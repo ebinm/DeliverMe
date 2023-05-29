@@ -6,19 +6,22 @@
 }
 
 
-html, body, main {
+html, body, #root {
   width: 100%;
   height: 100%;
   background-color: #F0F3EB;
 }
 
-header img{
-  padding: 12px;
+#root {
+  display: flex;
+  flex-direction: column;
 }
 
-.vl {
-  width: 0;
-  outline: 1px solid;
+main{
   flex-grow: 1;
-  margin: 0 1em;
+}
+
+header img {
+  padding: 12px;
+  cursor: pointer;
 }
