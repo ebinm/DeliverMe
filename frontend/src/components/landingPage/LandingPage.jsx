@@ -1,13 +1,14 @@
 import Hero from "./Hero";
 import Journey from "./Journey";
-import Example from "./Carousel";
+import Reviews from "./Reviews";
 
 export default function LandingPage() {
+
     return (
-        <div>
+        <div style={{display: 'grid'}}>
             <Hero />
             <Journey />
-            <Example />
+            <Reviews />
         </div>
     );
 }

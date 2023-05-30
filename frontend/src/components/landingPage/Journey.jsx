@@ -8,7 +8,7 @@ const Journey = () => {
         {
             id: 1,
             icon: <img src="images/journey1.png" alt="Journey1" width={'100%'}
-                       style={{padding: "20px", paddingBottom: "60px"}}/>,
+                       style={{padding: "20px", paddingBottom: "60px",}}/>,
             title: 'Location',
             sentence:
                 'Choose a grocery store in your area',
@@ -16,7 +16,7 @@ const Journey = () => {
         {
             id: 2,
             icon: <img src="images/journey2.png" alt="Journey1" width={'100%'}
-                       style={{padding: "20px", paddingBottom: "60px", paddingTop: "80px"}}/>,
+                       style={{padding: "20px", paddingBottom: "60px", paddingTop: "120px"}}/>,
             title: 'Shop groceries',
             sentence:
                 'Specify the groceries that you want',
@@ -24,7 +24,7 @@ const Journey = () => {
         {
             id: 3,
             icon: <img src="images/journey3.png" alt="Journey1" width={'100%'}
-                       style={{padding: "20px", paddingBottom: "60px", paddingTop: "80px"}}/>,
+                       style={{padding: "20px", paddingBottom: "60px", paddingTop: "120px"}}/>,
             title: 'Personal Shopper',
             sentence: 'Select a personal shopper for the delivery',
         },
@@ -37,10 +37,10 @@ const Journey = () => {
         },
     ];
     return (
-        <Box sx={{display: 'grid', minHeight: '400px', backgroundColor: '#F8F9F5', justifyContent: 'center'}}>
+        <Box sx={{display: 'grid', minHeight: '400px', backgroundColor: '#F8F9F5', justifyContent: 'center',
+            paddingTop: '50px', paddingBottom: '50px'}}>
             <Typography variant="h3" sx={{
                 justifySelf: 'center',
-                paddingTop: '40px',
                 textAlign: 'center',
                 fontWeight: '500',
                 fontSize: '2rem',
@@ -66,10 +66,10 @@ const Journey = () => {
                         minHeight={300}
                         key={item.id}
                         sx={{
-                            height: '500px',
+                            maxHeight: '500px',
                             textAlign: 'center',
                             padding: '30px',
-                            width: '200px',
+                            maxWidth: '200px',
                             borderRadius: '10px',
                             margin: '10px !important',
                         }}

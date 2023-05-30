@@ -1,6 +1,10 @@
 import {Box, Button, Grid, Typography} from "@mui/material";
+import Pictures from "./Carousel";
+import {useNavigate} from "react-router-dom";
 
 const Hero = () => {
+
+    const navigate = useNavigate();
 
     return (
         <Box sx={{
@@ -39,13 +43,14 @@ const Hero = () => {
                     <Button
                         variant="contained"
                         color="primary"
-                        sx={{width: '200px', fontSize: '16px'}}
+                        sx={{width: '400px', height:'60px', fontSize: '16px', backgroundColor: 'primary.dark'}}
+                        onClick={() => navigate("/map")}
                     >
                         ORDER NOW
                     </Button>
                 </Grid>
                 <Grid item xs={12} md={5}>
-                    <img src="images/delivery.jpg" alt="Delivery" width={'100%'}/>
+                    <Pictures/>
                 </Grid>
             </Grid>
         </Box>
