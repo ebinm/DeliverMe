@@ -8,6 +8,7 @@ import TestExample from "./components/BuyerChooseShop/TestExample";
 import {Signup} from "./components/authentication/Signup";
 import {CustomerProvider} from "./util/context/CustomerContext";
 import {Login} from "./components/authentication/Login";
+import LandingPage from "./components/landingPage/LandingPage";
 
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
             <Header/>
             <main>
                 <Routes>
-                    <Route path={"/"} element={"Hi, I am home"}/>
+                    <Route path={"/"} element={<LandingPage/>}/>
                     <Route path={"/shopper/signup"} element={<Signup type={"shopper"}/>}/>
                     <Route path={"/buyer/signup"} element={<Signup type={"buyer"}/>}/>
                     <Route path={"/login"} element={<Login/>}/>
