@@ -30,10 +30,7 @@ export function BuyerMyOrders(){
     }
 
 
-    return <Box sx={{
-        "backgroundColor": "main.light",
-        "padding": "32px"
-    }}>
+    return <>
         <Typography variant={"h4"} component={"h1"}>My Orders</Typography>
 
         <For each={orders}>{(order, index) =>
@@ -41,7 +38,7 @@ export function BuyerMyOrders(){
         }</For>
 
 
-    </Box>
+    </>
 
 
 }

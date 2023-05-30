@@ -3,7 +3,7 @@ import {
     Avatar,
     Box,
     Button,
-    Divider,
+    Divider, Link,
     ListItemIcon,
     ListItemText,
     Menu,
@@ -11,7 +11,7 @@ import {
     MenuList,
     Typography
 } from "@mui/material"
-import {createSearchParams, useLocation, useNavigate} from "react-router-dom";
+import {createSearchParams, NavLink, useLocation, useNavigate} from "react-router-dom";
 import {CustomerContext} from "../util/context/CustomerContext";
 import {Show} from "./util/ControlFlow";
 import ListIcon from '@mui/icons-material/List';
@@ -29,8 +29,9 @@ export default function Header() {
         <header>
             <Box bgcolor={"primary.main"} display={"flex"} flexDirection={"row"} justifyContent={"space-between"}
                  alignItems={"center"} height={"90px"} width={"100%"} padding={"8px"}>
-                <img src={"/images/logo.svg"} alt={"DeliverMe Logo"} height={"100%"}
-                     onClick={() => navigate("/")}/>
+                <Link href={"/"} sx={{"height": "100%"}} component={NavLink}>
+                    <img src={"/images/logo.svg"} alt={"DeliverMe Logo"} height={"100%"}/>
+                </Link>
 
                 <Show when={customer} fallback={
                     <AuthenticationMenu/>
