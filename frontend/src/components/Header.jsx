@@ -29,7 +29,7 @@ export default function Header() {
         <header>
             <Box bgcolor={"primary.main"} display={"flex"} flexDirection={"row"} justifyContent={"space-between"}
                  alignItems={"center"} height={"90px"} width={"100%"} padding={"8px"}>
-                <Link href={"/"} sx={{"height": "100%"}} component={NavLink}>
+                <Link sx={{"height": "100%"}} component={(props) => <NavLink {...props} to={"/"}/>}>
                     <img src={"/images/logo.svg"} alt={"DeliverMe Logo"} height={"100%"}/>
                 </Link>
 
