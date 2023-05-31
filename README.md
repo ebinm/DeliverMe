@@ -2,6 +2,8 @@
 
 ## Development Setup
 
+jwt: 9cf49be9c2b84412a99afec0b01f9ccd
+
 ### Scripts
 
 The backend `package.json` contains two ways of running a dev build.
