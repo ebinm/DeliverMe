@@ -1,18 +1,75 @@
 import Typography from "@mui/material/Typography";
-import {Box} from "@mui/material";
+import {Box, MenuItem, Paper, Popover, Select, Table, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Divider from "@mui/material/Divider";
-import {Show} from "../util/ControlFlow";
+import {For, Show} from "../util/ControlFlow";
 import SpeakerNotesOutlinedIcon from '@mui/icons-material/SpeakerNotesOutlined';
 import AccessAlarmsOutlinedIcon from '@mui/icons-material/AccessAlarmsOutlined';
 import {DateTimePicker} from "@mui/x-date-pickers";
-import {useState} from "react";
+import {memo, useCallback, useContext, useEffect, useState} from "react";
 import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
+import {formatUnitNumerusClausus} from "../../util/util";
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import Button from "@mui/material/Button";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import InfoIcon from '@mui/icons-material/Info';
+import {CustomerContext} from "../../util/context/CustomerContext";
 
 export function BuyerChooseItems({shop}) {
 
-    const [from, setFrom] = useState()
-    const [to, setTo] = useState()
+    const {customer} = useContext(CustomerContext)
+
+    const [from, setFrom] = useState(null)
+    const [to, setTo] = useState(null)
+    const [notes, setNotes] = useState("")
+
+    const [items, setItems] = useState([])
+
+    // TODO clear on purchase
+    useEffect(() => {
+        if (customer?._id) {
+            try {
+                const stored = window.localStorage.getItem(`item-cache-${customer._id}`)
+                setItems(JSON.parse(stored))
+                console.log(JSON.parse(stored))
+                console.log(stored)
+            } catch(e) {
+                throw e
+            }
+        }
+    }, [customer?._id])
+
+    useEffect(() => {
+        console.log(customer)
+        if (customer?._id) {
+            window.localStorage.setItem(`item-cache-${customer._id}`, JSON.stringify(items))
+        }
+    }, [items, customer?._id])
+
+
+    const setItemsSimple = useCallback(
+        (newItem, localId) => {
+            if (newItem === undefined) {
+                setItems(prev => prev.filter((item) => item.localId !== localId))
+            } else if (typeof newItem === "function") {
+                setItems(prev => prev.map((oldItem) => oldItem.localId === localId ? newItem(oldItem) : oldItem))
+            } else {
+                setItems(prev => prev.map((oldItem) => oldItem.localId === localId ? newItem : oldItem))
+            }
+
+        }, [])
+
+    const addNewItem = useCallback(
+        () => setItems(prev => [...prev, {
+            localId: Math.random().toString(36).slice(2),
+            name: "",
+            quantity: 1,
+            unit: "Unit",
+            brandName: "",
+            ifItemUnavailable: "Unspecified",
+            note: ""
+        }]), [])
 
 
     const iconSx = {"color": "primary.dark", "gridRow": "span 2", "width": "40px", "height": "40px"}
@@ -36,31 +93,38 @@ export function BuyerChooseItems({shop}) {
         "color": "text.light"
     }
 
+    const paperSx = {"borderRadius": "16px", "padding": "32px", "mt": "16px"}
+
     return <>
         <Typography variant={"h4"} component={"h1"}>Fill your order</Typography>
 
-        <Box shadow={1} borderRadius={"16px"} display={"flex"} flexDirection={"row"} padding={"32px"} marginTop={"16px"}
-             justifyContent={"space-around"} backgroundColor={"white"}>
 
-            <Show when={shop.name}>
+        <Paper sx={paperSx}>
+            <Stack direction={"row"} shadow={1}
+                   justifyContent={"space-around"} backgroundColor={"white"}>
+
+                <Show when={shop.name}>
+                    <Box sx={containerSx}>
+                        <ShoppingCartOutlinedIcon sx={iconSx}/>
+                        <Typography sx={headerSx}>Chosen
+                            shop</Typography>
+                        <Typography textAlign={"center"} sx={{"alignSelf": "self-start"}}
+                                    alignSelf={"top"}>{shop.name}</Typography>
+                    </Box>
+
+                    <Divider orientation={"vertical"} sx={{"height": "auto"}}/>
+                </Show>
+
+
                 <Box sx={containerSx}>
-                    <ShoppingCartOutlinedIcon sx={iconSx}/>
-                    <Typography sx={headerSx}>Chosen
-                        shop</Typography>
-                    <Typography textAlign={"center"} sx={{"alignSelf": "self-start"}}
-                                alignSelf={"top"}>{shop.name}</Typography>
-                </Box>
-
-                <Divider orientation={"vertical"} sx={{"height": "auto"}}/>
-            </Show>
-
-
-            <Box sx={containerSx}>
-                <AccessAlarmsOutlinedIcon sx={iconSx}/>
-                <Typography sx={headerSx} >Delivery time</Typography>
-                <Box sx={containerSx}>
+                    <AccessAlarmsOutlinedIcon sx={iconSx}/>
+                    <Typography sx={headerSx}>Delivery time</Typography>
+                    <Box sx={containerSx}>
                         <Typography color={"text.light"}>From</Typography>
                         <DateTimePicker
+                            name={"order-time-from-input"}
+                            value={from}
+                            onChange={value => setFrom(value)}
                             disablePast
                             sx={dateInputSx}
                             slotProps={{"textField": {variant: "standard"}}}/>
@@ -68,31 +132,186 @@ export function BuyerChooseItems({shop}) {
                         <Typography color={"text.light"} justifySelf={"flex-end"}>To</Typography>
                         <DateTimePicker
                             disablePast
-                            variant={"standard"}
+                            value={to}
+                            onChange={value => setTo(value)}
+                            name={"order-time-to-input"}
                             sx={dateInputSx}
                             slotProps={{"textField": {variant: "standard"}}}/>
-
+                    </Box>
                 </Box>
-            </Box>
 
-            <Divider orientation={"vertical"} sx={{"height": "auto"}}/>
+                <Divider orientation={"vertical"} sx={{"height": "auto"}}/>
 
-            <Box sx={containerSx}>
-                <SpeakerNotesOutlinedIcon sx={iconSx}/>
-                <Typography sx={headerSx}>Additional notes</Typography>
-                <TextField multiline
-                           sx={dateInputSx}
-                           fullwidth
-                           variant={"standard"}
-                           InputProps={{
-                               "sx": {
-                                   "border": "none",
-                                   "outline": "none",
-                               }
-                           }}
+                <Box sx={containerSx}>
+                    <SpeakerNotesOutlinedIcon sx={iconSx}/>
+                    <Typography sx={headerSx}>Additional notes</Typography>
+                    <TextField multiline
+                               name={"order-note-input"}
+                               sx={dateInputSx}
+                               fullwidth={"true"}
+                               variant={"standard"}
+                               value={notes}
+                               onChange={e => setNotes(e.target.value)}
+                               InputProps={{
+                                   "sx": {
+                                       "border": "none",
+                                       "outline": "none",
+                                   }
+                               }}
 
-                />
-            </Box>
-        </Box>
+                    />
+                </Box>
+            </Stack>
+        </Paper>
+
+
+        <Paper sx={paperSx}>
+            <Stack direction={"column"}>
+                <Button startIcon={<AddCircleIcon/>} variant={"text"} onClick={addNewItem} sx={{
+                    "alignSelf": "flex-end",
+                    "width": "160px",
+                    "backgroundColor": "primary.dark",
+                    "color": "primary.light",
+                    "&:hover": {
+                        "outlineColor": "primary.dark",
+                        "outlineWidth": "2px",
+                        "outlineStyle": "solid",
+                        "color": "primary.dark",
+                    }
+                }}>Add Item</Button>
+
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell itemType={"head"}>Product Name</TableCell>
+                            <TableCell itemType={"head"}>Quantity</TableCell>
+                            <TableCell itemType={"head"}>Brand (Optional)</TableCell>
+                            <TableCell itemType={"head"}>If unavailable</TableCell>
+                            <TableCell itemType={"head"} sx={{"display": "flex", "alignItems": "center", gap: "8px"}}>Additional
+                                notes <InfoPopover/>
+                            </TableCell>
+                            <TableCell itemType={"head"}/>
+                        </TableRow>
+                    </TableHead>
+
+                    <TableBody>
+                        <For each={items}>{(item) =>
+                            <SingleItemView key={item.localId} item={item} setSelf={setItemsSimple}/>
+                        }</For>
+                    </TableBody>
+                </Table>
+            </Stack>
+        </Paper>
     </>
 }
+
+function InfoPopover() {
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    return <>
+        <InfoIcon sx={{"color": "primary.dark"}}
+                  onMouseEnter={e => setAnchorEl(e.currentTarget)}
+                  onMouseLeave={() => setAnchorEl(null)}/>
+        <Popover
+            sx={{
+                pointerEvents: 'none',
+            }}
+            open={!!anchorEl}
+            anchorEl={anchorEl}
+            anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}
+            transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+            }}
+            onClose={() => setAnchorEl(null)}
+            disableRestoreFocus
+        >
+            <Paper sx={{"padding": "16px", "maxWidth": "320px"}}>
+                <Typography>Here you can specify for example an upper bound on the price or what to do when the item is
+                    not available.</Typography>
+            </Paper>
+        </Popover>
+    </>
+}
+
+const SingleItemView = memo(({item, setSelf}) => {
+
+    return <TableRow>
+        <TableCell>
+            <TextField value={item.name} name={"grocery-item-name-input"}
+                       variant={"standard"}
+                       onChange={(e) => {
+                           // e is a synthetic event which might change value between now and when the callback
+                           // of setSelf is called
+                           const value = e.target.value
+                           setSelf(prev => ({...prev, name: value}), item.localId)
+                       }}/>
+        </TableCell>
+
+        <TableCell>
+            <Stack direction={"row"} alignItems={"center"} gap={"8px"}>
+                <TextField value={item.quantity} type={"number"} inputProps={{"min": "1"}}
+                           name={"grocery-item-quantity-input"}
+                           variant={"standard"}
+                           onChange={(e) => {
+                               const value = e.target.value
+                               setSelf(prev => ({...prev, quantity: parseInt(value)}), item.localId)
+                           }}/>
+
+                <Select value={item.unit}
+                        name={"grocery-item-unit-input"}
+                        variant={"standard"}
+                        onChange={e => {
+                            const value = e.target.value
+                            setSelf(prev => ({...prev, unit: value}), item.localId)
+                        }
+                        }>
+                    <MenuItem value={"Unit"}>{formatUnitNumerusClausus("Unit", item.quantity)}</MenuItem>
+                    <MenuItem value={"kg"}>kg</MenuItem>
+                    <MenuItem value={"lb"}>lb</MenuItem>
+                </Select>
+            </Stack>
+        </TableCell>
+
+        <TableCell>
+            <TextField value={item.brandName}
+                       variant={"standard"}
+                       name={"grocery-item-brand-name-input"}
+                       onChange={(e) => {
+                           const value = e.target.value
+                           setSelf(prev => ({...prev, brandName: value}), item.localId)
+                       }}/>
+        </TableCell>
+
+        <TableCell>
+            <Select value={item.ifItemUnavailable}
+                    variant={"standard"}
+                    name={"grocery-item-if-item-unavailable-input"}
+                    onChange={e => {
+                        const value = e.target.value
+                        setSelf(prev => ({...prev, ifItemUnavailable: value}), item.localId)
+                    }}>
+                <MenuItem value={"Unspecified"}>Unspecified</MenuItem>
+                <MenuItem value={"Buy Nothing"}>Buy Nothing</MenuItem>
+                <MenuItem value={"Ignore Brand"}>Ignore Brand</MenuItem>
+                <MenuItem value={"See Notes"}>See Notes</MenuItem>
+            </Select>
+        </TableCell>
+
+        <TableCell>
+            <TextField value={item.note} name={"grocery-item-note-input"}
+                       variant={"standard"}
+                       multiline
+                       onChange={(e) => setSelf(prev => ({...prev, note: e.currentTarget?.value}), item.localId)}/>
+        </TableCell>
+
+        <TableCell>
+            <Button onClick={() => setSelf(undefined, item.localId)}>
+                <RemoveCircleIcon sx={{"color": "primary.dark"}}/>
+            </Button>
+        </TableCell>
+    </TableRow>
+})

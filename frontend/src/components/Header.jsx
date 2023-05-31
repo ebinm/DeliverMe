@@ -3,7 +3,7 @@ import {
     Avatar,
     Box,
     Button,
-    Divider, Link,
+    Divider,
     ListItemIcon,
     ListItemText,
     Menu,
@@ -19,19 +19,18 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 export default function Header() {
-    const navigate = useNavigate()
     const {customer} = useContext(CustomerContext)
-
-    // TODO create a methode that says hi to the user
 
     return (
 
         <header>
             <Box bgcolor={"primary.main"} display={"flex"} flexDirection={"row"} justifyContent={"space-between"}
                  alignItems={"center"} height={"90px"} width={"100%"} padding={"8px"}>
-                <Link sx={{"height": "100%"}} component={(props) => <NavLink {...props} to={"/"}/>}>
-                    <img src={"/images/logo.svg"} alt={"DeliverMe Logo"} height={"100%"}/>
-                </Link>
+                <Box sx={{"height": "100%"}}>
+                    <NavLink to={"/"}>
+                        <img src={"/images/logo.svg"} alt={"DeliverMe Logo"} height={"100%"}/>
+                    </NavLink>
+                </Box>
 
                 <Show when={customer} fallback={
                     <AuthenticationMenu/>
