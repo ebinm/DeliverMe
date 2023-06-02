@@ -27,7 +27,7 @@ export function OrderItemsOverview({items}) {
 
     return <Accordion>
         <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}>
+            expandIcon={<ExpandMoreIcon/>}>
             <Typography color={"text.light"} variant={"h6"} component={"h3"}>Overview</Typography>
         </AccordionSummary>
         <AccordionDetails>

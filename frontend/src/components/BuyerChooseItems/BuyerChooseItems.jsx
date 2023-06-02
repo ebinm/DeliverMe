@@ -34,7 +34,7 @@ export function BuyerChooseItems({shop}) {
                 setItems(JSON.parse(stored))
                 console.log(JSON.parse(stored))
                 console.log(stored)
-            } catch(e) {
+            } catch (e) {
                 throw e
             }
         }
