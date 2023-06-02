@@ -20,15 +20,15 @@ const deliverMeTheme = createTheme({
     },
     components: {
         MuiListItemButton: {
-          styleOverrides: {
-            root: {
-              '&.Mui-selected': {
-                backgroundColor: '#ECF2E3',
-              },
+            styleOverrides: {
+                root: {
+                    '&.Mui-selected': {
+                        backgroundColor: '#ECF2E3',
+                    },
+                },
             },
-          },
         },
-      },
+    },
 })
 
 export {deliverMeTheme}

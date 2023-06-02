@@ -8,7 +8,13 @@ import Modal from '@mui/material/Modal';
 import {useTheme} from "@mui/material/styles"
 
 
-const DefineCustomShopModal = ({ showModal, handleCloseModal, setUseCustomShop, setCustomShopValues, CustomShopValues }) => {
+const DefineCustomShopModal = ({
+                                   showModal,
+                                   handleCloseModal,
+                                   setUseCustomShop,
+                                   setCustomShopValues,
+                                   CustomShopValues
+                               }) => {
 
     const theme = useTheme()
 
@@ -45,11 +51,11 @@ const DefineCustomShopModal = ({ showModal, handleCloseModal, setUseCustomShop, 
             >
                 <>
                     <Box sx={style}>
-                        <Typography variant="h4" sx={{ mb: 2 }}>
+                        <Typography variant="h4" sx={{mb: 2}}>
                             Custom Shop Form
                         </Typography>
                         <Box
-                            sx={{ width: "100%" }}
+                            sx={{width: "100%"}}
                         >
                             <form onSubmit={handleSubmit}>
                                 <div>
@@ -58,8 +64,11 @@ const DefineCustomShopModal = ({ showModal, handleCloseModal, setUseCustomShop, 
                                         id="outlined"
                                         label="Name"
                                         margin="dense"
-                                        sx={{ width: '100%' }}
-                                        onChange={(e) => setCustomShopValues({ ...CustomShopValues, Name: e.target.value })}
+                                        sx={{width: '100%'}}
+                                        onChange={(e) => setCustomShopValues({
+                                            ...CustomShopValues,
+                                            Name: e.target.value
+                                        })}
                                     />
                                 </div>
                                 <div>
@@ -68,8 +77,11 @@ const DefineCustomShopModal = ({ showModal, handleCloseModal, setUseCustomShop, 
                                         id="filled-error-helper-text"
                                         label="Street Address"
                                         margin="dense"
-                                        sx={{ width: '100%' }}
-                                        onChange={(e) => setCustomShopValues({ ...CustomShopValues, Street: e.target.value })}
+                                        sx={{width: '100%'}}
+                                        onChange={(e) => setCustomShopValues({
+                                            ...CustomShopValues,
+                                            Street: e.target.value
+                                        })}
                                     />
                                 </div>
                                 <div>
@@ -78,8 +90,11 @@ const DefineCustomShopModal = ({ showModal, handleCloseModal, setUseCustomShop, 
                                         id="standard-error"
                                         label="City"
                                         margin="dense"
-                                        sx={{ width: '100%' }}
-                                        onChange={(e) => setCustomShopValues({ ...CustomShopValues, City: e.target.value })}
+                                        sx={{width: '100%'}}
+                                        onChange={(e) => setCustomShopValues({
+                                            ...CustomShopValues,
+                                            City: e.target.value
+                                        })}
                                     />
                                 </div>
                                 <div>
@@ -88,14 +103,17 @@ const DefineCustomShopModal = ({ showModal, handleCloseModal, setUseCustomShop, 
                                         id="standard-error"
                                         label="State"
                                         margin="dense"
-                                        sx={{ width: '100%' }}
-                                        onChange={(e) => setCustomShopValues({ ...CustomShopValues, State: e.target.value })}
+                                        sx={{width: '100%'}}
+                                        onChange={(e) => setCustomShopValues({
+                                            ...CustomShopValues,
+                                            State: e.target.value
+                                        })}
                                     />
                                 </div>
                                 <Stack
-                                    direction={{ xs: 'column', sm: 'row' }}
-                                    spacing={{ xs: 1, sm: 1, md: 1 }}
-                                    sx={{ mt: 2, justifyContent: 'space-between' }}
+                                    direction={{xs: 'column', sm: 'row'}}
+                                    spacing={{xs: 1, sm: 1, md: 1}}
+                                    sx={{mt: 2, justifyContent: 'space-between'}}
                                 >
                                     <Button variant="contained" onClick={handleCloseModal}>Back</Button>
                                     <Button variant="contained" type="submit">Select Shop</Button>

@@ -1,7 +1,3 @@
-
-
-
-
 const mockedOrders = [
     {
         _id: "iuvhjadfoiuj3c2roi",
