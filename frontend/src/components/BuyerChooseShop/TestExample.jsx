@@ -33,7 +33,7 @@ const TestExample = () => {
     const handleClose = () => setOpen(false);
 
     return (
-        <div>
+        <Box sx={{ m: 10, maxHeight: "10%" }}>
             <Button variant="contained" onClick={handleOpen}>Open modal</Button>
             <Modal
                 open={open}
@@ -93,7 +93,7 @@ const TestExample = () => {
                     </Box>
                 </>
             </Modal>
-        </div>
+        </Box>
     );
 };
 

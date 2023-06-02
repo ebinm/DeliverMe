@@ -11,6 +11,7 @@ import {Login} from "./components/authentication/Login";
 import {BuyerChooseItems} from "./components/BuyerChooseItems/BuyerChooseItems";
 import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
 import {LocalizationProvider} from "@mui/x-date-pickers";
+import {NotificationProvider} from "./util/context/NotificationContext";
 
 
 function App() {
