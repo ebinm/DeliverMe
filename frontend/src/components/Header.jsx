@@ -24,6 +24,7 @@ import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import moment from "moment"
 import {NotificationContext} from "../util/context/NotificationContext";
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import ChecklistIcon from '@mui/icons-material/Checklist';
 
 export default function Header() {
     const navigate = useNavigate()
@@ -201,7 +202,9 @@ function AvatarDialogRaw({open, close}, ref) {
                         navigate(`/${customer.type.toLowerCase()}/my-orders`)
                         close()
                     }}>
-                        <ListItemIcon/>
+                        <ListItemIcon>
+                            <ChecklistIcon/>
+                        </ListItemIcon>
                         <ListItemText>My orders</ListItemText>
                     </MenuItem>
 
