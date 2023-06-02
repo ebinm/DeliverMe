@@ -12,7 +12,7 @@ import {
     MenuList,
     Typography
 } from "@mui/material"
-import {createSearchParams, useLocation, useNavigate} from "react-router-dom";
+import {createSearchParams, NavLink, useLocation, useNavigate} from "react-router-dom";
 import {CustomerContext} from "../util/context/CustomerContext";
 import {For, Show} from "./util/ControlFlow";
 import ListIcon from '@mui/icons-material/List';
@@ -27,15 +27,17 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 
 export default function Header() {
-    const navigate = useNavigate()
     const {customer} = useContext(CustomerContext)
 
     return (
         <header>
             <Box bgcolor={"primary.main"} display={"flex"} flexDirection={"row"} justifyContent={"space-between"}
                  alignItems={"center"} height={"90px"} width={"100%"} padding={"8px"}>
-                <img src={"/images/logo.svg"} alt={"DeliverMe Logo"} height={"100%"}
-                     onClick={() => navigate("/")}/>
+                <Box sx={{"height": "100%"}}>
+                    <NavLink to={"/"}>
+                        <img src={"/images/logo.svg"} alt={"DeliverMe Logo"} height={"100%"}/>
+                    </NavLink>
+                </Box>
 
                 <Show when={customer} fallback={
                     <AuthenticationMenu/>

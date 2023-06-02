@@ -30,7 +30,7 @@ function useFetch(endpoint, options) {
             setLoading(false)
         }).catch(err => {
             setError(err)
-            if(!ac.signal.aborted){
+            if (!ac.signal.aborted) {
                 setLoading(false)
             }
         })
