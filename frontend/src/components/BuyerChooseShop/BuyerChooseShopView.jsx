@@ -9,7 +9,7 @@ import {GoogleMap, InfoWindow, LoadScript, Marker,} from '@react-google-maps/api
 import DefineCustomShopModal from './DefineCustomShopModal';
 
 
-const MapWithList = () => {
+const BuyerChooseShopView = () => {
     const [map, setMap] = useState(null);
     const [mapCenter, setMapCenter] = useState(null);
     const [searchValue, setSearchValue] = useState('Munich');
@@ -241,4 +241,4 @@ const MapWithList = () => {
     );
 };
 
-export default MapWithList;
+export {BuyerChooseShopView};
