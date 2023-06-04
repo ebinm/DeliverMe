@@ -51,7 +51,7 @@ If SSL is wanted, place the key and certificate files in `./frontend/.cert` nami
 If you want to create a locally trusted script for development the following link might prove useful:
 https://deliciousbrains.com/ssl-certificate-authority-for-local-https-development/
 
-If you message @ge93xax he can also send you a root certificate and signed certificates for localhost which you can then install/ add to trust store.
+If you message Lukas Rossi he can also send you a root certificate and signed certificates for localhost which you can then install/ add to trust store.
 I would not recommend this option though as it in theory poses a security risk.
 
 
