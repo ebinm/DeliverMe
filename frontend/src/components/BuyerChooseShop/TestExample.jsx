@@ -33,7 +33,7 @@ const TestExample = () => {
     const handleClose = () => setOpen(false);
 
     return (
-        <div>
+        <Box sx={{ m: 10, maxHeight: "10%" }}>
             <Button variant="contained" onClick={handleOpen}>Open modal</Button>
             <Modal
                 open={open}
@@ -43,11 +43,11 @@ const TestExample = () => {
             >
                 <>
                     <Box sx={style}>
-                        <Typography variant="h4" sx={{ mb: 2 }}>
+                        <Typography variant="h4" sx={{mb: 2}}>
                             Custom Shop Form
                         </Typography>
                         <Box
-                            sx={{ width: "100%" }}
+                            sx={{width: "100%"}}
                         >
                             <form>
                                 <div>
@@ -57,7 +57,7 @@ const TestExample = () => {
                                         label="Name"
                                         defaultValue="Hello World"
                                         margin="dense"
-                                        sx={{ width: '100%' }}
+                                        sx={{width: '100%'}}
                                     />
                                 </div>
                                 <div>
@@ -67,7 +67,7 @@ const TestExample = () => {
                                         label="Street Address"
                                         defaultValue="Hello World"
                                         margin="dense"
-                                        sx={{ width: '100%' }}
+                                        sx={{width: '100%'}}
                                     />
                                 </div>
                                 <div>
@@ -77,13 +77,13 @@ const TestExample = () => {
                                         label="City"
                                         defaultValue="Hello World"
                                         margin="dense"
-                                        sx={{ width: '100%' }}
+                                        sx={{width: '100%'}}
                                     />
                                 </div>
                                 <Stack
-                                    direction={{ xs: 'column', sm: 'row' }}
-                                    spacing={{ xs: 1, sm: 1, md: 1 }}
-                                    sx={{ mt: 2, justifyContent: 'space-between' }}
+                                    direction={{xs: 'column', sm: 'row'}}
+                                    spacing={{xs: 1, sm: 1, md: 1}}
+                                    sx={{mt: 2, justifyContent: 'space-between'}}
                                 >
                                     <Button variant="contained">Back</Button>
                                     <Button variant="contained" type="submit">Select Shop</Button>
@@ -93,7 +93,7 @@ const TestExample = () => {
                     </Box>
                 </>
             </Modal>
-        </div>
+        </Box>
     );
 };
 

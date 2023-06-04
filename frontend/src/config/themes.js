@@ -15,19 +15,20 @@ const deliverMeTheme = createTheme({
         selected: {
             light: "#E3EEFF",
             main: "#D8E7FF"
-        }
+        },
+        orange: "#FFAC33"
     },
     components: {
         MuiListItemButton: {
-          styleOverrides: {
-            root: {
-              '&.Mui-selected': {
-                backgroundColor: '#ECF2E3',
-              },
+            styleOverrides: {
+                root: {
+                    '&.Mui-selected': {
+                        backgroundColor: '#ECF2E3',
+                    },
+                },
             },
-          },
         },
-      },
+    },
 })
 
 export {deliverMeTheme}

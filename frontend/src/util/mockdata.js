@@ -1,7 +1,3 @@
-
-
-
-
 const mockedOrders = [
     {
         _id: "iuvhjadfoiuj3c2roi",
@@ -242,4 +238,26 @@ const mockedOrders = [
     }
 ]
 
-export {mockedOrders}
+// TODO missing some information about what to do now
+const mockedNotifications = [
+    {
+        _id: "u98oujao32ujdoa9j2",
+        msg: "You can leave a rating for @Simon",
+        date: new Date(2023, 4, 10, 20, 9, 0).toUTCString(),
+        type: "rating"
+    },
+    {
+        _id: "u98oujao32ujdoa9jgsweges2",
+        msg: "You received an invoice",
+        date: new Date(2023, 4, 10, 20, 10, 0).toUTCString(),
+        type: "invoice"
+    },
+    {
+        _id: "u9gweweg8oujao32ujdoa9j2",
+        msg: "Your order has been completed",
+        date:  new Date(2022, 4, 9, 20, 10, 0).toUTCString(),
+        type: "purchaseCompleted"
+    }
+]
+
+export {mockedOrders, mockedNotifications}

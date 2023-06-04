@@ -8,33 +8,36 @@ import TestExample from "./components/BuyerChooseShop/TestExample";
 import {Signup} from "./components/authentication/Signup";
 import {CustomerProvider} from "./util/context/CustomerContext";
 import {Login} from "./components/authentication/Login";
-import {ShopperChooseOrderView} from "./components/ShopperChooseOrder/ShopperChooseOrderView";
-import { SnackbarProvider} from 'notistack';
+import {BuyerChooseItems} from "./components/BuyerChooseItems/BuyerChooseItems";
+import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
+import {LocalizationProvider} from "@mui/x-date-pickers";
+import {NotificationProvider} from "./util/context/NotificationContext";
 
 
 function App() {
     return (
         <CustomerProvider>
-            <Header/>
-            <main>
-            <SnackbarProvider maxSnack={3}>
-                <Routes>
-                    <Route path={"/"} element={"Hi, I am home"}/>
-                    <Route path={"/shopper/signup"} element={<Signup type={"shopper"}/>}/>
-                    <Route path={"/buyer/signup"} element={<Signup type={"buyer"}/>}/>
-                    <Route path={"/login"} element={<Login/>}/>
-                    <Route path={"/buyer/my-orders"} element={<BuyerMyOrders/>}/>
-                    <Route path={"/shopper/my-orders"} element={<ShopperMyOrders/>}/>
-                    <Route path={"/"} element={"Hi, I am home"} />
-                    <Route path={"/map"} element={<BuyerChooseShopView/>} />
-                    <Route path={"/ordermap"} element={<ShopperChooseOrderView/>} />
-                    <Route path={"/test"} element={<TestExample />} />
-                    <Route path={"/shopper/signup"} element={<Signup type={"shopper"} />} />
-                    <Route path={"/buyer/signup"} element={<Signup type={"buyer"} />} />
-                    <Route path={"/login"} element={<Login />} />
-                </Routes>
-                </SnackbarProvider>
-            </main>
+            <NotificationProvider>
+                <LocalizationProvider dateAdapter={AdapterMoment}>
+                    <Header/>
+                    <main>
+                        <Routes>
+                            <Route path={"/"} element={"Hi, I am home"}/>
+                            <Route path={"/shopper/signup"} element={<Signup type={"shopper"}/>}/>
+                            <Route path={"/buyer/signup"} element={<Signup type={"buyer"}/>}/>
+                            <Route path={"/login"} element={<Login/>}/>
+                            <Route path={"/buyer/my-orders"} element={<BuyerMyOrders/>}/>
+                            <Route path={"/shopper/my-orders"} element={<ShopperMyOrders/>}/>
+                            <Route path={"/"} element={"Hi, I am home"}/>
+                            <Route path={"/map"} element={<MapWithList/>}/>
+                            <Route path={"/test"} element={<TestExample/>}/>
+                            <Route path={"/buyer/choose-items"} element={<BuyerChooseItems shop={{
+                                name: "REWE"
+                            }}/>}/>
+                        </Routes>
+                    </main>
+                </LocalizationProvider>
+            </NotificationProvider>
         </CustomerProvider>
     );
 }

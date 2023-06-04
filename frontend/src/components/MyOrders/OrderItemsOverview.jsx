@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import {For} from "../util/ControlFlow";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {formatUnitNumerusClausus} from "../../util/util";
 
 
 export function OrderItemsOverview({items}) {
@@ -26,7 +27,7 @@ export function OrderItemsOverview({items}) {
 
     return <Accordion>
         <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}>
+            expandIcon={<ExpandMoreIcon/>}>
             <Typography color={"text.light"} variant={"h6"} component={"h3"}>Overview</Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -55,16 +56,4 @@ export function OrderItemsOverview({items}) {
             </TableContainer>
         </AccordionDetails>
     </Accordion>
-}
-
-function formatUnitNumerusClausus(unit, quantity) {
-    if (unit === undefined || unit === "unit") {
-        if (quantity === 1) {
-            return "unit"
-        } else {
-            return "units"
-        }
-    }
-
-    return unit
 }
