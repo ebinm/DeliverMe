@@ -1,6 +1,5 @@
 import {Buyer, Customer, CustomerType, Shopper} from "../models/customer";
 import {Request, Response} from "express";
-import {Model} from "mongoose";
 
 import jsonwebtoken from 'jsonwebtoken'
 import bcrypt from "bcrypt";

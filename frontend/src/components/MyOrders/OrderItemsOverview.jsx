@@ -15,7 +15,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {formatUnitNumerusClausus} from "../../util/util";
 
 
-export function OrderItemsOverview({items}) {
+export function OrderItemsOverview({items, defaultExpanded, title="Overview"}) {
 
     const headerSx = {
         "color": "text.light"
@@ -25,10 +25,10 @@ export function OrderItemsOverview({items}) {
         "padding": "8px 8px 8px 0"
     }
 
-    return <Accordion>
+    return <Accordion defaultExpanded={defaultExpanded}>
         <AccordionSummary
             expandIcon={<ExpandMoreIcon/>}>
-            <Typography color={"text.light"} variant={"h6"} component={"h3"}>Overview</Typography>
+            <Typography color={"text.light"} variant={"h6"} component={"h3"}>{title}</Typography>
         </AccordionSummary>
         <AccordionDetails>
             <TableContainer>
@@ -43,7 +43,7 @@ export function OrderItemsOverview({items}) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        <For each={items}>{item => <TableRow key={item._id}>
+                        <For each={items}>{item => <TableRow key={item._id || item.localId}>
                             <TableCell sx={cellSx}>{item.name || ""}</TableCell>
                             <TableCell
                                 sx={cellSx}>{item.quantity} {formatUnitNumerusClausus(item.unit, item.quantity)}</TableCell>

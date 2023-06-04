@@ -1,34 +1,30 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Grid, List, ListItem, ListItemButton, ListItemText} from '@mui/material';
+import {Box, CircularProgress, Grid, List, ListItem, ListItemButton, ListItemText} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
-import {GoogleMap, InfoWindow, LoadScript, Marker,} from '@react-google-maps/api';
+import {GoogleMap, InfoWindow, Marker, useJsApiLoader,} from '@react-google-maps/api';
 import DefineCustomShopModal from './DefineCustomShopModal';
+import {Show} from "../../util/ControlFlow";
 
+const MapWithList = ({onSubmitShop}) => {
 
-const MapWithList = () => {
+    const [selectedShop, setSelectedShop] = useState(null);
     const [map, setMap] = useState(null);
     const [mapCenter, setMapCenter] = useState(null);
     const [searchValue, setSearchValue] = useState('Munich');
     const [shops, setShops] = useState([]);
-    const [selectedShop, setSelectedShop] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [CustomShopValues, setCustomShopValues] = useState(null);
     const [UseCustomShop, setUseCustomShop] = useState(false);
 
     // getDay returns 0-6, where 0 is Sunday and 6 is Saturday
-    var currentDay = new Date().getDay() - 1;
+    let currentDay = new Date().getDay() - 1;
     if (currentDay === -1) {
         currentDay = 6;
     }
-
-    useEffect(() => {
-        console.log(CustomShopValues);
-        console.log(UseCustomShop);
-    }, [CustomShopValues, UseCustomShop]);
 
     useEffect(() => {
         if (map) {
@@ -38,9 +34,16 @@ const MapWithList = () => {
         }
     }, [map]);
 
+    // We use useState as a way of handling a constant here to stop useJsApiLoader from triggering more than once.
+    const [googleLibraries] = useState(["places"]);
+    const {isLoaded} = useJsApiLoader({
+        googleMapsApiKey: "AIzaSyDtlTfWb_VyQaJfgkmuKG8qqSl0-1Cj_FQ",
+        libraries: googleLibraries
+    });
+
 
     useEffect(() => {
-        if (map) {
+        if (map && mapCenter) {
             const placesService = new window.google.maps.places.PlacesService(map);
             const request = {
                 location: mapCenter,
@@ -70,12 +73,11 @@ const MapWithList = () => {
                     // Wait for all promises to resolve and set the updated shops state
                     Promise.all(shopPromises).then((updatedShops) => {
                         setShops(updatedShops);
-                        console.log(updatedShops);
                     });
                 }
             });
         }
-    }, [map, mapCenter]);
+    }, [map]);
 
     const handlePlaceSelect = () => {
         console.log('Search Value:', searchValue);
@@ -87,8 +89,6 @@ const MapWithList = () => {
                 input: searchValue,
                 fields: ['geometry']
             };
-
-            console.log('Search Value:', searchValue);
 
             const autocompleteService = new window.google.maps.places.AutocompleteService();
             autocompleteService.getPlacePredictions(request, (predictions, status) => {
@@ -136,7 +136,7 @@ const MapWithList = () => {
 
 
     return (
-        <Box sx={{ m: 10, maxHeight: "10%" }}>
+        <Box sx={{"height": "100%"}}>
             <DefineCustomShopModal
                 showModal={showModal}
                 handleCloseModal={handleCloseModal}
@@ -171,10 +171,7 @@ const MapWithList = () => {
                 </Grid>
             </Grid>
             <Grid container spacing={5} sx={{mb: 2}}>
-                <LoadScript
-                    googleMapsApiKey="AIzaSyDtlTfWb_VyQaJfgkmuKG8qqSl0-1Cj_FQ"
-                    libraries={["places"]}
-                >
+                <Show when={isLoaded} fallback={<CircularProgress/>}>
                     <Grid item xs={6} md={4} sx={{maxHeight: '70vh', overflow: 'auto'}}>
                         <List>
                             <ListItem key={0}>
@@ -223,7 +220,7 @@ const MapWithList = () => {
                             ))}
                         </GoogleMap>
                     </Grid>
-                </LoadScript>
+                </Show>
             </Grid>
             <Box
                 sx={{
@@ -237,8 +234,8 @@ const MapWithList = () => {
                     spacing={{xs: 1, sm: 1, md: 1}}
                     sx={{mb: 2}}
                 >
-                    <Button variant="contained">Skip</Button>
-                    <Button variant="contained">Select Shop</Button>
+                    <Button variant="contained" onClick={() => onSubmitShop(null)}>Skip</Button>
+                    <Button variant="contained" onClick={() => onSubmitShop(selectedShop)}>Select Shop</Button>
                 </Stack>
             </Box>
         </Box>
