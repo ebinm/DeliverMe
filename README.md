@@ -7,10 +7,6 @@
 Make sure your ip is whitelisted on AtlasDB. Else the backend can not connect with the instance.
 
 
-
-
-jwt: 
-
 ### Scripts
 
 The backend `package.json` contains two ways of running a dev build.
