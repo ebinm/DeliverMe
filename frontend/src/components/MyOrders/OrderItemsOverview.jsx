@@ -15,7 +15,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {formatUnitNumerusClausus} from "../../util/util";
 
 
-export function OrderItemsOverview({items, defaultExpanded}) {
+export function OrderItemsOverview({items, defaultExpanded, title="Overview"}) {
 
     const headerSx = {
         "color": "text.light"
@@ -28,7 +28,7 @@ export function OrderItemsOverview({items, defaultExpanded}) {
     return <Accordion defaultExpanded={defaultExpanded}>
         <AccordionSummary
             expandIcon={<ExpandMoreIcon/>}>
-            <Typography color={"text.light"} variant={"h6"} component={"h3"}>Overview</Typography>
+            <Typography color={"text.light"} variant={"h6"} component={"h3"}>{title}</Typography>
         </AccordionSummary>
         <AccordionDetails>
             <TableContainer>

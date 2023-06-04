@@ -1,4 +1,4 @@
-import {createContext} from "react";
+import {createContext, useState} from "react";
 import {useFetch} from "../hooks";
 
 // @type Context<{login: () => Promise<{msg: string}> | undefined, signup: () => Promise<{msg: string} | undefined, customer: {firstName: string, lastName: string, email: string, type: "BUYER" | "SHOPPER"} | undefined }>}>
@@ -24,10 +24,11 @@ function fetchUser(setCustomer) {
 
 function CustomerProvider({children}) {
 
-    const [customer, setCustomer, loading] = useFetch(`${process.env.REACT_APP_BACKEND}/api/me`, {
+    const [ready, setReady] = useState(false)
+    const [customer, setCustomer, ] = useFetch(`${process.env.REACT_APP_BACKEND}/api/me`, {
         credentials: "include",
         withCredentials: true
-    })
+    }, () => setReady(true))
 
 
     // type: "shopper" | "buyer"
@@ -81,7 +82,7 @@ function CustomerProvider({children}) {
         signup,
         customer,
         logout,
-        ready: !loading
+        ready
     }}>
         {children}
     </CustomerContext.Provider>

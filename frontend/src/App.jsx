@@ -8,7 +8,6 @@ import TestExample from "./components/BuyerOrderCreation/BuyerChooseShop/TestExa
 import {Signup} from "./components/authentication/Signup";
 import {CustomerProvider} from "./util/context/CustomerContext";
 import {Login} from "./components/authentication/Login";
-import {BuyerChooseItems} from "./components/BuyerOrderCreation/BuyerChooseItems/BuyerChooseItems";
 import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {NotificationProvider} from "./util/context/NotificationContext";

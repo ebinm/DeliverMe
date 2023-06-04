@@ -35,7 +35,7 @@ const MapWithList = ({onSubmitShop}) => {
     }, [map]);
 
     // We use useState as a way of handling a constant here to stop useJsApiLoader from triggering more than once.
-    const [ googleLibraries ] = useState(["places"]);
+    const [googleLibraries] = useState(["places"]);
     const {isLoaded} = useJsApiLoader({
         googleMapsApiKey: "AIzaSyDtlTfWb_VyQaJfgkmuKG8qqSl0-1Cj_FQ",
         libraries: googleLibraries

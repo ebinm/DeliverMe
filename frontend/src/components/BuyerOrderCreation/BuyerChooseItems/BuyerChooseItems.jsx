@@ -1,12 +1,24 @@
 import Typography from "@mui/material/Typography";
-import {Box, MenuItem, Paper, Popover, Select, Table, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
+import {
+    Box,
+    DialogActions,
+    MenuItem,
+    Paper,
+    Popover,
+    Select,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow
+} from "@mui/material";
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Divider from "@mui/material/Divider";
 import {For, Show} from "../../util/ControlFlow";
 import SpeakerNotesOutlinedIcon from '@mui/icons-material/SpeakerNotesOutlined';
 import AccessAlarmsOutlinedIcon from '@mui/icons-material/AccessAlarmsOutlined';
 import {DateTimePicker} from "@mui/x-date-pickers";
-import {memo, useCallback, useContext, useState} from "react";
+import {memo, useCallback, useState} from "react";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import {formatUnitNumerusClausus} from "../../../util/util";
@@ -14,12 +26,22 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import Button from "@mui/material/Button";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import InfoIcon from '@mui/icons-material/Info';
-import {CustomerContext} from "../../../util/context/CustomerContext";
-import {useCacheLocalStorageForCustomer} from "../../../util/hooks";
+import {DarkButton, darkButtonSx, OutlinedButton, outlinedButtonSx} from "../../util/Buttons";
+import {useLocaleText} from "@mui/x-date-pickers/internals";
 
-export function BuyerChooseItems({shop, onSubmit, onGoBack, to, setTo, from, setFrom, items, setItems, notes, setNotes}) {
-
-    const {customer} = useContext(CustomerContext)
+export function BuyerChooseItems({
+                                     shop,
+                                     onSubmit,
+                                     onGoBack,
+                                     to,
+                                     setTo,
+                                     from,
+                                     setFrom,
+                                     items,
+                                     setItems,
+                                     notes,
+                                     setNotes
+                                 }) {
 
 
     const setItemsSimple = useCallback(
@@ -51,111 +73,118 @@ export function BuyerChooseItems({shop, onSubmit, onGoBack, to, setTo, from, set
     return <>
         <Typography variant={"h4"} component={"h1"}>Fill your order</Typography>
 
-
         <Paper sx={paperSx}>
-            <Stack direction={"row"} shadow={1}
-                   justifyContent={"space-around"} backgroundColor={"white"}>
+                <Stack direction={"row"} shadow={1}
+                       justifyContent={"space-around"} backgroundColor={"white"}>
 
-                <Show when={shop?.name}>
+                    <Show when={shop?.name}>
+                        <Box sx={containerSx}>
+                            <ShoppingCartOutlinedIcon sx={iconSx}/>
+                            <Typography sx={headerSx}>Chosen
+                                shop</Typography>
+                            <Typography textAlign={"center"} sx={{"alignSelf": "self-start"}}
+                                        alignSelf={"top"}>{shop?.name}</Typography>
+                        </Box>
+
+                        <Divider orientation={"vertical"} sx={{"height": "auto"}}/>
+                    </Show>
+
+
                     <Box sx={containerSx}>
-                        <ShoppingCartOutlinedIcon sx={iconSx}/>
-                        <Typography sx={headerSx}>Chosen
-                            shop</Typography>
-                        <Typography textAlign={"center"} sx={{"alignSelf": "self-start"}}
-                                    alignSelf={"top"}>{shop?.name}</Typography>
+                        <AccessAlarmsOutlinedIcon sx={iconSx}/>
+                        <Typography sx={headerSx}>Delivery time</Typography>
+                        <Box sx={containerSx}>
+                            <Typography color={"text.light"}>From</Typography>
+                            <DateTimePicker
+                                name={"order-time-from-input"}
+                                value={from}
+                                onChange={value => !isNaN(value) && setFrom(value)}
+                                disablePast
+                                sx={dateInputSx}
+                                slots={{"actionBar": ((props) => <CustomDateTimePickerActionBar {...props}/>)}}
+                                slotProps={{"textField": {variant: "standard"}}}/>
+
+                            <Typography color={"text.light"} justifySelf={"flex-end"}>To</Typography>
+                            <DateTimePicker
+                                disablePast
+                                value={to}
+                                onChange={value => !isNaN(value)&& setTo(value)}
+                                name={"order-time-to-input"}
+                                sx={dateInputSx}
+                                slots={{"actionBar": ((props) => <CustomDateTimePickerActionBar {...props}/>)}}
+                                slotProps={{"textField": {variant: "standard"}}}/>
+                        </Box>
                     </Box>
 
                     <Divider orientation={"vertical"} sx={{"height": "auto"}}/>
-                </Show>
 
-
-                <Box sx={containerSx}>
-                    <AccessAlarmsOutlinedIcon sx={iconSx}/>
-                    <Typography sx={headerSx}>Delivery time</Typography>
                     <Box sx={containerSx}>
-                        <Typography color={"text.light"}>From</Typography>
-                        <DateTimePicker
-                            name={"order-time-from-input"}
-                            value={from}
-                            onChange={value => setFrom(value)}
-                            disablePast
-                            sx={dateInputSx}
-                            slotProps={{"textField": {variant: "standard"}}}/>
-
-                        <Typography color={"text.light"} justifySelf={"flex-end"}>To</Typography>
-                        <DateTimePicker
-                            disablePast
-                            value={to}
-                            onChange={value => setTo(value)}
-                            name={"order-time-to-input"}
-                            sx={dateInputSx}
-                            slotProps={{"textField": {variant: "standard"}}}/>
+                        <SpeakerNotesOutlinedIcon sx={iconSx}/>
+                        <Typography sx={headerSx}>Additional notes</Typography>
+                        <TextField multiline
+                                   name={"order-note-input"}
+                                   sx={dateInputSx}
+                                   fullwidth={"true"}
+                                   variant={"standard"}
+                                   value={notes}
+                                   onChange={e => setNotes(e.target.value)}
+                                   InputProps={{
+                                       "sx": {
+                                           "border": "none",
+                                           "outline": "none",
+                                       }
+                                   }}/>
                     </Box>
-                </Box>
-
-                <Divider orientation={"vertical"} sx={{"height": "auto"}}/>
-
-                <Box sx={containerSx}>
-                    <SpeakerNotesOutlinedIcon sx={iconSx}/>
-                    <Typography sx={headerSx}>Additional notes</Typography>
-                    <TextField multiline
-                               name={"order-note-input"}
-                               sx={dateInputSx}
-                               fullwidth={"true"}
-                               variant={"standard"}
-                               value={notes}
-                               onChange={e => setNotes(e.target.value)}
-                               InputProps={{
-                                   "sx": {
-                                       "border": "none",
-                                       "outline": "none",
-                                   }
-                               }}
-
-                    />
-                </Box>
-            </Stack>
-        </Paper>
-
-
-        <Paper sx={paperSx}>
-            <Stack direction={"column"} gap={"32px"}>
-                <Button startIcon={<AddCircleIcon/>} variant={"text"} onClick={addNewItem} sx={darkButtonSx}>Add
-                    Item</Button>
-
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell itemType={"head"}>Product Name</TableCell>
-                            <TableCell itemType={"head"}>Quantity</TableCell>
-                            <TableCell itemType={"head"}>Brand (Optional)</TableCell>
-                            <TableCell itemType={"head"}>If unavailable</TableCell>
-                            <TableCell itemType={"head"} sx={{"display": "flex", "alignItems": "center", gap: "8px"}}>Additional
-                                notes <InfoPopover/>
-                            </TableCell>
-                            <TableCell itemType={"head"}/>
-                        </TableRow>
-                    </TableHead>
-
-                    <TableBody>
-                        <For each={items}>{(item) =>
-                            <SingleItemView key={item.localId} item={item} setSelf={setItemsSimple}/>
-                        }</For>
-                    </TableBody>
-                </Table>
-
-                <Stack direction={"row"} justifyContent={"end"} gap={"16px"}>
-                    <Button variant={"outlined"} sx={{
-                        "color": "primary.dark",
-                        "borderColor": "primary.dark"
-                    }} onClick={onGoBack}>Go Back</Button>
-                    <Button sx={darkButtonSx} onClick={() => {
-                        onSubmit(items, from, to, notes)
-                    }}>Next</Button>
                 </Stack>
-            </Stack>
-        </Paper>
+            </Paper>
+
+
+            <Paper sx={paperSx}>
+                <Stack direction={"column"} gap={"32px"}>
+                    <DarkButton startIcon={<AddCircleIcon/>} variant={"text"} onClick={addNewItem}>Add
+                        Item</DarkButton>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell itemType={"head"}>Product Name</TableCell>
+                                <TableCell itemType={"head"}>Quantity</TableCell>
+                                <TableCell itemType={"head"}>Brand (Optional)</TableCell>
+                                <TableCell itemType={"head"}>If unavailable</TableCell>
+                                <TableCell itemType={"head"}
+                                           sx={{"display": "flex", "alignItems": "center", gap: "8px"}}>Additional
+                                    notes <InfoPopover/>
+                                </TableCell>
+                                <TableCell itemType={"head"}/>
+                            </TableRow>
+                        </TableHead>
+
+                        <TableBody>
+                            <For each={items}>{(item) =>
+                                <SingleItemView key={item.localId} item={item} setSelf={setItemsSimple}/>
+                            }</For>
+                        </TableBody>
+                    </Table>
+
+                    <Stack direction={"row-reverse"} gap={"16px"}>
+                        <DarkButton onClick={() => {
+                            onSubmit(items, from, to, notes)
+                        }}>Next</DarkButton>
+                        <OutlinedButton onClick={onGoBack}>Go Back</OutlinedButton>
+                    </Stack>
+                </Stack>
+            </Paper>
     </>
+}
+
+function CustomDateTimePickerActionBar(props) {
+    const {onAccept, onClear, onCancel, onSetToday, actions, ...other} = props;
+
+    const localeText = useLocaleText();
+
+    return <DialogActions {...other}>
+        <Button sx={outlinedButtonSx} onClick={onClear}>{localeText.clearButtonLabel}</Button>
+        <Button sx={darkButtonSx} onClick={onAccept}>{localeText.okButtonLabel}</Button>
+    </DialogActions>
 }
 
 function InfoPopover() {
@@ -269,18 +298,6 @@ const SingleItemView = memo(({item, setSelf}) => {
     </TableRow>
 })
 
-const darkButtonSx = {
-    "alignSelf": "flex-end",
-    "width": "160px",
-    "backgroundColor": "primary.dark",
-    "color": "primary.light",
-    "&:hover": {
-        "outlineColor": "primary.dark",
-        "outlineWidth": "2px",
-        "outlineStyle": "solid",
-        "color": "primary.dark",
-    }
-}
 
 const containerSx = {
     "display": "grid",
