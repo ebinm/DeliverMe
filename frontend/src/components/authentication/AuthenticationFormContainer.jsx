@@ -1,7 +1,7 @@
 import {Box, Button, CircularProgress, FormGroup, Link, Typography} from "@mui/material";
 import React, {useState} from "react";
 import {Show} from "../util/ControlFlow";
-import {useNavigate, useSearchParams} from "react-router-dom";
+import {createSearchParams, useLocation, useNavigate, useSearchParams} from "react-router-dom";
 
 
 export function AuthenticationFormContainer({onSubmit, title, children, altText, altLink, actionText}) {
@@ -50,7 +50,9 @@ export function AuthenticationFormContainer({onSubmit, title, children, altText,
                     </Button>
 
 
-                    <Link color={"text.main"} alignSelf={"center"} href={altLink}>{altText}</Link>
+                    <Link color={"text.main"} alignSelf={"center"} href={altLink + "?" + createSearchParams({
+                        "ref": searchParams.get("ref")
+                    }).toString()}>{altText}</Link>
 
                     <Show when={error}>
                         <Box marginTop={"16px"} alignSelf={"center"}><strong>{error}</strong></Box>

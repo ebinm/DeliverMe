@@ -3,10 +3,10 @@ import {SingleBidView} from "./SingleBidView";
 import {Accordion, AccordionDetails, AccordionSummary, Typography} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-export function SingleOrderViewShopper({order, index}) {
+export function SingleOrderViewShopper({order, orderName}) {
 
     return <SingleOrderViewCommon
-        index={index}
+        orderName={orderName}
         order={order}
         contact={order.createdBy}
         bidView={

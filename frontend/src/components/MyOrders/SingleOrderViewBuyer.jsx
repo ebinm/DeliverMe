@@ -15,7 +15,7 @@ import {SingleBidView} from "./SingleBidView";
 import {SingleOrderViewCommon} from "./SingleOrderViewCommon";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-export function SingleOrderViewBuyer({order, index}) {
+export function SingleOrderViewBuyer({order, orderName}) {
 
     const [selectedBid, setSelectedBid] = useState()
     const [confirmOrderModalOpen, setConfirmOrderModalOpen] = useState(false)
@@ -53,7 +53,7 @@ export function SingleOrderViewBuyer({order, index}) {
         </Modal>
 
         <SingleOrderViewCommon
-            index={index}
+            orderName={orderName}
             order={order} contact={order.selectedBid?.createdBy}
             buttons={<ButtonGroup sx={{"justifyContent": "end"}}>
                 <Show when={selectedBid !== undefined}>

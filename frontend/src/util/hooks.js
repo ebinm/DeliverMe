@@ -1,4 +1,6 @@
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
+import {tryLoadFromLocalStorage} from "./util";
+import {CustomerContext} from "./context/CustomerContext";
 
 
 function useFetch(endpoint, options) {
@@ -50,5 +52,36 @@ function useFetch(endpoint, options) {
     ]
 }
 
+function useCacheLocalStorageForCustomer(key, initialState = null, storageCondition = () => true) {
+    const {customer} = useContext(CustomerContext)
+    const [value, setValue] = useState(initialState)
 
-export {useFetch}
+    useEffect(() => {
+        if (customer?._id) {
+            const success = tryLoadFromLocalStorage(`${key}-${customer._id}`, setValue, initialState)
+            if (!success) {
+                tryLoadFromLocalStorage(`${key}-default`, setValue, initialState)
+            }
+        } else {
+            tryLoadFromLocalStorage(`${key}-default`, setValue, initialState)
+        }
+    }, [customer?._id])
+
+    useEffect(() => {
+        if (!storageCondition(value)) {
+            return
+        }
+
+        if (customer?._id) {
+            window.localStorage.setItem(`${key}-${customer._id}`, JSON.stringify(value))
+        } else {
+            window.localStorage.setItem(`${key}-default`, JSON.stringify(value))
+        }
+    }, [customer?._id, value, storageCondition(value)])
+
+
+    return [value, setValue]
+}
+
+
+export {useFetch, useCacheLocalStorageForCustomer}

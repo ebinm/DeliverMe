@@ -34,7 +34,7 @@ export function BuyerMyOrders() {
         <Typography variant={"h4"} component={"h1"}>My Orders</Typography>
 
         <For each={orders}>{(order, index) =>
-            <SingleOrderViewBuyer key={order._id} order={order} index={index}/>
+            <SingleOrderViewBuyer key={order._id} order={order} orderName={`Order ${index}`}/>
         }</For>
     </>
 }

@@ -10,7 +10,7 @@ const CustomerContext = createContext({
     ready: false
 })
 
-async function fetchUser(setCustomer) {
+function fetchUser(setCustomer) {
     return fetch(`${process.env.REACT_APP_BACKEND}/api/me`, {
         credentials: "include",
         withCredentials: true

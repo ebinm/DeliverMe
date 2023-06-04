@@ -3,15 +3,16 @@ import Header from "./components/Header";
 import {BuyerMyOrders} from "./components/MyOrders/BuyerMyOrders";
 import {ShopperMyOrders} from "./components/MyOrders/ShopperMyOrders";
 import {Route, Routes} from "react-router-dom";
-import MapWithList from "./components/BuyerChooseShop/BuyerChooseShopView";
-import TestExample from "./components/BuyerChooseShop/TestExample";
+import MapWithList from "./components/BuyerOrderCreation/BuyerChooseShop/BuyerChooseShopView";
+import TestExample from "./components/BuyerOrderCreation/BuyerChooseShop/TestExample";
 import {Signup} from "./components/authentication/Signup";
 import {CustomerProvider} from "./util/context/CustomerContext";
 import {Login} from "./components/authentication/Login";
-import {BuyerChooseItems} from "./components/BuyerChooseItems/BuyerChooseItems";
+import {BuyerChooseItems} from "./components/BuyerOrderCreation/BuyerChooseItems/BuyerChooseItems";
 import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {NotificationProvider} from "./util/context/NotificationContext";
+import {BuyerOrderCreationView} from "./components/BuyerOrderCreation/BuyerOrderCreationView";
 
 
 function App() {
@@ -31,9 +32,7 @@ function App() {
                             <Route path={"/"} element={"Hi, I am home"}/>
                             <Route path={"/map"} element={<MapWithList/>}/>
                             <Route path={"/test"} element={<TestExample/>}/>
-                            <Route path={"/buyer/choose-items"} element={<BuyerChooseItems shop={{
-                                name: "REWE"
-                            }}/>}/>
+                            <Route path={"/buyer/order/create/*"} element={<BuyerOrderCreationView/>}/>
                         </Routes>
                     </main>
                 </LocalizationProvider>

@@ -2,50 +2,24 @@ import Typography from "@mui/material/Typography";
 import {Box, MenuItem, Paper, Popover, Select, Table, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Divider from "@mui/material/Divider";
-import {For, Show} from "../util/ControlFlow";
+import {For, Show} from "../../util/ControlFlow";
 import SpeakerNotesOutlinedIcon from '@mui/icons-material/SpeakerNotesOutlined';
 import AccessAlarmsOutlinedIcon from '@mui/icons-material/AccessAlarmsOutlined';
 import {DateTimePicker} from "@mui/x-date-pickers";
-import {memo, useCallback, useContext, useEffect, useState} from "react";
+import {memo, useCallback, useContext, useState} from "react";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
-import {formatUnitNumerusClausus} from "../../util/util";
+import {formatUnitNumerusClausus} from "../../../util/util";
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import Button from "@mui/material/Button";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import InfoIcon from '@mui/icons-material/Info';
-import {CustomerContext} from "../../util/context/CustomerContext";
+import {CustomerContext} from "../../../util/context/CustomerContext";
+import {useCacheLocalStorageForCustomer} from "../../../util/hooks";
 
-export function BuyerChooseItems({shop}) {
+export function BuyerChooseItems({shop, onSubmit, onGoBack, to, setTo, from, setFrom, items, setItems, notes, setNotes}) {
 
     const {customer} = useContext(CustomerContext)
-
-    const [from, setFrom] = useState(null)
-    const [to, setTo] = useState(null)
-    const [notes, setNotes] = useState("")
-
-    const [items, setItems] = useState([])
-
-    // TODO clear on purchase
-    useEffect(() => {
-        if (customer?._id) {
-            try {
-                const stored = window.localStorage.getItem(`item-cache-${customer._id}`)
-                setItems(JSON.parse(stored))
-                console.log(JSON.parse(stored))
-                console.log(stored)
-            } catch (e) {
-                throw e
-            }
-        }
-    }, [customer?._id])
-
-    useEffect(() => {
-        console.log(customer)
-        if (customer?._id) {
-            window.localStorage.setItem(`item-cache-${customer._id}`, JSON.stringify(items))
-        }
-    }, [items, customer?._id])
 
 
     const setItemsSimple = useCallback(
@@ -74,27 +48,6 @@ export function BuyerChooseItems({shop}) {
 
     const iconSx = {"color": "primary.dark", "gridRow": "span 2", "width": "40px", "height": "40px"}
 
-    const containerSx = {
-        "display": "grid",
-        "gridTemplateColumns": "min-content auto",
-        "justifyContent": "center",
-        "alignItems": "center",
-        "columnGap": "16px"
-    }
-
-    const dateInputSx = {
-        "border": "none",
-        "outline": "none",
-    }
-
-    const headerSx = {
-        "textAlign": "center",
-        "alignSelf": "self-end",
-        "color": "text.light"
-    }
-
-    const paperSx = {"borderRadius": "16px", "padding": "32px", "mt": "16px"}
-
     return <>
         <Typography variant={"h4"} component={"h1"}>Fill your order</Typography>
 
@@ -103,13 +56,13 @@ export function BuyerChooseItems({shop}) {
             <Stack direction={"row"} shadow={1}
                    justifyContent={"space-around"} backgroundColor={"white"}>
 
-                <Show when={shop.name}>
+                <Show when={shop?.name}>
                     <Box sx={containerSx}>
                         <ShoppingCartOutlinedIcon sx={iconSx}/>
                         <Typography sx={headerSx}>Chosen
                             shop</Typography>
                         <Typography textAlign={"center"} sx={{"alignSelf": "self-start"}}
-                                    alignSelf={"top"}>{shop.name}</Typography>
+                                    alignSelf={"top"}>{shop?.name}</Typography>
                     </Box>
 
                     <Divider orientation={"vertical"} sx={{"height": "auto"}}/>
@@ -166,19 +119,9 @@ export function BuyerChooseItems({shop}) {
 
 
         <Paper sx={paperSx}>
-            <Stack direction={"column"}>
-                <Button startIcon={<AddCircleIcon/>} variant={"text"} onClick={addNewItem} sx={{
-                    "alignSelf": "flex-end",
-                    "width": "160px",
-                    "backgroundColor": "primary.dark",
-                    "color": "primary.light",
-                    "&:hover": {
-                        "outlineColor": "primary.dark",
-                        "outlineWidth": "2px",
-                        "outlineStyle": "solid",
-                        "color": "primary.dark",
-                    }
-                }}>Add Item</Button>
+            <Stack direction={"column"} gap={"32px"}>
+                <Button startIcon={<AddCircleIcon/>} variant={"text"} onClick={addNewItem} sx={darkButtonSx}>Add
+                    Item</Button>
 
                 <Table>
                     <TableHead>
@@ -200,6 +143,16 @@ export function BuyerChooseItems({shop}) {
                         }</For>
                     </TableBody>
                 </Table>
+
+                <Stack direction={"row"} justifyContent={"end"} gap={"16px"}>
+                    <Button variant={"outlined"} sx={{
+                        "color": "primary.dark",
+                        "borderColor": "primary.dark"
+                    }} onClick={onGoBack}>Go Back</Button>
+                    <Button sx={darkButtonSx} onClick={() => {
+                        onSubmit(items, from, to, notes)
+                    }}>Next</Button>
+                </Stack>
             </Stack>
         </Paper>
     </>
@@ -315,3 +268,37 @@ const SingleItemView = memo(({item, setSelf}) => {
         </TableCell>
     </TableRow>
 })
+
+const darkButtonSx = {
+    "alignSelf": "flex-end",
+    "width": "160px",
+    "backgroundColor": "primary.dark",
+    "color": "primary.light",
+    "&:hover": {
+        "outlineColor": "primary.dark",
+        "outlineWidth": "2px",
+        "outlineStyle": "solid",
+        "color": "primary.dark",
+    }
+}
+
+const containerSx = {
+    "display": "grid",
+    "gridTemplateColumns": "min-content auto",
+    "justifyContent": "center",
+    "alignItems": "center",
+    "columnGap": "16px"
+}
+
+const dateInputSx = {
+    "border": "none",
+    "outline": "none",
+}
+
+const headerSx = {
+    "textAlign": "center",
+    "alignSelf": "self-end",
+    "color": "text.light"
+}
+
+const paperSx = {"borderRadius": "16px", "padding": "32px", "mt": "16px"}
