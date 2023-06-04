@@ -10,7 +10,6 @@ type Customer = {
 type CustomerType = "BUYER" | "SHOPPER"
 
 
-
 /**
  * A type to be used in a type union with the CustomerType to distinguish buyers from shoppers.
  */
