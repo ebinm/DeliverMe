@@ -1,10 +1,7 @@
 import {Box, Button, Grid, Typography} from "@mui/material";
 import Pictures from "./Carousel";
-import {useNavigate} from "react-router-dom";
 
 const Hero = () => {
-
-    const navigate = useNavigate();
 
     return (
         <Box sx={{
@@ -41,10 +38,10 @@ const Hero = () => {
                         With DeliverMe you can get your groceries from any local store delivered to your door step.
                     </Typography>
                     <Button
+                        href={"/buyer/order/create"}
                         variant="contained"
                         color="primary"
                         sx={{width: '400px', height:'60px', fontSize: '16px', backgroundColor: 'primary.dark'}}
-                        onClick={() => navigate("/map")}
                     >
                         ORDER NOW
                     </Button>
