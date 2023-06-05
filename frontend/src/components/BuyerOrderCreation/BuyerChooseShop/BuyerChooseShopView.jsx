@@ -7,6 +7,7 @@ import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import { GoogleMap, InfoWindow, LoadScript, Marker, } from '@react-google-maps/api';
 import DefineCustomShopModal from './DefineCustomShopModal';
+import {Show} from "../../util/ControlFlow";
 
 const libraries = ["places"]; // Define libraries as a constant array outside the component
 
@@ -15,12 +16,11 @@ const BuyerChooseShopView = () => {
     const [mapCenter, setMapCenter] = useState(null);
     const [searchValue, setSearchValue] = useState('Munich');
     const [shops, setShops] = useState([]);
-    const [selectedShop, setSelectedShop] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [CustomShop, setCustomShop] = useState(null);
 
     // getDay returns 0-6, where 0 is Sunday and 6 is Saturday
-    var currentDay = new Date().getDay() - 1;
+    let currentDay = new Date().getDay() - 1;
     if (currentDay === -1) {
         currentDay = 6;
     }
@@ -32,6 +32,13 @@ const BuyerChooseShopView = () => {
             setMapCenter(defaultCenter);
         }
     }, [map]);
+
+    // We use useState as a way of handling a constant here to stop useJsApiLoader from triggering more than once.
+    const [googleLibraries] = useState(["places"]);
+    const {isLoaded} = useJsApiLoader({
+        googleMapsApiKey: "AIzaSyDtlTfWb_VyQaJfgkmuKG8qqSl0-1Cj_FQ",
+        libraries: googleLibraries
+    });
 
 
     useEffect(() => {
@@ -71,7 +78,7 @@ const BuyerChooseShopView = () => {
                 }
             });
         }
-    }, [map, mapCenter]);
+    }, [map]);
 
     const handlePlaceSelect = () => {
         if (map) {
@@ -135,7 +142,7 @@ const BuyerChooseShopView = () => {
 
 
     return (
-        <Box sx={{ m: 10, maxHeight: "10%" }}>
+        <Box sx={{"height": "100%"}}>
             <DefineCustomShopModal
                 showModal={showModal}
                 handleCloseModal={handleCloseModal}
@@ -231,7 +238,7 @@ const BuyerChooseShopView = () => {
 
                         </GoogleMap>
                     </Grid>
-                </LoadScript>
+                </Show>
             </Grid>
             <Box
                 sx={{
@@ -245,8 +252,8 @@ const BuyerChooseShopView = () => {
                     spacing={{ xs: 1, sm: 1, md: 1 }}
                     sx={{ mb: 2 }}
                 >
-                    <Button variant="contained">Skip</Button>
-                    <Button variant="contained">Select Shop</Button>
+                    <Button variant="contained" onClick={() => onSubmitShop(null)}>Skip</Button>
+                    <Button variant="contained" onClick={() => onSubmitShop(selectedShop)}>Select Shop</Button>
                 </Stack>
             </Box>
         </Box>

@@ -1,6 +1,5 @@
 import {Buyer, Customer, CustomerType, Shopper} from "../models/customer";
 import {Request, Response} from "express";
-import {Model} from "mongoose";
 
 import jsonwebtoken from 'jsonwebtoken'
 import bcrypt from "bcrypt";
@@ -74,7 +73,10 @@ function sendJWT(res: Response, customerId: number, type: CustomerType) {
             if (err) {
                 res.status(500).json({msg: "Could not create authentication"})
             }
-            res.cookie("jwt", token, {expires: new Date(Date.now() + 30 * 60 * 60 * 24 * 1000)}).json({msg: "Successfully authenticated"})
+            res.cookie("jwt", token, {
+                expires: new Date(Date.now() + 30 * 60 * 60 * 24 * 1000),
+                path:"/"
+            }).json({msg: "Successfully authenticated"})
         }
     )
 }

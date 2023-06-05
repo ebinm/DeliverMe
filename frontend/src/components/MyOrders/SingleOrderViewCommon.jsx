@@ -8,7 +8,7 @@ import {DateDisplay} from "./DateDisplay";
 import {OrderItemsOverview} from "./OrderItemsOverview";
 
 
-export function SingleOrderViewCommon({index, order, contact, buttons, bidView}) {
+export function SingleOrderViewCommon({order, contact, buttons, bidView, orderName}) {
     const iconSx = {
         "padding": "8px",
         "borderRadius": "50%",
@@ -25,7 +25,7 @@ export function SingleOrderViewCommon({index, order, contact, buttons, bidView})
         <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"} alignItems={"center"}>
 
             <Box display={"flex"} flexDirection={"row"} gap={"32px"} alignItems={"center"}>
-                <Typography variant={"h5"} component={"h2"} fontWeight={"bold"}>Order {index + 1}</Typography>
+                <Typography variant={"h5"} component={"h2"} fontWeight={"bold"}>{orderName}</Typography>
                 <Box bgcolor={getStatusColor(order.status)} padding={"0 24px"} borderRadius={"8px"}>
                     <Typography component={"span"} variant={"h6"}>{order.status}</Typography>
                 </Box>
@@ -48,16 +48,15 @@ export function SingleOrderViewCommon({index, order, contact, buttons, bidView})
 
         <Box display={"grid"} gridTemplateColumns={"min-content auto"} gap={"8px"} mt={"16px"}>
             <ShoppingCartOutlinedIcon/>
-            <Typography variant={"body1"}>{order.groceryShop.name}, {order.groceryShop.street}</Typography>
+            <Typography variant={"body1"}>{order?.groceryShop?.name}, {order?.groceryShop?.street}</Typography>
             <LocationOnOutlinedIcon/>
-            <Typography variant={"body1"}>{order.groceryShop.city}, {order.groceryShop.country}</Typography>
+            <Typography variant={"body1"}>{order?.groceryShop?.city}, {order?.groceryShop?.country}</Typography>
         </Box>
 
-        <DateDisplay from={order.earliestDeliveryTime} to={order.latestDeliveryTime}/>
+        <DateDisplay from={order?.earliestDeliveryTime} to={order?.latestDeliveryTime}/>
         <Divider sx={{"margin": "8px 0"}}/>
 
-        <OrderItemsOverview items={order.items}/>
-
+        <OrderItemsOverview items={order?.items}/>
 
         <Divider sx={{"margin": "8px 0"}}/>
 

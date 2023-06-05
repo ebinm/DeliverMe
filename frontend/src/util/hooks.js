@@ -1,18 +1,24 @@
-import {useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useState} from "react";
+import {tryLoadFromLocalStorage} from "./util";
+import {CustomerContext} from "./context/CustomerContext";
 
 
-function useFetch(endpoint, options) {
+function useFetch(endpoint, options, onSuccess = undefined, onFinally=undefined) {
 
     // A note on the loading state: We do not consider abortions to be errors as they trigger
     // an instant refetch. This allows us to keep consistent state, even in the face of React's strict mode
-    // which forces useEffects cleanup to run.
-    const [loading, setLoading] = useState(true)
+    // which forces useEffects cleanup to run. The default of loading false seems weird but it allows
+    // us to deduce the loading state more easily
+    const [loading, setLoading] = useState(false)
     const [error, setError] = useState(undefined)
     const [item, setItem] = useState(undefined)
 
     useEffect(() => {
-        const ac = new AbortController()
+        if (!endpoint) {
+            return
+        }
 
+        const ac = new AbortController()
         setLoading(true)
         setError(undefined)
         fetch(endpoint, {signal: ac.signal, ...options})
@@ -33,6 +39,8 @@ function useFetch(endpoint, options) {
             if (!ac.signal.aborted) {
                 setLoading(false)
             }
+        }).finally(() => {
+            onFinally && onFinally()
         })
 
         return () => {
@@ -40,7 +48,7 @@ function useFetch(endpoint, options) {
             setLoading(false)
             setError({msg: "Aborted fetch"})
         }
-    }, [endpoint, ...Object.values(options)])
+    }, [endpoint, JSON.stringify(options)])
 
     return [
         item,
@@ -50,5 +58,43 @@ function useFetch(endpoint, options) {
     ]
 }
 
+function useCacheLocalStorageForCustomer(key, initialState = null, storageCondition = () => true) {
+    const {customer} = useContext(CustomerContext)
+    const [value, setValue] = useState(initialState)
 
-export {useFetch}
+    useEffect(() => {
+        if (customer?._id) {
+            const success = tryLoadFromLocalStorage(`${key}-${customer._id}`, setValue, initialState)
+            if (!success) {
+                tryLoadFromLocalStorage(`${key}-default`, setValue, initialState)
+            }
+        } else {
+            tryLoadFromLocalStorage(`${key}-default`, setValue, initialState)
+        }
+    }, [customer?._id])
+
+    useEffect(() => {
+        if (!storageCondition(value)) {
+            return
+        }
+
+        if (customer?._id) {
+            window.localStorage.setItem(`${key}-${customer._id}`, JSON.stringify(value))
+        } else {
+            window.localStorage.setItem(`${key}-default`, JSON.stringify(value))
+        }
+    }, [customer?._id, value, storageCondition(value)])
+
+    const clear = useCallback(() => {
+        if (customer?._id) {
+            window.localStorage.setItem(`${key}-${customer._id}`, null)
+        } else {
+            window.localStorage.setItem(`${key}-default`, null)
+        }
+    }, [key, customer?._id])
+
+    return [value, setValue, clear]
+}
+
+
+export {useFetch, useCacheLocalStorageForCustomer}

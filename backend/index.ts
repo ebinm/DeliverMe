@@ -3,7 +3,7 @@ import https from 'https';
 import dotenv from 'dotenv'
 import express from "express"
 import cors from "cors"
-import {signup, login} from "./services/authService";
+import {login, signup} from "./services/authService";
 import {authenticated, AuthenticatedRequest} from "./middleware/auth";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
@@ -100,8 +100,6 @@ try {
 
 
 const wss = new WebSocketServer({server})
-
-
 
 
 wss.on("connection", (ws) => {

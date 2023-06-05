@@ -255,7 +255,7 @@ const mockedNotifications = [
     {
         _id: "u9gweweg8oujao32ujdoa9j2",
         msg: "Your order has been completed",
-        date:  new Date(2022, 4, 9, 20, 10, 0).toUTCString(),
+        date: new Date(2022, 4, 9, 20, 10, 0).toUTCString(),
         type: "purchaseCompleted"
     }
 ]

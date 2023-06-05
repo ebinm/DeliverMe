@@ -34,7 +34,7 @@ export function ShopperMyOrders() {
         <Typography variant={"h4"} component={"h1"}>My Orders</Typography>
 
         <For each={orders}>{(order, index) =>
-            <SingleOrderViewShopper key={order._id} order={order} index={index}/>
+            <SingleOrderViewShopper key={order._id} order={order} orderName={`Order ${index}`}/>
         }</For>
     </>
 
