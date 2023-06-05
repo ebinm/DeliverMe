@@ -24,11 +24,11 @@ function fetchUser(setCustomer) {
 
 function CustomerProvider({children}) {
 
-    const [ready, setReady] = useState(false)
-    const [customer, setCustomer, ] = useFetch(`${process.env.REACT_APP_BACKEND}/api/me`, {
+    const [finishedOnce, setFinishedOnce] = useState(false)
+    const [customer, setCustomer, loading] = useFetch(`${process.env.REACT_APP_BACKEND}/api/me`, {
         credentials: "include",
         withCredentials: true
-    }, () => setReady(true))
+    }, undefined, () => setFinishedOnce(true))
 
 
     // type: "shopper" | "buyer"
@@ -76,13 +76,12 @@ function CustomerProvider({children}) {
         window.location.reload()
     }
 
-
     return <CustomerContext.Provider value={{
         login,
         signup,
         customer,
         logout,
-        ready
+        ready: finishedOnce && !loading
     }}>
         {children}
     </CustomerContext.Provider>
