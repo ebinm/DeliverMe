@@ -1,35 +1,29 @@
 import React from 'react';
-import PaymentForm from './PaymentForm';
 import Typography from '@mui/material/Typography';
-import CssBaseline from '@mui/material/CssBaseline';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import PaymentForm from './PaymentForm';
 
 const theme = createTheme();
 
 const containerStyle = {
-  height: '70vh', // Set the height to 70% of the viewport height
-  width: '50vw', // Set the width to 50% of the viewport width
+  height: '70vh',
+  width: '70vw',
+  margin: '20px',
   display: 'flex',
-  margin: '0 auto',
   flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
 };
 
 const lineStyle = {
   borderBottom: '1px solid #E2E8F0',
-  width: '80%', // Specify the desired width for the line
-  marginBottom: '10px',
-};
-
-const textStyle = {
-  marginLeft: '10px', // Add left margin to the text
+  width: '95%',
+  margin: '10px',
 };
 
 const contentStyle = {
-  marginLeft: '40px', // Add left margin to the content
+  margin: '40px',
+  flex: 1,
 };
 
 const rowStyle = {
@@ -38,21 +32,17 @@ const rowStyle = {
   marginBottom: '10px',
 };
 
-export default function CheckoutPage() {
+const CheckoutPage = () => {
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
       <Container component="main" sx={{ mb: 4 }}>
-      
-        <Paper variant="outlined" sx={{ ...containerStyle }}>
-          
-        <div style={textStyle}>
+        <Paper variant="outlined" sx={containerStyle}>
+          <div>
             <Typography component="h1" variant="h5" align="left">
               Payment Details
             </Typography>
-            
-      </div>
-      <div style={lineStyle} />
+          </div>
+          <div style={lineStyle} />
           <div style={contentStyle}>
             <div style={rowStyle}>
               <Typography variant="body1">Delivery Costs (with fee)</Typography>
@@ -68,11 +58,11 @@ export default function CheckoutPage() {
             </div>
           </div>
           <div style={lineStyle} />
-          <React.Fragment>
-            <PaymentForm />
-          </React.Fragment>
+          <PaymentForm />
         </Paper>
       </Container>
     </ThemeProvider>
   );
-}
+};
+
+export default CheckoutPage;

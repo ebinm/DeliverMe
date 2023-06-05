@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { FormControlLabel, Radio, RadioGroup, TextField, Button, Box } from '@mui/material';
+import { FormControlLabel, Radio, RadioGroup, TextField } from '@mui/material';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
+import Grid from '@mui/material/Grid';
 
 const PaymentForm = () => {
   const clientId = process.env.REACT_APP_CLIENT_ID;
@@ -12,8 +13,6 @@ const PaymentForm = () => {
   const [cardNumber, setCardNumber] = useState('');
   const [expiration, setExpiration] = useState('');
   const [cvc, setCVC] = useState('');
-
-  const [amount, setAmount] = useState('70');
 
   const handlePaymentMethodChange = (event) => {
     setPaymentMethod(event.target.value);
@@ -36,18 +35,18 @@ const PaymentForm = () => {
   };
 
   const handlePayNow = () => {
-    // Handle payment with credit card
-    console.log('Processing payment with credit card:', amount);
+    console.log('Processing payment with credit card');
   };
+
   const handlePaymentSuccess = (data, actions) => {
-    // Handle successful payment
     console.log('Payment successful:', data);
-    return Promise.resolve(); //check this out!!
+    return Promise.resolve();
   };
 
   const handlePaymentError = (err) => {
     console.log(err);
   };
+
   const createPayPalOrder = (data, actions) => {
     return actions.order.create({
       purchase_units: [
@@ -60,41 +59,39 @@ const PaymentForm = () => {
       ],
     });
   };
-  
+
   return (
-    <div>
-      <FormControl component="fieldset">
-        <FormLabel component="legend">Payment Method</FormLabel>
-        <RadioGroup value={paymentMethod} onChange={handlePaymentMethodChange}>
-          <FormControlLabel value="credit_card" control={<Radio />} label="Credit Card" />
-          {paymentMethod === 'credit_card' && (
-            <div>
-              <Box>
-                <Typography variant="subtitle1">Cardholder Name</Typography>
-                <TextField
-                  label=""
-                  variant="outlined"
-                  value={cardName}
-                  onChange={handleCardNameChange}
-                  fullWidth
-                  margin="normal"
-                  style={{ backgroundColor: '#EFF3EF' }}
-                />
-              </Box>
-              <Box>
-                <Typography variant="subtitle1">Card Number</Typography>
-                <TextField
-                  label=""
-                  variant="outlined"
-                  value={cardNumber}
-                  onChange={handleCardNumberChange}
-                  fullWidth
-                  margin="normal"
-                  style={{ backgroundColor: '#EFF3EF' }}
-                />
-              </Box>
-              <Box display="flex" flexDirection="row">
-                <Box flex={1}>
+    <Grid container mt={2} ml={2} mr={2} mb={2}>
+      <Grid item xs={12}>
+        <FormControl component="fieldset">
+          <FormLabel component="legend">Payment Method</FormLabel>
+          <RadioGroup value={paymentMethod} onChange={handlePaymentMethodChange}>
+            <FormControlLabel value="credit_card" control={<Radio />} label="Credit Card" />
+            {paymentMethod === 'credit_card' && (
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle1">Cardholder Name</Typography>
+                  <TextField
+                    label=""
+                    variant="outlined"
+                    value={cardName}
+                    onChange={handleCardNameChange}
+                    fullWidth
+                    style={{ backgroundColor: '#EFF3EF' }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle1">Card Number</Typography>
+                  <TextField
+                    label=""
+                    variant="outlined"
+                    value={cardNumber}
+                    onChange={handleCardNumberChange}
+                    fullWidth
+                    style={{ backgroundColor: '#EFF3EF' }}
+                  />
+                </Grid>
+                <Grid item xs={6}>
                   <Typography variant="subtitle1">Expiration Date</Typography>
                   <TextField
                     label=""
@@ -102,11 +99,10 @@ const PaymentForm = () => {
                     value={expiration}
                     onChange={handleExpirationChange}
                     fullWidth
-                    margin="normal"
                     style={{ backgroundColor: '#EFF3EF' }}
                   />
-                </Box>
-                <Box flex={1} marginLeft={2}>
+                </Grid>
+                <Grid item xs={6}>
                   <Typography variant="subtitle1">CVC</Typography>
                   <TextField
                     label=""
@@ -114,31 +110,27 @@ const PaymentForm = () => {
                     value={cvc}
                     onChange={handleCVCChange}
                     fullWidth
-                    margin="normal"
                     style={{ backgroundColor: '#EFF3EF' }}
                   />
-                </Box>
-              </Box>
-              
-            </div>
-          )}
-          <FormControlLabel value="paypal" control={<Radio />} label="PayPal" />
-          {paymentMethod === 'paypal' && (
-            <PayPalScriptProvider options={{ 'client-id': clientId }}>
-              <PayPalButtons
-                createOrder={createPayPalOrder}
-                onApprove={handlePaymentSuccess}
-                onError={handlePaymentError}
-              />
-            </PayPalScriptProvider>
-          )}
-        </RadioGroup>
-      </FormControl>
-      <Button variant="contained" color="primary" onClick={handlePayNow}>
-                Pay Now
-              </Button>
-    </div>
-    
+                </Grid>
+              </Grid>
+            )}
+            <FormControlLabel value="paypal" control={<Radio />} label="PayPal" />
+            {paymentMethod === 'paypal' && (
+              <Grid item xs={12}>
+                <PayPalScriptProvider options={{ 'client-id': clientId }}>
+                  <PayPalButtons
+                    createOrder={createPayPalOrder}
+                    onApprove={handlePaymentSuccess}
+                    onError={handlePaymentError}
+                  />
+                </PayPalScriptProvider>
+              </Grid>
+            )}
+          </RadioGroup>
+        </FormControl>
+      </Grid>
+    </Grid>
   );
 };
 
