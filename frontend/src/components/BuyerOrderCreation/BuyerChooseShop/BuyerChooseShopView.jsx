@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Grid, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { Box, CircularProgress, Grid, List, ListItem, ListItemButton, ListItemText, ListItemIcon } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
-import { GoogleMap, InfoWindow, LoadScript, Marker, } from '@react-google-maps/api';
+import { GoogleMap, Marker, useJsApiLoader, } from '@react-google-maps/api';
 import DefineCustomShopModal from './DefineCustomShopModal';
-import {Show} from "../../util/ControlFlow";
+import { Show } from "../../util/ControlFlow";
+import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 
-const libraries = ["places"]; // Define libraries as a constant array outside the component
 
-const BuyerChooseShopView = () => {
+
+const BuyerChooseShopView = ({ onSubmitShop }) => {
+
+    const [selectedShop, setSelectedShop] = useState(null);
     const [map, setMap] = useState(null);
     const [mapCenter, setMapCenter] = useState(null);
     const [searchValue, setSearchValue] = useState('Munich');
@@ -35,14 +38,14 @@ const BuyerChooseShopView = () => {
 
     // We use useState as a way of handling a constant here to stop useJsApiLoader from triggering more than once.
     const [googleLibraries] = useState(["places"]);
-    const {isLoaded} = useJsApiLoader({
+    const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: "AIzaSyDtlTfWb_VyQaJfgkmuKG8qqSl0-1Cj_FQ",
         libraries: googleLibraries
     });
 
 
     useEffect(() => {
-        if (map) {
+        if (map && mapCenter) {
             console.log("Fetching Shops of Location: ", mapCenter);
             const placesService = new window.google.maps.places.PlacesService(map);
             const request = {
@@ -78,9 +81,11 @@ const BuyerChooseShopView = () => {
                 }
             });
         }
-    }, [map]);
+    }, [map, mapCenter]);
 
     const handlePlaceSelect = () => {
+        console.log('Search Value:', searchValue);
+
         if (map) {
             const placesService = new window.google.maps.places.PlacesService(map);
 
@@ -88,8 +93,6 @@ const BuyerChooseShopView = () => {
                 input: searchValue,
                 fields: ['geometry']
             };
-
-            console.log('Map Search Value:', searchValue);
 
             const autocompleteService = new window.google.maps.places.AutocompleteService();
             autocompleteService.getPlacePredictions(request, (predictions, status) => {
@@ -104,7 +107,6 @@ const BuyerChooseShopView = () => {
                     });
                 }
             });
-
         }
     };
 
@@ -120,8 +122,8 @@ const BuyerChooseShopView = () => {
 
     const handleListEntryClick = (shop) => {
         setSelectedShop(shop);
-        //map.setCenter(shop.geometry.location);
-        //setMapCenter(shop.geometry.location);
+        // map.setCenter(shop.geometry.location);
+        // setMapCenter(shop.geometry.location);
     };
 
     const handleOpenModal = () => {
@@ -140,9 +142,8 @@ const BuyerChooseShopView = () => {
         setSelectedShop(place);
     };
 
-
     return (
-        <Box sx={{"height": "100%"}}>
+        <Box sx={{ "height": "100%" }}>
             <DefineCustomShopModal
                 showModal={showModal}
                 handleCloseModal={handleCloseModal}
@@ -153,9 +154,7 @@ const BuyerChooseShopView = () => {
 
             <Grid container spacing={5}>
                 <Grid item xs={6} md={4}>
-                    <Typography variant="h5" fontWeight="bold" sx={{ mb: 4 }}>
-                        Select a Shop or Define a Custom Shop
-                    </Typography>
+                    <Typography variant={"h4"} component={"h1"}> Select a Shop</Typography>
                 </Grid>
                 <Grid item xs={6} md={8}>
                     <Stack
@@ -172,38 +171,37 @@ const BuyerChooseShopView = () => {
                             onKeyDown={handleInputKeyDown}
                             sx={{ width: '100%' }}
                         />
-
                         <Button variant="contained" onClick={handlePlaceSelect}>Search</Button>
                     </Stack>
                 </Grid>
             </Grid>
             <Grid container spacing={5} sx={{ mb: 2 }}>
-                <LoadScript
-                    googleMapsApiKey="AIzaSyDtlTfWb_VyQaJfgkmuKG8qqSl0-1Cj_FQ"
-                    libraries={libraries}
-                >
+                <Show when={isLoaded} fallback={<CircularProgress />}>
                     <Grid item xs={6} md={4} sx={{ maxHeight: '70vh', overflow: 'auto' }}>
                         <List>
 
-                            <Divider sx={{ mb: 2}}/>
+                            <Divider sx={{ mb: 2 }} />
 
                             <ListItem key={0}>
-                                <ListItemButton sx={{ bgcolor: "gray", borderRadius: '10px', boxShadow: 3 }}
+                                <ListItemButton variant="outlined" sx={{ bgcolor: "primary.dark", borderRadius: '10px', boxShadow: 3 }}
                                     onClick={() => handleOpenModal()}>
+                                    <ListItemIcon sx={{ justifyContent: 'left' }} >
+                                        {<TravelExploreIcon />}
+                                    </ListItemIcon>
                                     <ListItemText primary="Define Custom Shop" />
                                 </ListItemButton>
                             </ListItem>
 
-                            {CustomShop && ( <ListItem key={1}>
-                                <ListItemButton 
+                            {CustomShop && (<ListItem key={1}>
+                                <ListItemButton
                                     selected={selectedShop === CustomShop}
                                     sx={{ bgcolor: "white", borderRadius: '10px', boxShadow: 3 }}
                                     onClick={() => handleListEntryClick(CustomShop)}>
-                                    <ListItemText primary={CustomShop.name}  secondary="Your Custom Shop" />
+                                    <ListItemText primary={CustomShop.name} secondary="Your Custom Shop" />
                                 </ListItemButton>
                             </ListItem>)}
-                           
-                            <Divider sx={{ mt: 2, mb: 2}}/>
+
+                            <Divider sx={{ mt: 2, mb: 2 }} />
 
                             {shops
                                 .map(shop => (

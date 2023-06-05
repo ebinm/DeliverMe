@@ -180,7 +180,7 @@ function AvatarDialogRaw({ open, close }, ref) {
                 }}>
                     <MenuItem sx={menuItemSx} onClick={() => {
                         // TODO location
-                        navigate("/map-shop")
+                        navigate("/buyer/order/create")
                         close()
                     }}>
                         <ListItemIcon>
