@@ -1,23 +1,20 @@
 import React from "react";
 import Header from "./components/Header";
-import CheckoutForm from "./components/payment/Checkout";
-import Checkout from "./components/payment/Checkoutmui";
+import CheckoutForm from "./components/payprovider/CheckoutPage";
 import {Route, Routes} from "react-router-dom";
 import { Box } from "@mui/material";
-import PaymentForm from "./components/payprovider/PaymentProvider";
-import CreditCardForm from "./components/payprovider/CreditCard";
+import './App.css';
+
 function App() {
   return (
-    <main>
+    <main className="App">
       <Header/>
       <Box sx={{ m: 10, maxHeight: "10%" }}>
         <Routes>
             <Route path={"/"} element={"Hi, I am home"}/>
             <Route path={"/login"} element={"Hi, I am login"}/>
             <Route path={"/personal-shopper/signup"} element={"Hi, I am Personal Shopper Sign-in"}/>
-            <Route path={"/trial"} element={<CheckoutForm/>} />
-9           <Route path={"/checkout"} element={<Checkout/>} />
-            <Route path={"/paytest"} element={<CreditCardForm/>}/>
+            <Route path={"/checkout"} element={<CheckoutForm/>} />
         </Routes>
       </Box>
     </main>
