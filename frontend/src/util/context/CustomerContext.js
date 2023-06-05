@@ -72,7 +72,7 @@ function CustomerProvider({children}) {
     }
 
     function logout() {
-        document.cookie = "jwt=;"
+        document.cookie = "jwt=;path=/;Max-Age=0"
         window.location.reload()
     }
 
