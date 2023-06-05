@@ -211,15 +211,16 @@ function AvatarDialogRaw({ open, close }, ref) {
                         <ListItemText>Notifications</ListItemText>
                     </MenuItem>
 
-                    <MenuItem sx={menuItemSx} onClick={() => {
-                        navigate(`/${customer.type.toLowerCase()}/my-orders`)
-                        close()
-                    }}>
-                        <ListItemIcon>
-                            <ChecklistIcon />
-                        </ListItemIcon>
-                        <ListItemText>My orders</ListItemText>
-                    </MenuItem>
+                    <li>
+                        <MenuItem sx={menuItemSx} onClick={() => {
+                            close()
+                        }} component={NavLink} to={`/${customer.type.toLowerCase()}/my-orders`}>
+                            <ListItemIcon>
+                                <ChecklistIcon/>
+                            </ListItemIcon>
+                            <ListItemText>My orders</ListItemText>
+                        </MenuItem>
+                    </li>
 
                     <MenuItem sx={menuItemSx} onClick={() => {
                         // TODO location
