@@ -1,100 +1,136 @@
-import React from 'react';
-import {Box} from '@mui/material';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
-import Modal from '@mui/material/Modal';
-import {useTheme} from '@mui/material/styles';
+import React, { useEffect, useState } from 'react';
+import { GoogleMap, LoadScript, Autocomplete, Marker, InfoWindow } from '@react-google-maps/api';
+import { set } from 'mongoose';
 
+
+const containerStyle = {
+    width: '100%',
+    height: '400px'
+};
+
+const center = {
+    lat: 40.712776,
+    lng: -74.005974
+};
 
 const TestExample = () => {
+    const [map, setMap] = useState(null);
+    const [searchValue, setSearchValue] = useState('');
+    const [autocomplete, setAutocomplete] = useState(null);
+    const [shops, setShops] = useState([]);
+    const [selectedPlace, setSelectedPlace] = useState(null);
+    const [selectedShop, setSelectedShop] = useState(null);
 
-    const theme = useTheme()
+    useEffect(() => {
+        if (autocomplete && map) {
+            const placesService = new window.google.maps.places.PlacesService(map);
 
-    const style = {
-        width: "100vh",
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        bgcolor: theme.palette.primary.main,
-        boxShadow: 24,
-        p: 4,
-        borderRadius: '10px',
-        flexDirection: 'column',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+            const request = {
+                location: selectedPlace,
+                radius: 500,
+                type: 'grocery_or_supermarket'
+            };
+
+            placesService.nearbySearch(request, (results, status) => {
+                if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+                    setShops(results);
+                }
+            });
+        }
+    }, [autocomplete, map, selectedPlace]);
+
+    useEffect(() => {
+        console.log(selectedShop);
+    }, [selectedShop]);
+
+    const handlePlaceSelect = () => {
+        if (autocomplete && map) {
+            const placesService = new window.google.maps.places.PlacesService(map);
+
+            const request = {
+                input: searchValue,
+                fields: ['geometry']
+            };
+
+            const autocompleteService = new window.google.maps.places.AutocompleteService();
+            autocompleteService.getPlacePredictions(request, (predictions, status) => {
+                if (status === window.google.maps.places.PlacesServiceStatus.OK && predictions?.length > 0) {
+                    const placeId = predictions[0].place_id;
+                    placesService.getDetails({ placeId }, (place, status) => {
+                        if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+
+                            map.setCenter(place.geometry.location);
+                            setSelectedPlace(place.geometry.location);
+                            console.log(place.geometry.location);
+                            // Additional logic with selected place information
+                            console.log('Selected Place:', place);
+                        }
+                    });
+                }
+            });
+        }
     };
+    const test = () => {
+        console.log("test");
+        const place = autocomplete.getPlace();
+        console.log(autocomplete.getPlace());
+        setSearchValue(place.formatted_address);
+    }
 
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleMarkerClick = (shop) => {
+        setSelectedShop(shop);
+      };
+      const handleInfoWindowClose = () => { //kann weg
+        setSelectedShop(null);
+      };
 
     return (
-        <Box sx={{ m: 10, maxHeight: "10%" }}>
-            <Button variant="contained" onClick={handleOpen}>Open modal</Button>
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <>
-                    <Box sx={style}>
-                        <Typography variant="h4" sx={{mb: 2}}>
-                            Custom Shop Form
-                        </Typography>
-                        <Box
-                            sx={{width: "100%"}}
-                        >
-                            <form>
-                                <div>
-                                    <TextField
-                                        required
-                                        id="outlined"
-                                        label="Name"
-                                        defaultValue="Hello World"
-                                        margin="dense"
-                                        sx={{width: '100%'}}
-                                    />
-                                </div>
-                                <div>
-                                    <TextField
-                                        required
-                                        id="filled-error-helper-text"
-                                        label="Street Address"
-                                        defaultValue="Hello World"
-                                        margin="dense"
-                                        sx={{width: '100%'}}
-                                    />
-                                </div>
-                                <div>
-                                    <TextField
-                                        required
-                                        id="standard-error"
-                                        label="City"
-                                        defaultValue="Hello World"
-                                        margin="dense"
-                                        sx={{width: '100%'}}
-                                    />
-                                </div>
-                                <Stack
-                                    direction={{xs: 'column', sm: 'row'}}
-                                    spacing={{xs: 1, sm: 1, md: 1}}
-                                    sx={{mt: 2, justifyContent: 'space-between'}}
-                                >
-                                    <Button variant="contained">Back</Button>
-                                    <Button variant="contained" type="submit">Select Shop</Button>
-                                </Stack>
-                            </form>
-                        </Box>
-                    </Box>
-                </>
-            </Modal>
-        </Box>
+        <LoadScript
+            googleMapsApiKey="AIzaSyDtlTfWb_VyQaJfgkmuKG8qqSl0-1Cj_FQ"
+            libraries={["places"]}
+        >
+            <div>
+                <Autocomplete
+                    onLoad={autocomplete => setAutocomplete(autocomplete)}
+                    onPlaceChanged={test}
+                >
+                    <input
+                        type="text"
+                        placeholder="Search for a place"
+                        value={searchValue}
+                        onChange={e => setSearchValue(e.target.value)}
+                        style={{ width: '100%' }}
+                    />
+                </Autocomplete>
+                <div>
+                    <h2>Shops Near You:</h2>
+                    <ul>
+                        {shops.map(shop => (
+                            <li key={shop.place_id}>{shop.name}</li>
+                        ))}
+                    </ul>
+                </div>
+                <GoogleMap
+                    mapContainerStyle={containerStyle}
+                    center={center}
+                    zoom={14}
+                    onLoad={map => setMap(map)}
+                >
+                    {shops.map(shop => (
+                        <Marker key={shop.place_id} position={shop.geometry.location} onClick={() => handleMarkerClick(shop)}>
+                            {selectedShop === shop && (
+                                <InfoWindow position={shop.geometry.location} onCloseClick={handleInfoWindowClose}>
+                                    <div>
+                                        <h3>{shop.name}ddd</h3>
+                                    </div>
+                                </InfoWindow>
+                            )}
+                        </Marker>
+                    ))}
+                </GoogleMap>
+            </div>
+        </LoadScript>
     );
 };
 
-export default TestExample;
+export {TestExample};
