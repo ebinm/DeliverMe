@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
 import Typography from '@mui/material/Typography';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import { FormControlLabel, Radio, RadioGroup, TextField, Button, Box } from '@mui/material';
+import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Box, TextField } from '@mui/material';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
+import { FaCcMastercard, FaCcVisa, FaPaypal } from 'react-icons/fa';
+import { styled } from '@mui/system';
+
+const IconContainer = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+});
+
+const Icon = styled('div')(({ theme }) => ({
+  marginLeft: theme.spacing(1),
+}));
 
 const PaymentForm = () => {
   const clientId = process.env.REACT_APP_CLIENT_ID;
@@ -64,15 +73,30 @@ const PaymentForm = () => {
     backgroundColor: '#EFF3EF',
   };
 
-
   return (
-    <Box mt={4} ml={4} mr={4} mb={4}> {/* Add margin to the nested component */}
+    <Box mt={4} ml={4} mr={4} mb={4} display="flex" flexDirection="column" alignItems="stretch">
       <FormControl component="fieldset">
         <FormLabel component="legend">Payment Method</FormLabel>
         <RadioGroup value={paymentMethod} onChange={handlePaymentMethodChange}>
-          <FormControlLabel value="credit_card" control={<Radio />} label="Credit Card" />
+          <FormControlLabel
+            value="credit_card"
+            control={<Radio />}
+            label={
+              <Box display="flex" alignItems="center">
+                <Typography variant="body1">Credit Card</Typography>
+                <IconContainer>
+                  <Icon>
+                    <FaCcMastercard size={20} />
+                  </Icon>
+                  <Icon>
+                    <FaCcVisa size={20} />
+                  </Icon>
+                </IconContainer>
+              </Box>
+            }
+          />
           {paymentMethod === 'credit_card' && (
-            <div>
+            <Box display="flex" flexDirection="column" alignItems="stretch">
               <Box>
                 <Typography variant="subtitle1">Cardholder Name</Typography>
                 <TextField
@@ -123,22 +147,37 @@ const PaymentForm = () => {
                   />
                 </Box>
               </Box>
-              
-            </div>
+            </Box>
           )}
-          <FormControlLabel value="paypal" control={<Radio />} label="PayPal" />
+          <FormControlLabel
+            value="paypal"
+            control={<Radio />}
+            label={
+              <Box display="flex" alignItems="center">
+                <Typography variant="body1">PayPal</Typography>
+                <IconContainer>
+                  <Icon>
+                    <FaPaypal size={20} />
+                  </Icon>
+                </IconContainer>
+              </Box>
+            }
+          />
           {paymentMethod === 'paypal' && (
-            <PayPalScriptProvider options={{ 'client-id': clientId }}>
-              <PayPalButtons
-                createOrder={createPayPalOrder}
-                onApprove={handlePaymentSuccess}
-                onError={handlePaymentError}
-              />
-            </PayPalScriptProvider>
+            <Box flex={1} display="flex" justifyContent="center" alignItems="center" marginTop={2}>
+              <PayPalScriptProvider options={{ 'client-id': clientId }}>
+                <PayPalButtons
+                  createOrder={createPayPalOrder}
+                  onApprove={handlePaymentSuccess}
+                  onError={handlePaymentError}
+                />
+              </PayPalScriptProvider>
+            </Box>
           )}
         </RadioGroup>
       </FormControl>
     </Box>
+    
   );
 };
 

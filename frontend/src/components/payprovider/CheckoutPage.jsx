@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Typography from '@mui/material/Typography';
+import  Button  from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -25,7 +26,6 @@ const modalStyle = {
   justifyContent: 'center',
 };
 
-
 const lineStyle = {
   borderBottom: '1px solid #E2E8F0',
   width: '95%',
@@ -43,19 +43,53 @@ const rowStyle = {
   marginBottom: '10px',
 };
 
-
 const CheckoutPage = () => {
   const [open, setOpen] = useState(true);
 
   const handleClose = () => {
     setOpen(false);
   };
+  const handleCancel = () => {
+    // Handle cancel order
+    console.log('Order canceled');
+  };
+
+  const handleConfirm = () => {
+    // Handle confirm order
+    console.log('Order confirmed');
+  };
+
+  const buttonContainerStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+  };
+
+  const confirmButtonStyle = {
+    position: 'absolute',
+    left: '54.72%',
+    right: '31.39%',
+    top: '78.12%',
+    bottom: '16.04%',
+    background: '#AAC0AA',
+    borderRadius: '10px',
+  };
+  
+  const cancelButtonStyle = {
+    position: 'absolute',
+    left: '54.72%',
+    right: '31.39%',
+    top: '78.12%',
+    bottom: '16.04%',
+    background: 'white',
+    color: '#4A5568',
+    borderRadius: '10px',
+  };
   
   return (
     <Modal open={open} onClose={handleClose} style={modalStyle}>
       <div>
         <ThemeProvider theme={theme}>
-          <Container >
+          <Container>
             <Paper variant="outlined" sx={containerStyle}>
               <div>
                 <Typography component="h1" variant="h5" align="left">
@@ -78,7 +112,16 @@ const CheckoutPage = () => {
                 </div>
               </div>
               <div style={lineStyle} />
-              <PaymentForm contentStyle={contentStyle} />
+              <PaymentForm  />
+              <div style={lineStyle} />
+              <div style={buttonContainerStyle}>
+  <Button sx={cancelButtonStyle} variant="contained" onClick={handleCancel}>
+    Cancel
+  </Button>
+  <Button sx={confirmButtonStyle} variant="contained" color="primary" onClick={handleConfirm}>
+    Confirm Order
+  </Button>
+</div>
             </Paper>
           </Container>
         </ThemeProvider>
