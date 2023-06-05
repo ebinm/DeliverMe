@@ -3,6 +3,7 @@ import {Request, Response} from "express";
 
 import jsonwebtoken from 'jsonwebtoken'
 import bcrypt from "bcrypt";
+import {buyerPicture, shopperPicture} from "./defaultPictures";
 
 
 type JWTPayload = {
@@ -19,7 +20,14 @@ async function signup(req: Request, res: Response, customerType: CustomerType) {
     // TODO validate email
     const {firstName, lastName, email, password}: Partial<Customer> = req.body;
 
-    const document = customerType === "BUYER" ? Buyer : Shopper
+    const document = customerType === "BUYER" ? Buyer : Shopper;
+    let profilePicture: String;
+
+    if (document == Buyer) {
+        profilePicture = buyerPicture
+    } else {
+        profilePicture = shopperPicture
+    }
     const existingUser = await document.findOne({email})
 
     if (existingUser) {
@@ -31,7 +39,7 @@ async function signup(req: Request, res: Response, customerType: CustomerType) {
     const passwordHash = await bcrypt.hash(password, salt)
 
     const newUser = new document({
-        email, password: passwordHash, firstName, lastName
+        email, password: passwordHash, firstName, lastName, profilePicture
     })
 
     await newUser.save()

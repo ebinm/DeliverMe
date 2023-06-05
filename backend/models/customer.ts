@@ -4,7 +4,8 @@ type Customer = {
     email: string,
     firstName: string,
     lastName: string,
-    password: string
+    password: string,
+    profilePicture: string
 }
 
 type CustomerType = "BUYER" | "SHOPPER"
@@ -29,6 +30,9 @@ const CustomerSchema = new mongoose.Schema<Customer>({
         type: String
     },
     password: {
+        type: String
+    },
+    profilePicture: {
         type: String
     }
 });

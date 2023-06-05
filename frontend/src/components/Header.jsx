@@ -1,4 +1,4 @@
-import React, { forwardRef, useContext, useRef, useState } from "react";
+import React, {forwardRef, useContext, useRef, useState} from "react";
 import {
     Avatar,
     Badge,
@@ -12,37 +12,36 @@ import {
     MenuList,
     Typography
 } from "@mui/material"
-import { createSearchParams, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { CustomerContext } from "../util/context/CustomerContext";
-import { For, Show } from "./util/ControlFlow";
+import {createSearchParams, NavLink, useLocation, useNavigate} from "react-router-dom";
+import {CustomerContext} from "../util/context/CustomerContext";
+import {For, Show} from "./util/ControlFlow";
 import ListIcon from '@mui/icons-material/List';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import LogoutIcon from '@mui/icons-material/Logout';
 import GradeIcon from '@mui/icons-material/Grade';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import moment from "moment"
-import { NotificationContext } from "../util/context/NotificationContext";
+import {NotificationContext} from "../util/context/NotificationContext";
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 
 export default function Header() {
-    const { customer } = useContext(CustomerContext)
+    const {customer} = useContext(CustomerContext)
 
     return (
         <header>
             <Box bgcolor={"primary.main"} display={"flex"} flexDirection={"row"} justifyContent={"space-between"}
-                alignItems={"center"} height={"90px"} width={"100%"} padding={"8px"}>
-                <Box sx={{ "height": "100%" }}>
+                 alignItems={"center"} height={"90px"} width={"100%"} padding={"8px"}>
+                <Box sx={{"height": "100%"}}>
                     <NavLink to={"/"}>
-                        <img src={"/images/logo.svg"} alt={"DeliverMe Logo"} height={"100%"} />
+                        <img src={"/images/logo.svg"} alt={"DeliverMe Logo"} height={"100%"}/>
                     </NavLink>
                 </Box>
 
                 <Show when={customer} fallback={
-                    <AuthenticationMenu />
-                }>{resolved => <LoggedInMenu customer={resolved} />}
+                    <AuthenticationMenu/>
+                }>{resolved => <LoggedInMenu customer={resolved}/>}
                 </Show>
             </Box>
         </header>
@@ -61,38 +60,38 @@ function AuthenticationMenu() {
             "borderColor": "text.main"
         }}>Join as a Personal Shopper</Button>
         <Divider orientation={"vertical"}
-            sx={{
-                "borderColor": "text.main",
-                "flexGrow": "1",
-                margin: "0 1em",
-                height: "auto"
-            }} />
+                 sx={{
+                     "borderColor": "text.main",
+                     "flexGrow": "1",
+                     margin: "0 1em",
+                     height: "auto"
+                 }}/>
         <Button variant={"text"} onClick={() => navigate({
             pathname: "/login",
             search: createSearchParams({
                 ref: location.pathname
             }).toString()
         })}
-            sx={{ "color": "text.main" }}>Login</Button>
+                sx={{"color": "text.main"}}>Login</Button>
     </Box>
 }
 
-function LoggedInMenu({ customer }) {
+function LoggedInMenu({customer}) {
     const [dialogOpen, setDialogOpen] = useState(false)
 
     const anchorEl = useRef();
 
-    const { notifications } = useContext(NotificationContext)
+    const {notifications} = useContext(NotificationContext)
 
     return <>
-        <Box display={"flex"} flexDirection={"row"} sx={{ "cursor": "pointer" }}
-            onClick={() => {
-                setDialogOpen(b => !b)
-            }}>
+        <Box display={"flex"} flexDirection={"row"} sx={{"cursor": "pointer"}}
+             onClick={() => {
+                 setDialogOpen(b => !b)
+             }}>
             <Badge
                 overlap="circular"
                 invisible={notifications.length === 0}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
                 badgeContent={
                     <NotificationsActiveIcon sx={{
                         "backgroundColor": "orange",
@@ -116,35 +115,36 @@ function LoggedInMenu({ customer }) {
                                 transform: 'scale(1) rotate(0)'
                             }
                         }
-                    }} />
+                    }}/>
                 }
             >
-                <Avatar alt={customer.firstName + " " + customer.lastName} ref={anchorEl} />
+                <Avatar imgProps={{sx: {padding: '0px'}}} alt={customer.firstName + " " + customer.lastName} ref={anchorEl}
+                        src={`data:image/jpeg;base64,${customer.profilePicture}`}/>
             </Badge>
 
             <Divider orientation={"vertical"}
-                sx={{
-                    "borderColor": "text.main",
-                    "flexGrow": "1",
-                    margin: "0 1em",
-                    height: "auto"
-                }} />
-            <Typography component={"span"} sx={{ "alignSelf": "center" }}
-                variant={"h6"}>{customer.firstName} {customer.lastName}</Typography>
+                     sx={{
+                         "borderColor": "text.main",
+                         "flexGrow": "1",
+                         margin: "0 1em",
+                         height: "auto"
+                     }}/>
+            <Typography component={"span"} sx={{"alignSelf": "center"}}
+                        variant={"h6"}>{customer.firstName} {customer.lastName}</Typography>
         </Box>
-        <AvatarDialog open={dialogOpen} close={() => setDialogOpen(false)} ref={anchorEl?.current} />
+        <AvatarDialog open={dialogOpen} close={() => setDialogOpen(false)} ref={anchorEl?.current}/>
     </>
 }
 
 const AvatarDialog = forwardRef(AvatarDialogRaw)
 
-function AvatarDialogRaw({ open, close }, ref) {
+function AvatarDialogRaw({open, close}, ref) {
     const navigate = useNavigate()
 
-    const { logout, customer } = useContext(CustomerContext)
+    const {logout, customer} = useContext(CustomerContext)
 
     // TODO mark if any notifications
-    const { notifications, markAsRead } = useContext(NotificationContext)
+    const {notifications, markAsRead} = useContext(NotificationContext)
 
     // For anchoring
     const notificationRef = useRef();
@@ -163,15 +163,15 @@ function AvatarDialogRaw({ open, close }, ref) {
     return (
         <>
             <Menu open={open} onClose={close}
-                anchorEl={ref}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                }}
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                }}>
+                  anchorEl={ref}
+                  anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                  }}>
                 <Box padding={"8px"} alignSelf={"center"} textAlign={"center"}>
                     <Typography variant={"h5"} component={"span"}>Menu</Typography>
                 </Box>
@@ -180,47 +180,36 @@ function AvatarDialogRaw({ open, close }, ref) {
                 }}>
                     <MenuItem sx={menuItemSx} onClick={() => {
                         // TODO location
-                        navigate("/buyer/order/create")
-                        close()
-                    }}>
-                        <ListItemIcon>
-                            <OpenInNewIcon />
-                        </ListItemIcon>
-                        <ListItemText>Create New Order</ListItemText>
-                    </MenuItem>
-                    <MenuItem sx={menuItemSx} onClick={() => {
-                        // TODO location
                         navigate("/browseorders")
                         close()
                     }}>
                         <ListItemIcon>
-                            <ListIcon />
+                            <ListIcon/>
                         </ListItemIcon>
                         <ListItemText>Browse Orders</ListItemText>
                     </MenuItem>
 
-                    <MenuItem sx={{ ...menuItemSx, backgroundColor: notificationsOpen ? "selected.main" : undefined }}
-                        ref={notificationRef} onClick={() => {
-                            setNotificationsOpen(true)
-                        }}>
+                    <MenuItem sx={{...menuItemSx, backgroundColor: notificationsOpen ? "selected.main" : undefined}}
+                              ref={notificationRef} onClick={() => {
+                        setNotificationsOpen(true)
+                    }}>
                         <ListItemIcon>
                             <NotificationsIcon sx={{
                                 "color": notifications.length !== 0 ? "orange" : undefined
-                            }} />
+                            }}/>
                         </ListItemIcon>
                         <ListItemText>Notifications</ListItemText>
                     </MenuItem>
 
-                    <li>
-                        <MenuItem sx={menuItemSx} onClick={() => {
-                            close()
-                        }} component={NavLink} to={`/${customer.type.toLowerCase()}/my-orders`}>
-                            <ListItemIcon>
-                                <ChecklistIcon/>
-                            </ListItemIcon>
-                            <ListItemText>My orders</ListItemText>
-                        </MenuItem>
-                    </li>
+                    <MenuItem sx={menuItemSx} onClick={() => {
+                        navigate(`/${customer.type.toLowerCase()}/my-orders`)
+                        close()
+                    }}>
+                        <ListItemIcon>
+                            <ChecklistIcon/>
+                        </ListItemIcon>
+                        <ListItemText>My orders</ListItemText>
+                    </MenuItem>
 
                     <MenuItem sx={menuItemSx} onClick={() => {
                         // TODO location
@@ -229,7 +218,7 @@ function AvatarDialogRaw({ open, close }, ref) {
                         logout()
                     }}>
                         <ListItemIcon>
-                            <LogoutIcon />
+                            <LogoutIcon/>
                         </ListItemIcon>
                         <ListItemText>Logout</ListItemText>
                     </MenuItem>
@@ -239,16 +228,16 @@ function AvatarDialogRaw({ open, close }, ref) {
                 setNotificationsOpen(false)
                 markAsRead()
             }} open={notificationsOpen}
-                ref={notificationRef?.current} />
+                           ref={notificationRef?.current}/>
         </>
     )
 }
 
 const Notifications = forwardRef(NotificationsRaw)
 
-function NotificationsRaw({ open, close }, ref) {
+function NotificationsRaw({open, close}, ref) {
 
-    const { notifications } = useContext(NotificationContext)
+    const {notifications} = useContext(NotificationContext)
 
     const menuItemSx = {
         "margin": "8px 0",
@@ -259,15 +248,15 @@ function NotificationsRaw({ open, close }, ref) {
 
     return (
         <Menu open={open} onClose={close} elevation={10}
-            anchorEl={ref}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-            }}
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}>
+              anchorEl={ref}
+              anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+              }}
+              transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+              }}>
             <MenuList sx={{
                 "padding": "16px",
                 "maxHeight": "50vh"
@@ -276,12 +265,12 @@ function NotificationsRaw({ open, close }, ref) {
                 <For each={notifications} fallback={<Typography>No notifications</Typography>}>{notification =>
                     <MenuItem key={notification._id} sx={menuItemSx}>
                         <Box display={"grid"} gridTemplateColumns={"min-content auto"} alignItems={"center"}>
-                            <ListItemIcon sx={{ "gridRow": "span 2" }}>
+                            <ListItemIcon sx={{"gridRow": "span 2"}}>
                                 {notificationTypeToIcon(notification.type)}
                             </ListItemIcon>
                             <ListItemText>{notification.msg}</ListItemText>
                             <ListItemText
-                                sx={{ color: "text.light" }}>{moment(notification.date).fromNow()}</ListItemText>
+                                sx={{color: "text.light"}}>{moment(notification.date).fromNow()}</ListItemText>
                         </Box>
                     </MenuItem>
                 }</For>
@@ -293,11 +282,11 @@ function NotificationsRaw({ open, close }, ref) {
 function notificationTypeToIcon(type) {
     switch (type) {
         case "rating":
-            return <GradeIcon />
+            return <GradeIcon/>
         case "invoice":
-            return <ReceiptIcon />
+            return <ReceiptIcon/>
         case "purchaseCompleted":
-            return <AssignmentTurnedInIcon />
+            return <AssignmentTurnedInIcon/>
         default:
             return <></>
     }
