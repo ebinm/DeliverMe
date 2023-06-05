@@ -12,8 +12,10 @@ import {WebSocketServer} from "ws";
 import * as http from "http";
 import {getMockNotification} from "./datamock/notifications";
 
-dotenv.config()
-mongoose.connect(process.env.MONGO_URL).then(() => console.log("Connected to MongoDB"))
+
+dotenv.config();
+console.log("MongoDB URL: ", process.env.MONGO_URL);
+mongoose.connect(process.env.MONGO_URL).then(() => console.log("Connected to MongoDB"));
 
 const app = express();
 const PORT = process.env.PORT || 8443;

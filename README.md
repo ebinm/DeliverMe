@@ -62,3 +62,9 @@ I would not recommend this option though as it in theory poses a security risk.
 Backend: npm run watchCompileTS & npm run watchRunNode
 
 Frontend: npm start
+
+Mongo: https://cloud.mongodb.com/v2/646b6578d7b432020c271dab#/clusters
+
+- l.rossi@tum.de
+
+- VQrcNNkTuK0Kv9Mg
