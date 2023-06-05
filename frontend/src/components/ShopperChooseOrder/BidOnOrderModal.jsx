@@ -34,7 +34,7 @@ const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, Orde
     const handleSubmit = (e) => {
         e.preventDefault();
         handleCloseBidOnOrderModal();
-        enqueueSnackbar('This is a success message!', 'error' );
+        enqueueSnackbar('Snackbar message', { variant: 'success' });
         
         console.log("bid submitted", bidHight)
     };

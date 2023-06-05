@@ -1,22 +1,32 @@
 import React from 'react';
-import {Box} from '@mui/material';
+import { Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
-import {useTheme} from "@mui/material/styles"
+import { useTheme } from "@mui/material/styles"
+import { Autocomplete } from '@react-google-maps/api';
+import { useState } from 'react';
+import { useSnackbar } from 'notistack';
+import Snackbar from '@mui/material/Snackbar';
 
+import AlertTitle from '@mui/material/AlertTitle';
+import Alert from '@mui/material/Alert';
 
 const DefineCustomShopModal = ({
-                                   showModal,
-                                   handleCloseModal,
-                                   setUseCustomShop,
-                                   setCustomShopValues,
-                                   CustomShopValues
-                               }) => {
+    showModal,
+    handleCloseModal,
+    searchValue,
+    setSearchValue,
+    handleCustomShopSelect
+}) => {
 
     const theme = useTheme()
+    const [autocomplete, setAutocomplete] = useState(null);
+    const [name, setName] = useState('');
+    const [address, setAddress] = useState('');
+    const { enqueueSnackbar } = useSnackbar();
 
     const style = {
         width: "100vh",
@@ -34,12 +44,31 @@ const DefineCustomShopModal = ({
         alignItems: 'center',
     };
 
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        setUseCustomShop(true);
-        handleCloseModal();
+
+        if (autocomplete) {
+            const place = autocomplete.getPlace();
+            if (place) {
+                place.name = name;
+
+                console.log("Selected AutoComplete place: ", place);
+                handleCustomShopSelect(place);
+                setAddress(place.formatted_address);
+                handleCloseModal();
+            } else {
+                console.log("No place selected");
+                enqueueSnackbar('Select an Address from the List', 'error');
+            }
+        }
     };
+
+    const selectAutoComplete = () => {
+        if (autocomplete) {
+            const place = autocomplete.getPlace();
+            setAddress(place.formatted_address);
+        }
+    }
 
     return (
         <div>
@@ -51,73 +80,51 @@ const DefineCustomShopModal = ({
             >
                 <>
                     <Box sx={style}>
-                        <Typography variant="h4" sx={{mb: 2}}>
-                            Custom Shop Form
+
+
+
+                        <Typography variant="h4" sx={{ mb: 2 }}>
+                            Define Custom Shop
                         </Typography>
                         <Box
-                            sx={{width: "100%"}}
+                            sx={{ width: "100%" }}
                         >
                             <form onSubmit={handleSubmit}>
                                 <div>
                                     <TextField
                                         required
                                         id="outlined"
-                                        label="Name"
-                                        margin="dense"
-                                        sx={{width: '100%'}}
-                                        onChange={(e) => setCustomShopValues({
-                                            ...CustomShopValues,
-                                            Name: e.target.value
-                                        })}
+                                        label="Shop Name"
+                                        sx={{ width: '100%', mb: 4, backgroundColor: 'white' }}
+                                        onChange={(e) => setName(
+                                            e.target.value
+                                        )}
                                     />
+
+                                    <Autocomplete
+                                        onLoad={autocomplete => setAutocomplete(autocomplete)}
+                                        onPlaceChanged={selectAutoComplete}
+                                    >
+                                        <input
+                                            required
+                                            type="text"
+                                            placeholder="Search for a place"
+                                            value={address}
+                                            onChange={e => setAddress(e.target.value)}
+                                            style={{ width: "100%" }}
+                                        />
+                                    </Autocomplete>
+
+
+                                    <Stack
+                                        direction={{ xs: 'column', sm: 'row' }}
+                                        spacing={{ xs: 1, sm: 1, md: 1 }}
+                                        sx={{ mt: 4, justifyContent: 'space-between' }}
+                                    >
+                                        <Button variant="contained" onClick={handleCloseModal}>Back</Button>
+                                        <Button variant="contained" type="submit">Select Shop</Button>
+                                    </Stack>
                                 </div>
-                                <div>
-                                    <TextField
-                                        required
-                                        id="filled-error-helper-text"
-                                        label="Street Address"
-                                        margin="dense"
-                                        sx={{width: '100%'}}
-                                        onChange={(e) => setCustomShopValues({
-                                            ...CustomShopValues,
-                                            Street: e.target.value
-                                        })}
-                                    />
-                                </div>
-                                <div>
-                                    <TextField
-                                        required
-                                        id="standard-error"
-                                        label="City"
-                                        margin="dense"
-                                        sx={{width: '100%'}}
-                                        onChange={(e) => setCustomShopValues({
-                                            ...CustomShopValues,
-                                            City: e.target.value
-                                        })}
-                                    />
-                                </div>
-                                <div>
-                                    <TextField
-                                        required
-                                        id="standard-error"
-                                        label="State"
-                                        margin="dense"
-                                        sx={{width: '100%'}}
-                                        onChange={(e) => setCustomShopValues({
-                                            ...CustomShopValues,
-                                            State: e.target.value
-                                        })}
-                                    />
-                                </div>
-                                <Stack
-                                    direction={{xs: 'column', sm: 'row'}}
-                                    spacing={{xs: 1, sm: 1, md: 1}}
-                                    sx={{mt: 2, justifyContent: 'space-between'}}
-                                >
-                                    <Button variant="contained" onClick={handleCloseModal}>Back</Button>
-                                    <Button variant="contained" type="submit">Select Shop</Button>
-                                </Stack>
                             </form>
                         </Box>
                     </Box>

@@ -70,11 +70,13 @@ const TestExample = () => {
             });
         }
     };
+    
     const test = () => {
-        console.log("test");
+        console.log("test3");
         const place = autocomplete.getPlace();
         console.log(autocomplete.getPlace());
         setSearchValue(place.formatted_address);
+        handlePlaceSelect();
     }
 
     const handleMarkerClick = (shop) => {
