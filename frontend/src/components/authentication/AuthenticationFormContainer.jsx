@@ -51,7 +51,7 @@ export function AuthenticationFormContainer({onSubmit, title, children, altText,
 
 
                     <Link color={"text.main"} alignSelf={"center"} href={altLink + "?" + createSearchParams({
-                        "ref": searchParams.get("ref")
+                        "ref": searchParams.get("ref") || ""
                     }).toString()}>{altText}</Link>
 
                     <Show when={error}>

@@ -19,7 +19,7 @@ export function Signup({type}) {
 
     const {signup} = useContext(CustomerContext)
 
-    return <AuthenticationFormContainer title={type === "buyer" ? "Login as Buyer" : "Login as Shopper"}
+    return <AuthenticationFormContainer title={`Sign up as a ${type === "buyer" ? "Buyer" : "Shopper"}`}
                                         onSubmit={async () => signup(email, password1, firstName, lastName, type)}
                                         altText={"...or login instead"}
                                         altLink={"/login"}
