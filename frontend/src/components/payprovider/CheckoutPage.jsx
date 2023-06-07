@@ -12,7 +12,7 @@ const theme = createTheme();
 const containerStyle = {
   position: 'center',
   width: '845px',
-  height: '858px',
+  height: '860px',
   /* left: '297px',
   top: '35px', */
   background: '#FFFFFF',
@@ -49,37 +49,37 @@ const CheckoutPage = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
   const handleCancel = () => {
     // Handle cancel order
     console.log('Order canceled');
+    handleClose(); // Close the popup window
   };
 
   const handleConfirm = () => {
     // Handle confirm order
     console.log('Order confirmed');
+    handleClose();
   };
 
   const buttonContainerStyle = {
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end', // Align buttons to the right
+    marginTop: '20px', // Add some margin for spacing
+    marginRight: '60px',
   };
 
   const confirmButtonStyle = {
-    position: 'absolute',
-    left: '54.72%',
-    right: '31.39%',
-    top: '78.12%',
-    bottom: '16.04%',
+    height: '59.71940612792969px',
+    width: '200px',
     background: '#AAC0AA',
     borderRadius: '10px',
+    marginLeft: '10px', // Add some spacing between buttons
   };
   
   const cancelButtonStyle = {
-    position: 'absolute',
-    left: '54.72%',
-    right: '31.39%',
-    top: '78.12%',
-    bottom: '16.04%',
+    height: '59.71940612792969px',
+    width: '200px',
     background: 'white',
     color: '#4A5568',
     borderRadius: '10px',
