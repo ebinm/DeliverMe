@@ -8,6 +8,11 @@ const mockedOrders = [
         totalCostOfOrder: undefined,
         note: "Please do not ring the doorbell",
         groceryShop: {
+
+            place_id: "ChIJoeM2T0Q8nkcRJr9jNMktPow", // All objects have place_id
+            // formatted_address: "Saliterstraße 3, 85368 Moosburg an der Isar, Germany", //location object have formatted_address
+            // vicinity: "Karlsplatz 25, München", // shop object have vicinity
+
             name: "REWE",
             street: "Ungerstraße 54",
             city: "Munich",
@@ -23,6 +28,7 @@ const mockedOrders = [
             email: "betty.zhang@betty.zhang"
         },
         destination: {
+            place_id: "ChIJhxJpQvx1nkcROoAuAFtn6xM",
             name: undefined,
             street: "Münchernerstraße 32",
             city: "Munich",
@@ -110,6 +116,7 @@ const mockedOrders = [
         totalCostOfOrder: undefined,
         note: "Please do not ring the doorbell",
         groceryShop: {
+            place_id: "ChIJKRlMEYp1nkcR5-rTiWjgjTM",
             name: "REWE",
             street: "Ungerstraße 54",
             city: "Munich",
@@ -118,6 +125,7 @@ const mockedOrders = [
             country: "DE"
         },
         destination: {
+            place_id: "ChIJc2p5_eV1nkcRc6mZtUu203k",
             name: undefined,
             street: "Münchernerstraße 32",
             city: "Munich",

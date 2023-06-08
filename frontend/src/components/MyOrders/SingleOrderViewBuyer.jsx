@@ -20,7 +20,7 @@ export function SingleOrderViewBuyer({order, orderName}) {
     const [selectedBid, setSelectedBid] = useState()
     const [confirmOrderModalOpen, setConfirmOrderModalOpen] = useState(false)
 
-    const buttonStyle = {
+    const buttonStyle = { //TODO: use theme
         "backgroundColor": "primary.dark",
         "&:hover": {
             color: "text.main",

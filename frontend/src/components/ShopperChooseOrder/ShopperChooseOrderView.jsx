@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Grid, List, ListItem, ListItemButton, ListItemText, IconButton, ListItemAvatar } from '@mui/material';
+import {CircularProgress, Box, Grid, List, ListItem, ListItemButton, ListItemAvatar } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import ImageIcon from '@mui/icons-material/Image';
 import Typography from '@mui/material/Typography';
@@ -7,13 +7,14 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
-import { GoogleMap, InfoWindow, LoadScript, Marker, } from '@react-google-maps/api';
 import OrderDetailsModal from './OrderDetailsModal';
 import BidOnOrderModal from './BidOnOrderModal';
 import { mockedOrders } from '../../util/mockdata';
+import { Show } from '../util/ControlFlow';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { GoogleMap, Marker, useJsApiLoader, } from '@react-google-maps/api';
 
 const ShopperChooseOrderView = () => {
     const [map, setMap] = useState(null);
@@ -21,9 +22,14 @@ const ShopperChooseOrderView = () => {
     const [showOrderDetailsModal, setShowOrderDetailsModal] = useState(false);
     const [showBidOnOrderModal, setShowBidOnOrderModal] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
-
     const [orders] = useState(mockedOrders)
 
+    // We use useState as a way of handling a constant here to stop useJsApiLoader from triggering more than once.
+    const [googleLibraries] = useState(["places"]);
+    const { isLoaded } = useJsApiLoader({
+        googleMapsApiKey: "AIzaSyDtlTfWb_VyQaJfgkmuKG8qqSl0-1Cj_FQ",
+        libraries: googleLibraries
+    });
 
     useEffect(() => {
         if (map) {
@@ -87,10 +93,6 @@ const ShopperChooseOrderView = () => {
                 </Grid>
             </Grid>
             <Grid container spacing={5} sx={{ mb: 2 }}>
-                <LoadScript
-                    googleMapsApiKey="AIzaSyDtlTfWb_VyQaJfgkmuKG8qqSl0-1Cj_FQ"
-                    libraries={["places"]}
-                >
                     <Grid item xs={6} md={4} sx={{ maxHeight: '70vh', overflow: 'auto' }}>
                         <List >
                             {orders.map((order) => (
@@ -137,6 +139,7 @@ const ShopperChooseOrderView = () => {
                         </List>
                     </Grid>
                     <Grid item xs={6} md={8}>
+                        <Show when={isLoaded} fallback={<CircularProgress />}>
                         <GoogleMap
                             mapContainerStyle={{
                                 width: '100%',
@@ -146,8 +149,8 @@ const ShopperChooseOrderView = () => {
                             onLoad={map => setMap(map)}
                         >
                         </GoogleMap>
+                        </Show>
                     </Grid>
-                </LoadScript>
             </Grid>
         </>
     );
