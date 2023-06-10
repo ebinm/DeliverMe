@@ -152,6 +152,9 @@ const ShopperChooseOrderView = () => {
                         </Show>
                     </Grid>
             </Grid>
+            <Box display='flex' alignItems='center' justifyContent="flex-end" >
+             <Button variant="contained" onClick={() => BidOnOrderModal()}>Bid on Order</Button>
+            </Box>
         </>
     );
 };
