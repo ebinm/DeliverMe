@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {CircularProgress, Box, Grid, List, ListItem, ListItemButton, ListItemAvatar } from '@mui/material';
+import { CircularProgress, Box, Grid, List, ListItem, ListItemButton, ListItemAvatar } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import ImageIcon from '@mui/icons-material/Image';
 import Typography from '@mui/material/Typography';
@@ -14,15 +14,15 @@ import { Show } from '../util/ControlFlow';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { GoogleMap, Marker, useJsApiLoader, } from '@react-google-maps/api';
+import { GoogleMap, Marker, useJsApiLoader, DirectionsRenderer } from '@react-google-maps/api';
 
 const ShopperChooseOrderView = () => {
     const [map, setMap] = useState(null);
-    const [mapCenter, setMapCenter] = useState(null);
     const [showOrderDetailsModal, setShowOrderDetailsModal] = useState(false);
     const [showBidOnOrderModal, setShowBidOnOrderModal] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
-    const [orders] = useState(mockedOrders)
+    const [orders] = useState(mockedOrders);
+    const [directions, setDirections] = useState(null);
 
     // We use useState as a way of handling a constant here to stop useJsApiLoader from triggering more than once.
     const [googleLibraries] = useState(["places"]);
@@ -35,9 +35,28 @@ const ShopperChooseOrderView = () => {
         if (map) {
             const defaultCenter = { lat: 48.137154, lng: 11.576124 }
             map.setCenter(defaultCenter);
-            setMapCenter(defaultCenter);
         }
     }, [map]);
+
+
+    useEffect(() => {
+        setDirections(null);
+        if (selectedOrder && selectedOrder.groceryShop && selectedOrder.destination) {
+            const DirectionsService = new window.google.maps.DirectionsService();
+            DirectionsService.route(
+                {
+                    origin: selectedOrder.groceryShop.geometry.location,
+                    destination: selectedOrder.destination.geometry.location,
+                    travelMode: 'DRIVING'
+                },
+                (result, status) => {
+                    if (status === 'OK') {
+                        setDirections(result);
+                    }
+                }
+            );
+        }
+    }, [selectedOrder]);
 
 
     const handleOpenOrderDetailsModal = () => {
@@ -56,6 +75,11 @@ const ShopperChooseOrderView = () => {
         setShowBidOnOrderModal(false);
         //setShowOrderDetailsModal(true);
     };
+
+    const makenull = () => {
+        setDirections(null);
+        console.log(directions);
+    }
 
 
     return (
@@ -93,53 +117,53 @@ const ShopperChooseOrderView = () => {
                 </Grid>
             </Grid>
             <Grid container spacing={5} sx={{ mb: 2 }}>
-                    <Grid item xs={6} md={4} sx={{ maxHeight: '70vh', overflow: 'auto' }}>
-                        <List >
-                            {orders.map((order) => (
-                                <ListItem key={order._id}>
-                                    <ListItemButton
-                                        selected={selectedOrder === order}
-                                        onClick={() => {
-                                            setSelectedOrder(order);
-                                        }}
-                                        sx={{ bgcolor: "white", borderRadius: '10px', boxShadow: 3 }}
-                                    >
-                                        <Box sx={{ width: "100%" }}>
-                                            <Stack
-                                                direction={{ xs: 'column', sm: 'row' }}
-                                                spacing={{ xs: 1, sm: 1, md: 1 }}
-                                                sx={{ mb: 2 }}
-                                            >
-                                                <Box display='flex' alignItems='center'>
-                                                    <ListItemAvatar>
-                                                        <Avatar>
-                                                            <ImageIcon />
-                                                        </Avatar>
-                                                    </ListItemAvatar>
+                <Grid item xs={6} md={4} sx={{ maxHeight: '70vh', overflow: 'auto' }}>
+                    <List >
+                        {orders.map((order) => (
+                            <ListItem key={order._id}>
+                                <ListItemButton
+                                    selected={selectedOrder === order}
+                                    onClick={() => {
+                                        setSelectedOrder(order);
+                                    }}
+                                    sx={{ bgcolor: "white", borderRadius: '10px', boxShadow: 3 }}
+                                >
+                                    <Box sx={{ width: "100%" }}>
+                                        <Stack
+                                            direction={{ xs: 'column', sm: 'row' }}
+                                            spacing={{ xs: 1, sm: 1, md: 1 }}
+                                            sx={{ mb: 2 }}
+                                        >
+                                            <Box display='flex' alignItems='center'>
+                                                <ListItemAvatar>
+                                                    <Avatar>
+                                                        <ImageIcon />
+                                                    </Avatar>
+                                                </ListItemAvatar>
+                                            </Box>
+                                            <Box>
+                                                <Typography variant={"h6"} fontWeight="bold">{order?.createdBy?.firstName}, {order?.createdBy?.lastName}</Typography>
+                                                <Box display={"grid"} gridTemplateColumns={"min-content auto"} gap={"1px"} >
+                                                    <ShoppingCartOutlinedIcon />
+                                                    <Typography variant={"body1"}>{order?.groceryShop?.name}, {order?.groceryShop?.street}</Typography>
+                                                    <LocationOnOutlinedIcon />
+                                                    <Typography variant={"body1"}>{order?.groceryShop?.city}, {order?.groceryShop?.country}</Typography>
                                                 </Box>
-                                                <Box>
-                                                    <Typography variant={"h6"} fontWeight="bold">{order?.createdBy?.firstName}, {order?.createdBy?.lastName}</Typography>
-                                                    <Box display={"grid"} gridTemplateColumns={"min-content auto"} gap={"1px"} >
-                                                        <ShoppingCartOutlinedIcon />
-                                                        <Typography variant={"body1"}>{order?.groceryShop?.name}, {order?.groceryShop?.street}</Typography>
-                                                        <LocationOnOutlinedIcon />
-                                                        <Typography variant={"body1"}>{order?.groceryShop?.city}, {order?.groceryShop?.country}</Typography>
-                                                    </Box>
-                                                </Box>
-                                            </Stack>
+                                            </Box>
+                                        </Stack>
 
-                                            <Divider/>
-                                            <Button sx={{ width: '100%', color: 'gray', textTransform: 'none', justifyContent: 'space-between', mt:1, mb:2}} endIcon={<ArrowForwardIosIcon />} onClick={handleOpenOrderDetailsModal}>
-                                                <Typography variant="body1">See more details & place bid</Typography>
-                                            </Button>
-                                        </Box>
-                                    </ListItemButton>
-                                </ListItem>
-                            ))}
-                        </List>
-                    </Grid>
-                    <Grid item xs={6} md={8}>
-                        <Show when={isLoaded} fallback={<CircularProgress />}>
+                                        <Divider />
+                                        <Button sx={{ width: '100%', color: 'gray', textTransform: 'none', justifyContent: 'space-between', mt: 1, mb: 2 }} endIcon={<ArrowForwardIosIcon />} onClick={handleOpenOrderDetailsModal}>
+                                            <Typography variant="body1">See more details & place bid</Typography>
+                                        </Button>
+                                    </Box>
+                                </ListItemButton>
+                            </ListItem>
+                        ))}
+                    </List>
+                </Grid>
+                <Grid item xs={6} md={8}>
+                    <Show when={isLoaded} fallback={<CircularProgress />}>
                         <GoogleMap
                             mapContainerStyle={{
                                 width: '100%',
@@ -148,12 +172,31 @@ const ShopperChooseOrderView = () => {
                             zoom={14}
                             onLoad={map => setMap(map)}
                         >
+                            {selectedOrder && (
+                                <>
+                                    <Marker key={selectedOrder.groceryShop.place_id} position={selectedOrder.groceryShop.geometry.location}></Marker>
+                                    <Marker key={selectedOrder.destination.place_id} position={selectedOrder.destination.geometry.location}></Marker>
+                                </>
+                            )}
+
+                            {directions && (
+                                <DirectionsRenderer
+                                    options={{
+                                        directions: directions,
+                                        suppressMarkers: false,
+                                        preserveViewport: false
+                                    }}
+                                />
+                            )}
+
+
+
                         </GoogleMap>
-                        </Show>
-                    </Grid>
+                    </Show>
+                </Grid>
             </Grid>
             <Box display='flex' alignItems='center' justifyContent="flex-end" >
-             <Button variant="contained" onClick={() => BidOnOrderModal()}>Bid on Order</Button>
+                <Button variant="contained" onClick={() => makenull()}>Bid on Order</Button>
             </Box>
         </>
     );
