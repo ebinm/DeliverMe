@@ -14,7 +14,7 @@ import { Show } from '../util/ControlFlow';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { GoogleMap, Marker, useJsApiLoader, DirectionsRenderer } from '@react-google-maps/api';
+import { GoogleMap, Marker, useJsApiLoader, DirectionsRenderer, InfoWindow } from '@react-google-maps/api';
 
 const ShopperChooseOrderView = () => {
     const [map, setMap] = useState(null);
@@ -23,6 +23,7 @@ const ShopperChooseOrderView = () => {
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [orders] = useState(mockedOrders);
     const [directions, setDirections] = useState(null);
+    const [mapKey, setMapKey] = useState(0);
 
     // We use useState as a way of handling a constant here to stop useJsApiLoader from triggering more than once.
     const [googleLibraries] = useState(["places"]);
@@ -40,7 +41,9 @@ const ShopperChooseOrderView = () => {
 
 
     useEffect(() => {
-        setDirections(null);
+        setDirections(null); //TODO ask lukas
+        setMapKey(prevKey => prevKey + 1);
+
         if (selectedOrder && selectedOrder.groceryShop && selectedOrder.destination) {
             const DirectionsService = new window.google.maps.DirectionsService();
             DirectionsService.route(
@@ -76,12 +79,6 @@ const ShopperChooseOrderView = () => {
         //setShowOrderDetailsModal(true);
     };
 
-    const makenull = () => {
-        setDirections(null);
-        console.log(directions);
-    }
-
-
     return (
         <>
             <OrderDetailsModal
@@ -109,7 +106,7 @@ const ShopperChooseOrderView = () => {
                     >
                         <TextField
                             id="location"
-                            label="Seach Location"
+                            label="Filter Orders"
                             sx={{ width: '100%' }}
                         />
                         <Button variant="contained" >Search</Button>
@@ -145,9 +142,9 @@ const ShopperChooseOrderView = () => {
                                                 <Typography variant={"h6"} fontWeight="bold">{order?.createdBy?.firstName}, {order?.createdBy?.lastName}</Typography>
                                                 <Box display={"grid"} gridTemplateColumns={"min-content auto"} gap={"1px"} >
                                                     <ShoppingCartOutlinedIcon />
-                                                    <Typography variant={"body1"}>{order?.groceryShop?.name}, {order?.groceryShop?.street}</Typography>
+                                                    <Typography variant={"body1"}>Shop: {order?.groceryShop?.name}, {order?.groceryShop?.street}, {order?.groceryShop?.city}</Typography>
                                                     <LocationOnOutlinedIcon />
-                                                    <Typography variant={"body1"}>{order?.groceryShop?.city}, {order?.groceryShop?.country}</Typography>
+                                                    <Typography variant={"body1"}>Destination: {order?.destination?.street}, {order?.destination?.city}</Typography>
                                                 </Box>
                                             </Box>
                                         </Stack>
@@ -165,6 +162,7 @@ const ShopperChooseOrderView = () => {
                 <Grid item xs={6} md={8}>
                     <Show when={isLoaded} fallback={<CircularProgress />}>
                         <GoogleMap
+                            key={mapKey}
                             mapContainerStyle={{
                                 width: '100%',
                                 height: '70vh'
@@ -172,31 +170,36 @@ const ShopperChooseOrderView = () => {
                             zoom={14}
                             onLoad={map => setMap(map)}
                         >
-                            {selectedOrder && (
+                            {directions && ( //TODO: show travel time, choose between car and bike 
                                 <>
-                                    <Marker key={selectedOrder.groceryShop.place_id} position={selectedOrder.groceryShop.geometry.location}></Marker>
-                                    <Marker key={selectedOrder.destination.place_id} position={selectedOrder.destination.geometry.location}></Marker>
+                                    <DirectionsRenderer
+                                        options={{
+                                            directions: directions,
+                                            suppressMarkers: true,
+                                            preserveViewport: false,
+                                        }}
+                                    />
+
+                                    <Marker
+                                        key={selectedOrder.groceryShop.place_id}
+                                        position={selectedOrder.groceryShop.geometry.location}
+                                        label="Shop"
+                                    />
+
+                                    <Marker
+                                        key={selectedOrder.destination.place_id}
+                                        position={selectedOrder.destination.geometry.location}
+                                        label="Destination"
+                                    />
                                 </>
+
                             )}
-
-                            {directions && (
-                                <DirectionsRenderer
-                                    options={{
-                                        directions: directions,
-                                        suppressMarkers: false,
-                                        preserveViewport: false
-                                    }}
-                                />
-                            )}
-
-
-
                         </GoogleMap>
                     </Show>
                 </Grid>
             </Grid>
             <Box display='flex' alignItems='center' justifyContent="flex-end" >
-                <Button variant="contained" onClick={() => makenull()}>Bid on Order</Button>
+                <Button variant="contained">Bid on Order</Button>
             </Box>
         </>
     );
