@@ -58,7 +58,7 @@ function useFetch(endpoint, options, onSuccess = undefined, onFinally=undefined)
     ]
 }
 
-function useCacheLocalStorageForCustomer(key, initialState = null, storageCondition = () => true) {
+function useCacheLocalStorageForCustomer(key, initialState = null, storageCondition = (_) => true) {
     const {customer} = useContext(CustomerContext)
     const [value, setValue] = useState(initialState)
 

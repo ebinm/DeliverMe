@@ -21,7 +21,8 @@
     "react-router-dom": "^6.11.2",
     "react-window": "^1.8.9",
     "sass": "^1.62.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "react-drag-drop-files": "^2.3.10"
   },
   "scripts": {
     "start": "react-scripts start",
