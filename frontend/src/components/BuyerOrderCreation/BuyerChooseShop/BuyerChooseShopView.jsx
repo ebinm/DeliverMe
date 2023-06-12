@@ -39,7 +39,7 @@ const BuyerChooseShopView = ({ onSubmitShop }) => {
     // We use useState as a way of handling a constant here to stop useJsApiLoader from triggering more than once.
     const [googleLibraries] = useState(["places"]);
     const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: "AIzaSyDtlTfWb_VyQaJfgkmuKG8qqSl0-1Cj_FQ",
+        googleMapsApiKey: "AIzaSyCAiDt2WyuMhekA25EMEQgx_wVO_WQW8Ok",
         libraries: googleLibraries
     });
 
@@ -50,35 +50,36 @@ const BuyerChooseShopView = ({ onSubmitShop }) => {
             const placesService = new window.google.maps.places.PlacesService(map);
             const request = {
                 location: mapCenter,
-                radius: 4000,
+                radius: 100, // Info: for low API usage radius is reduced (4000)
                 type: 'grocery_or_supermarket'
             };
 
             placesService.nearbySearch(request, (results, status) => {
-                if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-                    // Fetch operating hours for each shop
-                    const shopPromises = results.map((place) => {
-                        return new Promise((resolve) => {
-                            const detailsRequest = {
-                                placeId: place.place_id,
-                                fields: ['opening_hours']
-                            };
-                            placesService.getDetails(detailsRequest, (placeResult, placeStatus) => {
-                                if (placeStatus === window.google.maps.places.PlacesServiceStatus.OK) {
-                                    // Add operating hours to the place object
-                                    place.opening_hours = placeResult.opening_hours;
-                                }
-                                resolve(place);
-                            });
-                        });
-                    });
+                // if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+                //     // Fetch operating hours for each shop
+                //     const shopPromises = results.map((place) => {
+                //         return new Promise((resolve) => {
+                //             const detailsRequest = {
+                //                 placeId: place.place_id,
+                //                 fields: ['opening_hours']
+                //             };
+                //             placesService.getDetails(detailsRequest, (placeResult, placeStatus) => {
+                //                 if (placeStatus === window.google.maps.places.PlacesServiceStatus.OK) {
+                //                     // Add operating hours to the place object
+                //                     place.opening_hours = placeResult.opening_hours;
+                //                 }
+                //                 resolve(place);
+                //             });
+                //         });
+                //     });
 
-                    // Wait for all promises to resolve and set the updated shops state
-                    Promise.all(shopPromises).then((updatedShops) => {
-                        setShops(updatedShops);
-                        console.log("Shop infos: ", updatedShops);
-                    });
-                }
+                //     // Wait for all promises to resolve and set the updated shops state
+                //     Promise.all(shopPromises).then((updatedShops) => {
+                //         setShops(updatedShops);
+                //         console.log("Shop infos: ", updatedShops);
+                //     });
+                // }
+                setShops(results);
             });
         }
     }, [map, mapCenter]);
