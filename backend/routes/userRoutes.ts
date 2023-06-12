@@ -5,7 +5,7 @@ import {findBuyerById, findShopperById} from "../controllers/userController";
 
 const router = express.Router();
 
-router.get("/api/me", authenticated, async (req: AuthenticatedRequest, res, next) => {
+router.get("", authenticated, async (req: AuthenticatedRequest, res, next) => {
     try {
         if (req.customerType === "BUYER") {
             res.json(await findBuyerById(req.customerId))

@@ -1,11 +1,10 @@
 import express from "express";
 import {login, signup} from "../controllers/authController";
-import {api} from "../api";
 
 
 const router = express.Router();
 
-router.post("/api/shopper/signup", async (req, res, next) => {
+router.post("/signup", async (req, res, next) => {
     try {
         await signup(req, res, "SHOPPER")
     } catch (e) {
@@ -13,7 +12,7 @@ router.post("/api/shopper/signup", async (req, res, next) => {
     }
 })
 
-api.post("/api/shopper/login", async (req, res, next) => {
+router.post("/login", async (req, res, next) => {
     try {
         await login(req, res, "SHOPPER")
     } catch (e) {

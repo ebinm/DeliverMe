@@ -5,7 +5,7 @@ import shopperRoutes from "./routes/shopperRoutes";
 import buyerRoutes from "./routes/buyerRoutes";
 import userRoutes from "./routes/userRoutes";
 
-export const api = express();
+const api = express();
 api.use(express.json());
 api.use(cookieParser());
 
@@ -24,14 +24,15 @@ api.use(cors({
     },
 }));
 
+// API routes
 api.use("/api/shopper", shopperRoutes);
 
 api.use("/api/buyer", buyerRoutes);
 
-api.use("api/me", userRoutes);
+api.use("/api/me", userRoutes);
 
 api.use((err, req, res, next) => {
     res.status(500).json({msg: err})
 })
 
-module.exports(api);
+export default api;

@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 import {WebSocketServer} from "ws";
 import * as http from "http";
 import {getMockNotification} from "./datamock/notifications";
-import {api} from "./api";
+import api from "./api";
 
 dotenv.config();
 console.log("MongoDB URL: ", process.env.MONGO_URL);
