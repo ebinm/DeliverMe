@@ -3,7 +3,7 @@ import {Request, Response} from "express";
 
 import jsonwebtoken from 'jsonwebtoken'
 import bcrypt from "bcrypt";
-import {buyerPicture, shopperPicture} from "./defaultPictures";
+import {buyerPicture, shopperPicture} from "../datamock/defaultPictures";
 
 
 type JWTPayload = {

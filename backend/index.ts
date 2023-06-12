@@ -1,12 +1,7 @@
 import fs from 'fs';
 import https from 'https';
 import dotenv from 'dotenv'
-import express from "express"
-import {login, signup} from "./services/authService";
-import {authenticated, AuthenticatedRequest} from "./middleware/auth";
 import mongoose from "mongoose";
-import cookieParser from "cookie-parser";
-import {findBuyerById, findShopperById} from "./services/userService";
 import {WebSocketServer} from "ws";
 import * as http from "http";
 import {getMockNotification} from "./datamock/notifications";
