@@ -28,7 +28,7 @@ const ShopperChooseOrderView = () => {
     // We use useState as a way of handling a constant here to stop useJsApiLoader from triggering more than once.
     const [googleLibraries] = useState(["places"]);
     const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: "AIzaSyDtlTfWb_VyQaJfgkmuKG8qqSl0-1Cj_FQ",
+        googleMapsApiKey: "AIzaSyCAiDt2WyuMhekA25EMEQgx_wVO_WQW8Ok",
         libraries: googleLibraries
     });
 

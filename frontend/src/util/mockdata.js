@@ -40,7 +40,6 @@ const mockedOrders = [
                 location: {lat: 48.1493467, lng: 11.5582261}
             },
             formatted_address: "Karlsplatz 25, München", //location object have formatted_address but no vicinity
-            vicinity: "Karlsplatz 25, München", // shop object have vicinity but no formatted_address
             ///////////////////////////////////////////
 
             street: "Münchernerstraße 32",
