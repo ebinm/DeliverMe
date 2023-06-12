@@ -1,19 +1,11 @@
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Box,
-    Button,
-    ButtonGroup,
-    Modal,
-    Typography
-} from "@mui/material";
+import {Accordion, AccordionDetails, AccordionSummary, Button, ButtonGroup, Typography} from "@mui/material";
 import {Show} from "../util/ControlFlow";
 import {BidSelectionView} from "./BidSelectionView";
 import {useState} from "react";
 import {SingleBidView} from "./SingleBidView";
 import {SingleOrderViewCommon} from "./SingleOrderViewCommon";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import {BaseModal} from "../util/BaseModal";
 
 export function SingleOrderViewBuyer({order, orderName}) {
 
@@ -29,28 +21,21 @@ export function SingleOrderViewBuyer({order, orderName}) {
     }
 
     return <>
-        <Modal open={confirmOrderModalOpen} onClose={() => setConfirmOrderModalOpen(false)}
-               sx={{"display": "flex", "alignItems": "center", "justifyContent": "center"}}>
-            <Box display={"flex"} flexDirection={"column"} width={"300px"} boxShadow={1} sx={{
-                "overflow": "hidden",
-                "background": "white",
-                "borderRadius": "8px"
-            }}>
-                {/*TODO "Jetzt kostenpflichtig betsellen"*/}
-                <Typography sx={{"margin": "8px"}}>Are you sure you want to accept this bid? This cannot be
-                    undone.</Typography>
-                <ButtonGroup>
-                    <Button onClick={() => {
-                        setConfirmOrderModalOpen(false)
-                    }} sx={{...buttonStyle, flexGrow: 1}}>Cancel</Button>
-                    <Button onClick={() => {
-                        // TODO Set selected order
-                        console.warn("TODO set selected order")
-                        setConfirmOrderModalOpen(false)
-                    }} sx={{...buttonStyle, flexGrow: 1}}>Confirm</Button>
-                </ButtonGroup>
-            </Box>
-        </Modal>
+        <BaseModal open={confirmOrderModalOpen} onClose={() => setConfirmOrderModalOpen(false)}>
+            {/*TODO "Jetzt kostenpflichtig betsellen"*/}
+            <Typography sx={{"margin": "8px"}}>Are you sure you want to accept this bid? This cannot be
+                undone.</Typography>
+            <ButtonGroup>
+                <Button onClick={() => {
+                    setConfirmOrderModalOpen(false)
+                }} sx={{...buttonStyle, flexGrow: 1}}>Cancel</Button>
+                <Button onClick={() => {
+                    // TODO Set selected order
+                    console.warn("TODO set selected order")
+                    setConfirmOrderModalOpen(false)
+                }} sx={{...buttonStyle, flexGrow: 1}}>Confirm</Button>
+            </ButtonGroup>
+        </BaseModal>
 
         <SingleOrderViewCommon
             orderName={orderName}

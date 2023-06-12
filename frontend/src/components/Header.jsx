@@ -118,7 +118,8 @@ function LoggedInMenu({customer}) {
                     }}/>
                 }
             >
-                <Avatar imgProps={{sx: {padding: '0px'}}} alt={customer.firstName + " " + customer.lastName} ref={anchorEl}
+                <Avatar imgProps={{sx: {padding: '0px'}}} alt={customer.firstName + " " + customer.lastName}
+                        ref={anchorEl}
                         src={`data:image/jpeg;base64,${customer.profilePicture}`}/>
             </Badge>
 

@@ -1,14 +1,14 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import {Box} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
-import { useTheme } from "@mui/material/styles"
+import {useTheme} from "@mui/material/styles"
 
 
-const OrderDetailsModal = ({ showOrderDetailsModal, handleCloseOrderDetailsModal, handleOpenBidModal, Order }) => {
+const OrderDetailsModal = ({showOrderDetailsModal, handleCloseOrderDetailsModal, handleOpenBidModal, Order}) => {
 
     const theme = useTheme()
 
@@ -44,11 +44,11 @@ const OrderDetailsModal = ({ showOrderDetailsModal, handleCloseOrderDetailsModal
             >
                 <>
                     <Box sx={style}>
-                        <Typography variant="h4" sx={{ mb: 2 }}>
+                        <Typography variant="h4" sx={{mb: 2}}>
                             Order Details
                         </Typography>
                         <Box
-                            sx={{ width: "100%" }}
+                            sx={{width: "100%"}}
                         >
                             <div>
                                 <TextField
@@ -56,7 +56,7 @@ const OrderDetailsModal = ({ showOrderDetailsModal, handleCloseOrderDetailsModal
                                     id="outlined"
                                     label="Name"
                                     margin="dense"
-                                    sx={{ width: '100%' }}
+                                    sx={{width: '100%'}}
                                 />
                             </div>
                             <div>
@@ -65,7 +65,7 @@ const OrderDetailsModal = ({ showOrderDetailsModal, handleCloseOrderDetailsModal
                                     id="filled-error-helper-text"
                                     label="Street Address"
                                     margin="dense"
-                                    sx={{ width: '100%' }}
+                                    sx={{width: '100%'}}
                                 />
                             </div>
                             <div>
@@ -74,7 +74,7 @@ const OrderDetailsModal = ({ showOrderDetailsModal, handleCloseOrderDetailsModal
                                     id="standard-error"
                                     label="City"
                                     margin="dense"
-                                    sx={{ width: '100%' }}
+                                    sx={{width: '100%'}}
                                 />
                             </div>
                             <div>
@@ -83,13 +83,13 @@ const OrderDetailsModal = ({ showOrderDetailsModal, handleCloseOrderDetailsModal
                                     id="standard-error"
                                     label="State"
                                     margin="dense"
-                                    sx={{ width: '100%' }}
+                                    sx={{width: '100%'}}
                                 />
                             </div>
                             <Stack
-                                direction={{ xs: 'column', sm: 'row' }}
-                                spacing={{ xs: 1, sm: 1, md: 1 }}
-                                sx={{ mt: 2, justifyContent: 'space-between' }}
+                                direction={{xs: 'column', sm: 'row'}}
+                                spacing={{xs: 1, sm: 1, md: 1}}
+                                sx={{mt: 2, justifyContent: 'space-between'}}
                             >
                                 <Button variant="contained" onClick={handleCloseOrderDetailsModal}>Back</Button>
                                 <Button variant="contained" onClick={handleShowBidModal}>Create Bid</Button>

@@ -3,7 +3,7 @@ import {tryLoadFromLocalStorage} from "./util";
 import {CustomerContext} from "./context/CustomerContext";
 
 
-function useFetch(endpoint, options, onSuccess = undefined, onFinally=undefined) {
+function useFetch(endpoint, options, onSuccess = undefined, onFinally = undefined) {
 
     // A note on the loading state: We do not consider abortions to be errors as they trigger
     // an instant refetch. This allows us to keep consistent state, even in the face of React's strict mode

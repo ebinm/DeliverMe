@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
-import {GoogleMap, InfoWindow, LoadScript, Marker,} from '@react-google-maps/api';
+import {GoogleMap, LoadScript,} from '@react-google-maps/api';
 import OrderDetailsModal from './OrderDetailsModal';
 import BidOnOrderModal from './BidOnOrderModal';
 
@@ -20,7 +20,7 @@ const ShopperChooseOrderView = () => {
 
     useEffect(() => {
         if (map) {
-            const defaultCenter = { lat: 48.137154, lng: 11.576124 }
+            const defaultCenter = {lat: 48.137154, lng: 11.576124}
             map.setCenter(defaultCenter);
             setMapCenter(defaultCenter);
         }
@@ -61,36 +61,37 @@ const ShopperChooseOrderView = () => {
 
             <Grid container spacing={5}>
                 <Grid item xs={6} md={4}>
-                    <Typography variant="h5" fontWeight="bold" sx={{ mb: 4 }}>
+                    <Typography variant="h5" fontWeight="bold" sx={{mb: 4}}>
                         Select a Shop
                     </Typography>
                 </Grid>
                 <Grid item xs={6} md={8}>
                     <Stack
-                        direction={{ xs: 'column', sm: 'row' }}
-                        divider={<Divider orientation="vertical" flexItem />}
-                        spacing={{ xs: 1, sm: 1, md: 1 }}
-                        sx={{ mb: 2 }}
+                        direction={{xs: 'column', sm: 'row'}}
+                        divider={<Divider orientation="vertical" flexItem/>}
+                        spacing={{xs: 1, sm: 1, md: 1}}
+                        sx={{mb: 2}}
                     >
                         <TextField
                             id="location"
                             label="Seach Location"
-                            sx={{ width: '100%' }}
+                            sx={{width: '100%'}}
                         />
-                        <Button variant="contained" >Search</Button>
+                        <Button variant="contained">Search</Button>
                     </Stack>
                 </Grid>
             </Grid>
-            <Grid container spacing={5} sx={{ mb: 2 }}>
+            <Grid container spacing={5} sx={{mb: 2}}>
                 <LoadScript
                     googleMapsApiKey="AIzaSyDtlTfWb_VyQaJfgkmuKG8qqSl0-1Cj_FQ"
                     libraries={["places"]}
                 >
-                    <Grid item xs={6} md={4} sx={{ maxHeight: '70vh', overflow: 'auto' }}>
-                        <List >
-                            <ListItem key={0} >
-                                <ListItemButton sx={{ bgcolor: "gray", borderRadius: '10px', boxShadow: 3 }} onClick={() => handleOpenOrderDetailsModal()}>
-                                    <ListItemText primary="Input Custom Shop" />
+                    <Grid item xs={6} md={4} sx={{maxHeight: '70vh', overflow: 'auto'}}>
+                        <List>
+                            <ListItem key={0}>
+                                <ListItemButton sx={{bgcolor: "gray", borderRadius: '10px', boxShadow: 3}}
+                                                onClick={() => handleOpenOrderDetailsModal()}>
+                                    <ListItemText primary="Input Custom Shop"/>
                                 </ListItemButton>
                             </ListItem>
                         </List>
@@ -115,10 +116,10 @@ const ShopperChooseOrderView = () => {
                 }}
             >
                 <Stack
-                    direction={{ xs: 'column', sm: 'row' }}
-                    divider={<Divider orientation="vertical" flexItem />}
-                    spacing={{ xs: 1, sm: 1, md: 1 }}
-                    sx={{ mb: 2 }}
+                    direction={{xs: 'column', sm: 'row'}}
+                    divider={<Divider orientation="vertical" flexItem/>}
+                    spacing={{xs: 1, sm: 1, md: 1}}
+                    sx={{mb: 2}}
                 >
                     <Button variant="contained">Skip</Button>
                     <Button variant="contained">Select Shop</Button>

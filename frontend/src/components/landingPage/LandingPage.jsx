@@ -6,9 +6,9 @@ export default function LandingPage() {
 
     return (
         <div style={{display: 'grid'}}>
-            <Hero />
-            <Journey />
-            <Reviews />
+            <Hero/>
+            <Journey/>
+            <Reviews/>
         </div>
     );
 }
