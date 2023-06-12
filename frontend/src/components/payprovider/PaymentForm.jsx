@@ -63,7 +63,7 @@ const PaymentForm = () => {
         {
           amount: {
             currency_code: 'USD',
-            value: '10.99',
+            value: '70',
           },
         },
       ],

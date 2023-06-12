@@ -37,6 +37,10 @@ const contentStyle = {
   flex: 1,
 };
 
+const paymentDetailsStyle = {
+  margin: '20px',
+};
+
 const rowStyle = {
   display: 'flex',
   justifyContent: 'space-between',
@@ -91,7 +95,7 @@ const CheckoutPage = () => {
         <ThemeProvider theme={theme}>
           <Container>
             <Paper variant="outlined" sx={containerStyle}>
-              <div>
+              <div className="payment-details" style={paymentDetailsStyle}>
                 <Typography component="h1" variant="h5" align="left">
                   Payment Details
                 </Typography>
