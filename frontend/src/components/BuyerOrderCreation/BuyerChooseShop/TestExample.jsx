@@ -87,7 +87,7 @@ const TestExample = () => {
 
     return (
         <LoadScript
-            googleMapsApiKey="AIzaSyDtlTfWb_VyQaJfgkmuKG8qqSl0-1Cj_FQ"
+            googleMapsApiKey="AIzaSyCAiDt2WyuMhekA25EMEQgx_wVO_WQW8Ok"
             libraries={["places"]}
         >
             <div>

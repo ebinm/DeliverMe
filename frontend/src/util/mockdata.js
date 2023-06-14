@@ -8,12 +8,23 @@ const mockedOrders = [
         totalCostOfOrder: undefined,
         note: "Please do not ring the doorbell",
         groceryShop: {
+
+            ///// Google Maps API response object /////
+            place_id: "ChIJoeM2T0Q8nkcRJr9jNMktPow", // All maps objects have place_id
+            geometry: { // All maps objects have geometry with location
+                location: {lat: 48.12838420000001, lng: 11.5977815}
+            },
+            formatted_address: "Karlsplatz 25, München", //location object have formatted_address but no vicinity
+            vicinity: "Karlsplatz 25, München", // shop object have vicinity but no formatted_address
+            ///////////////////////////////////////////
+            
             name: "REWE",
             street: "Ungerstraße 54",
             city: "Munich",
             state: "Bavaria",
             postalCode: "80331",
-            country: "DE"
+            country: "DE",
+
         },
         createdBy: {
             firstName: "Betty",
@@ -23,7 +34,14 @@ const mockedOrders = [
             email: "betty.zhang@betty.zhang"
         },
         destination: {
-            name: undefined,
+            ///// Google Maps API response object /////
+            place_id: "ChIJwcfcMHIXdkcRVG-tsrdzL8U", // All maps objects have place_id
+            geometry: { // All maps objects have geometry with location
+                location: {lat: 48.1493467, lng: 11.5582261}
+            },
+            formatted_address: "Karlsplatz 25, München", //location object have formatted_address but no vicinity
+            ///////////////////////////////////////////
+
             street: "Münchernerstraße 32",
             city: "Munich",
             state: "Bavaria",
@@ -110,6 +128,15 @@ const mockedOrders = [
         totalCostOfOrder: undefined,
         note: "Please do not ring the doorbell",
         groceryShop: {
+            ///// Google Maps API response object /////
+            place_id: "ChIJKRlMEYp1nkcR5-rTiWjgjTM",
+            geometry: {
+                location: {lat: 48.12838420000001, lng: 11.5977815}
+            },
+            formatted_address: "Karlsplatz 25, München",
+            vicinity: "Karlsplatz 25, München",
+            ///////////////////////////////////////////
+
             name: "REWE",
             street: "Ungerstraße 54",
             city: "Munich",
@@ -118,7 +145,17 @@ const mockedOrders = [
             country: "DE"
         },
         destination: {
-            name: undefined,
+
+            ///// Google Maps API response object /////
+            place_id: "ChIJ4WA62X4XdkcRA3wMft7BjPQ",
+            geometry: {
+                location: {lat: 47.7999339, lng: 12.1655022}
+            },
+            formatted_address: "Karlsplatz 25, München",
+            vicinity: "Karlsplatz 25, München",
+            ///////////////////////////////////////////
+
+            name: "Shop name",
             street: "Münchernerstraße 32",
             city: "Munich",
             state: "Bavaria",
