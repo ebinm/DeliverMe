@@ -6,9 +6,10 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import {DateDisplay} from "./DateDisplay";
 import {OrderItemsOverview} from "./OrderItemsOverview";
+import Stack from "@mui/material/Stack";
 
 
-export function SingleOrderViewCommon({order, contact, buttons, bidView, orderName}) {
+export function SingleOrderViewCommon({order, contact, buttons, bidView, orderName, showDeliveryAddress = false}) {
     const iconSx = {
         "padding": "8px",
         "borderRadius": "50%",
@@ -54,6 +55,15 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
         </Box>
 
         <DateDisplay from={order?.earliestDeliveryTime} to={order?.latestDeliveryTime}/>
+        <Show when={showDeliveryAddress && order?.destination}>{destination =>
+            <Stack direction={"row"}>
+                <Typography variant={"body1"}>Delivery Address:&nbsp;</Typography>
+                <Typography variant={"body1"}
+                            color={"text.light"}>{destination.street}, {destination.postalCode} {destination.city}</Typography>
+            </Stack>
+        }
+        </Show>
+
         <Divider sx={{"margin": "8px 0"}}/>
 
         <OrderItemsOverview items={order?.items}/>

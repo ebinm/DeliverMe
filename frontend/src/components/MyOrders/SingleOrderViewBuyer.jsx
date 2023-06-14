@@ -1,4 +1,4 @@
-import {Accordion, AccordionDetails, AccordionSummary, Button, ButtonGroup, Typography} from "@mui/material";
+import {Accordion, AccordionDetails, AccordionSummary, ButtonGroup, Typography} from "@mui/material";
 import {Show} from "../util/ControlFlow";
 import {BidSelectionView} from "./BidSelectionView";
 import {useState} from "react";
@@ -6,35 +6,29 @@ import {SingleBidView} from "./SingleBidView";
 import {SingleOrderViewCommon} from "./SingleOrderViewCommon";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {BaseModal} from "../util/BaseModal";
+import Stack from "@mui/material/Stack";
+import {DarkButton, OutlinedButton} from "../util/Buttons";
 
 export function SingleOrderViewBuyer({order, orderName}) {
 
     const [selectedBid, setSelectedBid] = useState()
     const [confirmOrderModalOpen, setConfirmOrderModalOpen] = useState(false)
 
-    const buttonStyle = { //TODO: use theme
-        "backgroundColor": "primary.dark",
-        "&:hover": {
-            color: "text.main",
-            borderColor: "text.main"
-        }
-    }
-
     return <>
         <BaseModal open={confirmOrderModalOpen} onClose={() => setConfirmOrderModalOpen(false)}>
             {/*TODO "Jetzt kostenpflichtig betsellen"*/}
             <Typography sx={{"margin": "8px"}}>Are you sure you want to accept this bid? This cannot be
                 undone.</Typography>
-            <ButtonGroup>
-                <Button onClick={() => {
-                    setConfirmOrderModalOpen(false)
-                }} sx={{...buttonStyle, flexGrow: 1}}>Cancel</Button>
-                <Button onClick={() => {
+            <Stack direction={"row-reverse"} gap={"8px"} sx={{"mt": "32px"}}>
+                <DarkButton onClick={() => {
                     // TODO Set selected order
                     console.warn("TODO set selected order")
                     setConfirmOrderModalOpen(false)
-                }} sx={{...buttonStyle, flexGrow: 1}}>Confirm</Button>
-            </ButtonGroup>
+                }}>Confirm</DarkButton>
+                <OutlinedButton onClick={() => {
+                    setConfirmOrderModalOpen(false)
+                }}>Cancel</OutlinedButton>
+            </Stack>
         </BaseModal>
 
         <SingleOrderViewCommon
@@ -42,9 +36,9 @@ export function SingleOrderViewBuyer({order, orderName}) {
             order={order} contact={order.selectedBid?.createdBy}
             buttons={<ButtonGroup sx={{"justifyContent": "end"}}>
                 <Show when={selectedBid !== undefined}>
-                    <Button onClick={() => {
+                    <DarkButton onClick={() => {
                         setConfirmOrderModalOpen(true)
-                    }} sx={buttonStyle}>Select Bid</Button>
+                    }}>Select Bid</DarkButton>
                 </Show>
             </ButtonGroup>}
 
