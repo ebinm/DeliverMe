@@ -201,6 +201,7 @@ function AvatarDialogRaw({open, close}, ref) {
                         <ListItemText>Notifications</ListItemText>
                     </MenuItem>
 
+
                     <MenuItem sx={menuItemSx} onClick={() => {
                         navigate(`/${customer.type.toLowerCase()}/my-orders`)
                         close()
