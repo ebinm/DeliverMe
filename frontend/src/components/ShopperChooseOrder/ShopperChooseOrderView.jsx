@@ -1,30 +1,65 @@
-import React, {useEffect, useState} from 'react';
-import {Box, Grid, List, ListItem, ListItemButton, ListItemText} from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { CircularProgress, Box, Grid, List, ListItem, ListItemButton, ListItemAvatar } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import ImageIcon from '@mui/icons-material/Image';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
-import {GoogleMap, InfoWindow, LoadScript, Marker,} from '@react-google-maps/api';
 import OrderDetailsModal from './OrderDetailsModal';
 import BidOnOrderModal from './BidOnOrderModal';
-
+import { mockedOrders } from '../../util/mockdata';
+import { Show } from '../util/ControlFlow';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { GoogleMap, Marker, useJsApiLoader, DirectionsRenderer } from '@react-google-maps/api';
 
 const ShopperChooseOrderView = () => {
     const [map, setMap] = useState(null);
-    const [mapCenter, setMapCenter] = useState(null);
     const [showOrderDetailsModal, setShowOrderDetailsModal] = useState(false);
     const [showBidOnOrderModal, setShowBidOnOrderModal] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
+    const [orders] = useState(mockedOrders);
+    const [directions, setDirections] = useState(null);
+    const [mapKey, setMapKey] = useState(0);
 
+    // We use useState as a way of handling a constant here to stop useJsApiLoader from triggering more than once.
+    const [googleLibraries] = useState(["places"]);
+    const { isLoaded } = useJsApiLoader({
+        googleMapsApiKey: "AIzaSyCAiDt2WyuMhekA25EMEQgx_wVO_WQW8Ok",
+        libraries: googleLibraries
+    });
 
     useEffect(() => {
         if (map) {
             const defaultCenter = { lat: 48.137154, lng: 11.576124 }
             map.setCenter(defaultCenter);
-            setMapCenter(defaultCenter);
         }
     }, [map]);
+
+
+    useEffect(() => {
+        setDirections(null); //TODO ask lukas
+        setMapKey(prevKey => prevKey + 1);
+
+        if (selectedOrder && selectedOrder.groceryShop && selectedOrder.destination) {
+            const DirectionsService = new window.google.maps.DirectionsService();
+            DirectionsService.route(
+                {
+                    origin: selectedOrder.groceryShop.geometry.location,
+                    destination: selectedOrder.destination.geometry.location,
+                    travelMode: 'DRIVING'
+                },
+                (result, status) => {
+                    if (status === 'OK') {
+                        setDirections(result);
+                    }
+                }
+            );
+        }
+    }, [selectedOrder]);
 
 
     const handleOpenOrderDetailsModal = () => {
@@ -44,6 +79,9 @@ const ShopperChooseOrderView = () => {
         //setShowOrderDetailsModal(true);
     };
 
+    const handleBidOnOrder = () => {
+        // TODO
+    };
 
     return (
         <>
@@ -61,9 +99,7 @@ const ShopperChooseOrderView = () => {
 
             <Grid container spacing={5}>
                 <Grid item xs={6} md={4}>
-                    <Typography variant="h5" fontWeight="bold" sx={{ mb: 4 }}>
-                        Select a Shop
-                    </Typography>
+                    <Typography variant="h4" component="h1" sx={{ paddingLeft: '16px' }}>Orders</Typography>
                 </Grid>
                 <Grid item xs={6} md={8}>
                     <Stack
@@ -74,7 +110,7 @@ const ShopperChooseOrderView = () => {
                     >
                         <TextField
                             id="location"
-                            label="Seach Location"
+                            label="Filter Orders"
                             sx={{ width: '100%' }}
                         />
                         <Button variant="contained" >Search</Button>
@@ -82,21 +118,55 @@ const ShopperChooseOrderView = () => {
                 </Grid>
             </Grid>
             <Grid container spacing={5} sx={{ mb: 2 }}>
-                <LoadScript
-                    googleMapsApiKey="AIzaSyDtlTfWb_VyQaJfgkmuKG8qqSl0-1Cj_FQ"
-                    libraries={["places"]}
-                >
-                    <Grid item xs={6} md={4} sx={{ maxHeight: '70vh', overflow: 'auto' }}>
-                        <List >
-                            <ListItem key={0} >
-                                <ListItemButton sx={{ bgcolor: "gray", borderRadius: '10px', boxShadow: 3 }} onClick={() => handleOpenOrderDetailsModal()}>
-                                    <ListItemText primary="Input Custom Shop" />
+                <Grid item xs={6} md={4} sx={{ maxHeight: '70vh', overflow: 'auto' }}>
+                    <List >
+                        {orders.map((order) => (
+                            <ListItem key={order._id}>
+                                <ListItemButton
+                                    selected={selectedOrder === order}
+                                    onClick={() => {
+                                        setSelectedOrder(order);
+                                    }}
+                                    sx={{ bgcolor: "white", borderRadius: '10px', boxShadow: 3 }}
+                                >
+                                    <Box sx={{ width: "100%" }}>
+                                        <Stack
+                                            direction={{ xs: 'column', sm: 'row' }}
+                                            spacing={{ xs: 1, sm: 1, md: 1 }}
+                                            sx={{ mb: 2 }}
+                                        >
+                                            <Box display='flex' alignItems='center'>
+                                                <ListItemAvatar>
+                                                    <Avatar>
+                                                        <ImageIcon />
+                                                    </Avatar>
+                                                </ListItemAvatar>
+                                            </Box>
+                                            <Box>
+                                                <Typography variant={"h6"} fontWeight="bold">{order?.createdBy?.firstName}, {order?.createdBy?.lastName}</Typography>
+                                                <Box display={"grid"} gridTemplateColumns={"min-content auto"} gap={"1px"} >
+                                                    <ShoppingCartOutlinedIcon />
+                                                    <Typography variant={"body1"}>Shop: {order?.groceryShop?.name}, {order?.groceryShop?.street}, {order?.groceryShop?.city}</Typography>
+                                                    <LocationOnOutlinedIcon />
+                                                    <Typography variant={"body1"}>Destination: {order?.destination?.street}, {order?.destination?.city}</Typography>
+                                                </Box>
+                                            </Box>
+                                        </Stack>
+
+                                        <Divider />
+                                        <Button sx={{ width: '100%', color: 'gray', textTransform: 'none', justifyContent: 'space-between', mt: 1, mb: 2 }} endIcon={<ArrowForwardIosIcon />} onClick={handleOpenOrderDetailsModal}>
+                                            <Typography variant="body1">See more details & place bid</Typography>
+                                        </Button>
+                                    </Box>
                                 </ListItemButton>
                             </ListItem>
-                        </List>
-                    </Grid>
-                    <Grid item xs={6} md={8}>
+                        ))}
+                    </List>
+                </Grid>
+                <Grid item xs={6} md={8}>
+                    <Show when={isLoaded} fallback={<CircularProgress />}>
                         <GoogleMap
+                            key={mapKey}
                             mapContainerStyle={{
                                 width: '100%',
                                 height: '70vh'
@@ -104,28 +174,38 @@ const ShopperChooseOrderView = () => {
                             zoom={14}
                             onLoad={map => setMap(map)}
                         >
+                            {directions && ( //TODO: show travel time, choose between car and bike 
+                                <>
+                                    <DirectionsRenderer
+                                        options={{
+                                            directions: directions,
+                                            suppressMarkers: true,
+                                            preserveViewport: false,
+                                        }}
+                                    />
+
+                                    <Marker
+                                        key={selectedOrder.groceryShop.place_id}
+                                        position={selectedOrder.groceryShop.geometry.location}
+                                        label="Shop"
+                                    />
+
+                                    <Marker
+                                        key={selectedOrder.destination.place_id}
+                                        position={selectedOrder.destination.geometry.location}
+                                        label="Destination"
+                                    />
+                                </>
+                            )}
                         </GoogleMap>
-                    </Grid>
-                </LoadScript>
+                    </Show>
+                </Grid>
             </Grid>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'row-reverse',
-                }}
-            >
-                <Stack
-                    direction={{ xs: 'column', sm: 'row' }}
-                    divider={<Divider orientation="vertical" flexItem />}
-                    spacing={{ xs: 1, sm: 1, md: 1 }}
-                    sx={{ mb: 2 }}
-                >
-                    <Button variant="contained">Skip</Button>
-                    <Button variant="contained">Select Shop</Button>
-                </Stack>
+            <Box display='flex' alignItems='center' justifyContent="flex-end" >
+                <Button variant="contained" onClick={handleBidOnOrder}>Bid on Order</Button> 
             </Box>
         </>
     );
 };
 
-export {ShopperChooseOrderView};
+export { ShopperChooseOrderView };
