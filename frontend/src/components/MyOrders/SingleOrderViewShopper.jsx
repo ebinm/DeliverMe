@@ -12,14 +12,15 @@ import {RatingModal} from "../util/RatingModal";
 import {BaseModal} from "../util/BaseModal"
 import {Show} from "../util/ControlFlow"
 
-export function SingleOrderViewShopper({ order, orderName }) {
+export function SingleOrderViewShopper({ order }) {
 
     const [uploadOpen, setUploadOpen] = useState(false)
     const [ratingOpen, setRatingOpen] = useState(false)
 
     return <>
         <SingleOrderViewCommon
-            orderName={orderName}
+            showDeliveryAddress
+            orderName={`${order?.createdBy?.firstName} ${order?.createdBy?.lastName}`}
             order={order}
             contact={order.createdBy}
             bidView={
