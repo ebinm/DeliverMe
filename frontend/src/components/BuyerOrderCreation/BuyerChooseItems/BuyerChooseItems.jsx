@@ -28,6 +28,8 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import InfoIcon from '@mui/icons-material/Info';
 import {DarkButton, darkButtonSx, OutlinedButton, outlinedButtonSx} from "../../util/Buttons";
 import {useLocaleText} from "@mui/x-date-pickers/internals";
+import { CustomDateTimePickerActionBar } from "../../util/CustomDateTimePickerActionBar";
+
 
 export function BuyerChooseItems({
                                      shop,
@@ -176,16 +178,6 @@ export function BuyerChooseItems({
     </>
 }
 
-function CustomDateTimePickerActionBar(props) {
-    const {onAccept, onClear, onCancel, onSetToday, actions, ...other} = props;
-
-    const localeText = useLocaleText();
-
-    return <DialogActions {...other}>
-        <Button sx={outlinedButtonSx} onClick={onClear}>{localeText.clearButtonLabel}</Button>
-        <Button sx={darkButtonSx} onClick={onAccept}>{localeText.okButtonLabel}</Button>
-    </DialogActions>
-}
 
 function InfoPopover() {
     const [anchorEl, setAnchorEl] = useState(null);

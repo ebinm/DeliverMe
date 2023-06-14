@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken"
 import {NextFunction, Request, Response} from "express";
-import {JWTPayload} from "../services/authService";
+import {JWTPayload} from "../controllers/authController";
 import {CustomerType} from "../models/customer";
 
 type AuthenticatedRequest = Request & {

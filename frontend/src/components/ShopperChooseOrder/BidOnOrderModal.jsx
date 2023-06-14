@@ -1,17 +1,20 @@
-import React, {useState} from 'react';
-import {Box} from '@mui/material';
+import React, { useState } from 'react';
+import { Box, InputAdornment, OutlinedInput, FilledInput, Input } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
-import {useTheme} from "@mui/material/styles"
-import {useSnackbar} from 'notistack';
+import { useTheme } from "@mui/material/styles"
+import { useSnackbar } from 'notistack';
+import { DateTimePicker } from "@mui/x-date-pickers";
+import { CustomDateTimePickerActionBar } from "../util/CustomDateTimePickerActionBar";
 
 
-const BidOnOrderModal = ({showBidOnOrderModal, handleCloseBidOnOrderModal, Order}) => {
+const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, Order }) => {
     const [bidHight, setBidHight] = useState(0);
-    const {enqueueSnackbar} = useSnackbar();
+    const [bidDate, setBidDate] = useState();
+    const { enqueueSnackbar } = useSnackbar();
     const theme = useTheme()
 
     const style = {
@@ -34,7 +37,7 @@ const BidOnOrderModal = ({showBidOnOrderModal, handleCloseBidOnOrderModal, Order
     const handleSubmit = (e) => {
         e.preventDefault();
         handleCloseBidOnOrderModal();
-        enqueueSnackbar('Snackbar message', {variant: 'success'});
+        enqueueSnackbar('Snackbar message', { variant: 'success' });
 
         console.log("bid submitted", bidHight)
     };
@@ -57,19 +60,27 @@ const BidOnOrderModal = ({showBidOnOrderModal, handleCloseBidOnOrderModal, Order
                         >
                             <form onSubmit={handleSubmit}>
                                 <div>
-                                    <TextField
-                                        required
-                                        id="outlined"
-                                        label="Name"
-                                        margin="dense"
-                                        sx={{width: '100%'}}
+                                    <Typography justifySelf={"flex-end"} sx={{ mt: 3 }}>Bid Amount</Typography>
+                                    <Input
+                                        id="BidAmount"
+                                        endAdornment={<InputAdornment position="end">€</InputAdornment>}
                                         onChange={(e) => setBidHight(e.currentTarget.value)}
+                                        value={bidHight}
                                     />
+
+                                    <Typography justifySelf={"flex-end"} sx={{ mt: 3 }}>Expected Deliver Time</Typography>
+                                    <DateTimePicker
+                                        disablePast
+                                        name={"BidDate"}
+                                        value={bidDate}
+                                        onChange={value => !isNaN(value) && setBidDate(value)}
+                                        slots={{ "actionBar": ((props) => <CustomDateTimePickerActionBar {...props} />) }}
+                                        slotProps={{ "textField": { variant: "standard" } }} />
                                 </div>
                                 <Stack
-                                    direction={{xs: 'column', sm: 'row'}}
-                                    spacing={{xs: 1, sm: 1, md: 1}}
-                                    sx={{mt: 2, justifyContent: 'space-between'}}
+                                    direction={{ xs: 'column', sm: 'row' }}
+                                    spacing={{ xs: 1, sm: 1, md: 1 }}
+                                    sx={{ mt: 4, justifyContent: 'space-between' }}
                                 >
                                     <Button variant="contained" onClick={handleCloseBidOnOrderModal}>Back</Button>
                                     <Button variant="contained" type="submit">Bid</Button>

@@ -1,6 +1,6 @@
-import {SingleOrderViewCommon} from "./SingleOrderViewCommon";
-import {SingleBidView} from "./SingleBidView";
-import {Accordion, AccordionDetails, AccordionSummary, Typography} from "@mui/material";
+import { SingleOrderViewCommon } from "./SingleOrderViewCommon";
+import { SingleBidView } from "./SingleBidView";
+import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {DarkButton, OutlinedButton} from "../util/Buttons";
 import Stack from "@mui/material/Stack";
@@ -12,7 +12,7 @@ import {RatingModal} from "../util/RatingModal";
 import {BaseModal} from "../util/BaseModal"
 import {Show} from "../util/ControlFlow"
 
-export function SingleOrderViewShopper({order, orderName}) {
+export function SingleOrderViewShopper({ order, orderName }) {
 
     const [uploadOpen, setUploadOpen] = useState(false)
     const [ratingOpen, setRatingOpen] = useState(false)

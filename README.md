@@ -6,8 +6,7 @@
 
 Make sure your ip is whitelisted on AtlasDB. Else the backend can not connect with the instance.
 
-Whenever pulling a branch, just assume the dependencies have changed and run `npm i` (twice: one in `./.` and once in `./frontend`).
-
+Whenever pulling a branch, just assume the dependencies have changed and run `npm i --force` (twice: one in `./.` and once in `./frontend`).
 
 ### Scripts
 
@@ -24,19 +23,19 @@ We use dotenv. Create the files `./frontend/.env` and  `./.env` and set the foll
 
 #### Frontend
 
-| Name              | Description                                                                                                                     |
-|-------------------|---------------------------------------------------------------------------------------------------------------------------------|
-| HTTPS             | `true` or `false` depending on if SSL is wanted                                                                                 |
+| Name              | Description                                                                                                                       |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| HTTPS             | `true` or `false` depending on if SSL is wanted                                                                               |
 | SSL_CRT_FILE      | `./.cert/deliver.me.crt` or the desired location of the SSL certificate. (Other values require the backend to be reconfigured.) |
 | SSL_KEY_FILE      | `./.cert/deliver.me.key` or the desired location of the SSL key.                                                                |
-| REACT_APP_BACKEND | The url of the backend. For example:`https://localhost:8443` or `http://localhost:8443` depending on if SSL is used or not                                                                   |
+| REACT_APP_BACKEND | The url of the backend. For example:`https://localhost:8443` or `http://localhost:8443` depending on if SSL is used or not    |
 
 #### Backend
 
-| Name       | Description                            |
-| ---------- | -------------------------------------- |
-| MONGO_URL  | The url to connect to MongoDB . For example: "mongodb+srv://deliver-me:VQrcNNkTuK0Kv9Mg@delivermeprod.di6io6m.mongodb.net/"          |
-| JWT_SECRET | The secret used for signing JWT tokens. For example: "9cf49be9c2b84412a99afec0b01f9ccd" |
+| Name       | Description                                                                                                                 |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------- |
+| MONGO_URL  | The url to connect to MongoDB . For example: "mongodb+srv://deliver-me:VQrcNNkTuK0Kv9Mg@delivermeprod.di6io6m.mongodb.net/" |
+| JWT_SECRET | The secret used for signing JWT tokens. For example: "9cf49be9c2b84412a99afec0b01f9ccd"                                     |
 
 HTTPS=true
 SSL_CRT_FILE=./.cert/deliver.me.crt
@@ -56,15 +55,15 @@ https://deliciousbrains.com/ssl-certificate-authority-for-local-https-developmen
 If you message Lukas Rossi he can also send you a root certificate and signed certificates for localhost which you can then install/ add to trust store.
 I would not recommend this option though as it in theory poses a security risk.
 
-
 ## Simons
 
 Backend: npm run watchCompileTS & npm run watchRunNode
+
+Install: npm i --force
 
 Frontend: npm start
 
 Mongo: https://cloud.mongodb.com/v2/646b6578d7b432020c271dab#/clusters
 
-- l.rossi@tum.de
-
-- VQrcNNkTuK0Kv9Mg
+- Name: l.rossi@tum.de
+- pw: VQrcNNkTuK0Kv9Mg

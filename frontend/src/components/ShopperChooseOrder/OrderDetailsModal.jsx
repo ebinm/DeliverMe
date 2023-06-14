@@ -5,7 +5,8 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
-import {useTheme} from "@mui/material/styles"
+import { useTheme } from "@mui/material/styles"
+import { SingleOrderViewShopper } from '../MyOrders/SingleOrderViewShopper';
 
 
 const OrderDetailsModal = ({showOrderDetailsModal, handleCloseOrderDetailsModal, handleOpenBidModal, Order}) => {
@@ -26,6 +27,7 @@ const OrderDetailsModal = ({showOrderDetailsModal, handleCloseOrderDetailsModal,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        overflow: 'auto', // TODO: Take Lukas Modal!!!! (Also in all other occurrences of Modal)
     };
 
 
@@ -44,57 +46,18 @@ const OrderDetailsModal = ({showOrderDetailsModal, handleCloseOrderDetailsModal,
             >
                 <>
                     <Box sx={style}>
-                        <Typography variant="h4" sx={{mb: 2}}>
-                            Order Details
-                        </Typography>
-                        <Box
-                            sx={{width: "100%"}}
+
+                        <SingleOrderViewShopper order={Order} orderName={"TODO"} />
+
+                        <Stack
+                            direction={{ xs: 'column', sm: 'row' }}
+                            spacing={{ xs: 1, sm: 1, md: 1 }}
+                            sx={{ mt: 2, justifyContent: 'space-between', width: "100%" }}
                         >
-                            <div>
-                                <TextField
-                                    required
-                                    id="outlined"
-                                    label="Name"
-                                    margin="dense"
-                                    sx={{width: '100%'}}
-                                />
-                            </div>
-                            <div>
-                                <TextField
-                                    required
-                                    id="filled-error-helper-text"
-                                    label="Street Address"
-                                    margin="dense"
-                                    sx={{width: '100%'}}
-                                />
-                            </div>
-                            <div>
-                                <TextField
-                                    required
-                                    id="standard-error"
-                                    label="City"
-                                    margin="dense"
-                                    sx={{width: '100%'}}
-                                />
-                            </div>
-                            <div>
-                                <TextField
-                                    required
-                                    id="standard-error"
-                                    label="State"
-                                    margin="dense"
-                                    sx={{width: '100%'}}
-                                />
-                            </div>
-                            <Stack
-                                direction={{xs: 'column', sm: 'row'}}
-                                spacing={{xs: 1, sm: 1, md: 1}}
-                                sx={{mt: 2, justifyContent: 'space-between'}}
-                            >
-                                <Button variant="contained" onClick={handleCloseOrderDetailsModal}>Back</Button>
-                                <Button variant="contained" onClick={handleShowBidModal}>Create Bid</Button>
-                            </Stack>
-                        </Box>
+                            <Button variant="contained" onClick={handleCloseOrderDetailsModal}>Back</Button>
+                            <Button variant="contained" onClick={handleShowBidModal}>Create Bid</Button>
+                        </Stack>
+
                     </Box>
                 </>
             </Modal>

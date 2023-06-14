@@ -1,0 +1,38 @@
+import express from "express";
+import cookieParser from "cookie-parser";
+import cors from "cors"
+import shopperRoutes from "./routes/shopperRoutes";
+import buyerRoutes from "./routes/buyerRoutes";
+import userRoutes from "./routes/userRoutes";
+
+const api = express();
+api.use(express.json());
+api.use(cookieParser());
+
+// TODO I think this is only required in dev mode
+// TODO configure origin correctly
+const corsWhitelist = ['http://localhost:3000', 'https://localhost:3000']
+
+api.use(cors({
+    credentials: true,
+    origin: (origin, callback) => {
+        if (corsWhitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error("Not allowed by CORS"))
+        }
+    },
+}));
+
+// API routes
+api.use("/api/shopper", shopperRoutes);
+
+api.use("/api/buyer", buyerRoutes);
+
+api.use("/api/me", userRoutes);
+
+api.use((err, req, res, next) => {
+    res.status(500).json({msg: err})
+})
+
+export default api;
