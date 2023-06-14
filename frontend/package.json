@@ -24,7 +24,7 @@
     "react-window": "^1.8.9",
     "sass": "^1.62.1",
     "web-vitals": "^2.1.4",
-    "react-icons":  "^4.9.0",
+    "react-icons": "^4.9.0",
     "@mui/system": "^5.13.5"
   },
   "scripts": {

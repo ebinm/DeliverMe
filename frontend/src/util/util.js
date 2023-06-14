@@ -1,9 +1,9 @@
 function formatUnitNumerusClausus(unit, quantity) {
     if (unit === undefined || unit.toLowerCase() === "unit") {
         if (quantity === 1) {
-            return unit
+            return unit || "Unit"
         } else {
-            return unit + "s"
+            return (unit || "Unit") + "s"
         }
     }
 
