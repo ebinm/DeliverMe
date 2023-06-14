@@ -34,14 +34,15 @@ const Hero = () => {
                         opacity: '0.6',
                         paddingBottom: '30px',
                     }}>
-                        Hire personal shoppers who will help you with your groceries so that you can save time and effort.
+                        Hire personal shoppers who will help you with your groceries so that you can save time and
+                        effort.
                         With DeliverMe you can get your groceries from any local store delivered to your door step.
                     </Typography>
                     <Button
                         href={"/buyer/order/create"}
                         variant="contained"
                         color="primary"
-                        sx={{width: '400px', height:'60px', fontSize: '16px', backgroundColor: 'primary.dark'}}
+                        sx={{width: '400px', height: '60px', fontSize: '16px', backgroundColor: 'primary.dark'}}
                     >
                         ORDER NOW
                     </Button>

@@ -1,8 +1,7 @@
 import React from 'react';
 import Carousel from 'react-material-ui-carousel'
 
-function Pictures()
-{
+function Pictures() {
     let items = [
         {
             src: "images/delivery1.jpg",
@@ -26,18 +25,17 @@ function Pictures()
     return (
         <Carousel>
             {
-                items.map( (item, i) => <Item key={i} item={item} /> )
+                items.map((item, i) => <Item key={i} item={item}/>)
             }
         </Carousel>
     )
 }
 
-function Item(props)
-{
+function Item(props) {
     return (
         <>
             <img src={props.item.src} alt={props.item.alt} width={'100%'} height={'380px'}
-                 style={{ objectFit: "cover"}}/>
+                 style={{objectFit: "cover"}}/>
         </>
     )
 }

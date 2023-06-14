@@ -124,7 +124,7 @@ function Buyer(props) {
                 marginTop: 0.5,
                 marginBottom: 0
             }}>
-                <span style={{fontWeight:  "bold"}}>{props.item.firstName} {props.item.lastName}: </span>
+                <span style={{fontWeight: "bold"}}>{props.item.firstName} {props.item.lastName}: </span>
                 {props.item.review.comment}
             </Typography>
             <Typography sx={{
@@ -151,7 +151,7 @@ function calculatePastDays(date) {
         if (totalDays < 30) {
             return totalDays + " days ago"
         } else {
-            let totalMonths = Math.floor(totalDays/30);
+            let totalMonths = Math.floor(totalDays / 30);
 
             if (totalMonths < 12) {
 
@@ -162,7 +162,7 @@ function calculatePastDays(date) {
                 }
 
             } else {
-                let totalYears = Math.floor(totalMonths/12);
+                let totalYears = Math.floor(totalMonths / 12);
 
                 if (totalYears > 1) {
                     return totalYears + " years ago"
@@ -174,6 +174,7 @@ function calculatePastDays(date) {
         }
     }
 }
+
 function averageRating(buyers) {
     let length = buyers.length;
     let agg = 0;

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { GoogleMap, LoadScript, Autocomplete, Marker, InfoWindow } from '@react-google-maps/api';
+import React, {useEffect, useState} from 'react';
+import {Autocomplete, GoogleMap, InfoWindow, LoadScript, Marker} from '@react-google-maps/api';
 
 
 const containerStyle = {
@@ -55,7 +55,7 @@ const TestExample = () => {
             autocompleteService.getPlacePredictions(request, (predictions, status) => {
                 if (status === window.google.maps.places.PlacesServiceStatus.OK && predictions?.length > 0) {
                     const placeId = predictions[0].place_id;
-                    placesService.getDetails({ placeId }, (place, status) => {
+                    placesService.getDetails({placeId}, (place, status) => {
                         if (status === window.google.maps.places.PlacesServiceStatus.OK) {
 
                             map.setCenter(place.geometry.location);
@@ -69,7 +69,7 @@ const TestExample = () => {
             });
         }
     };
-    
+
     const test = () => {
         console.log("test3");
         const place = autocomplete.getPlace();
@@ -80,10 +80,10 @@ const TestExample = () => {
 
     const handleMarkerClick = (shop) => {
         setSelectedShop(shop);
-      };
-      const handleInfoWindowClose = () => { //kann weg
+    };
+    const handleInfoWindowClose = () => { //kann weg
         setSelectedShop(null);
-      };
+    };
 
     return (
         <LoadScript
@@ -100,7 +100,7 @@ const TestExample = () => {
                         placeholder="Search for a place"
                         value={searchValue}
                         onChange={e => setSearchValue(e.target.value)}
-                        style={{ width: '100%' }}
+                        style={{width: '100%'}}
                     />
                 </Autocomplete>
                 <div>
@@ -118,7 +118,8 @@ const TestExample = () => {
                     onLoad={map => setMap(map)}
                 >
                     {shops.map(shop => (
-                        <Marker key={shop.place_id} position={shop.geometry.location} onClick={() => handleMarkerClick(shop)}>
+                        <Marker key={shop.place_id} position={shop.geometry.location}
+                                onClick={() => handleMarkerClick(shop)}>
                             {selectedShop === shop && (
                                 <InfoWindow position={shop.geometry.location} onCloseClick={handleInfoWindowClose}>
                                     <div>
