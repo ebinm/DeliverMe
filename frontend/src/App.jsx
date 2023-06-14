@@ -13,7 +13,7 @@ import {Login} from "./components/authentication/Login";
 import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {NotificationProvider} from "./util/context/NotificationContext";
-import {SnackbarProvider}  from 'notistack';
+import {SnackbarProvider} from 'notistack';
 import {BuyerOrderCreationView} from "./components/BuyerOrderCreation/BuyerOrderCreationView";
 import LandingPage from "./components/landingPage/LandingPage";
 

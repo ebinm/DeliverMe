@@ -4,7 +4,6 @@ import {
     AccordionSummary,
     CircularProgress,
     FormGroup,
-    Modal,
     Paper,
     TextField,
     Typography
@@ -19,6 +18,7 @@ import {DarkButton, OutlinedButton} from "../../util/Buttons";
 import {Show} from "../../util/ControlFlow";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {DateDisplay} from "../../MyOrders/DateDisplay";
+import {BaseModal} from "../../util/BaseModal";
 
 export function BuyerOrderSummary({
                                       items,
@@ -148,26 +148,23 @@ export function BuyerOrderSummary({
             <OutlinedButton onClick={onGoBack}>Go Back</OutlinedButton>
         </Stack>
 
-        <Modal open={confirmModalOpen} onClose={() => setConfirmModalOpen(false)}
-               sx={{"display": "flex", "alignItems": "center", "justifyContent": "center"}}>
-            <Paper>
-                <Typography sx={{"padding": "16px"}}>Are you sure you want to place the order?</Typography>
-                <Stack direction={"row-reverse"} justifyContent={"space-between"} gap={"16px"} padding={"16px"}>
-                    <DarkButton sx={{"flexGrow": "1"}} onClick={async () => {
-                        setPostEndpointSignal("/api/buyer/order")
-                    }}>
-                        <Show when={!loading} fallback={<CircularProgress size={"1.5rem"}/>}>
-                            {/*TODO error handling*/}
-                            <Show when={error === undefined} fallback={<strong>{error?.msg || "Error"}</strong>}>
-                                Confirm
-                            </Show>
+        <BaseModal open={confirmModalOpen} onClose={() => setConfirmModalOpen(false)}>
+            <Typography sx={{"padding": "16px"}}>Are you sure you want to place the order?</Typography>
+            <Stack direction={"row-reverse"} justifyContent={"space-between"} gap={"16px"} padding={"16px"}>
+                <DarkButton sx={{"flexGrow": "1"}} onClick={async () => {
+                    setPostEndpointSignal("/api/buyer/order")
+                }}>
+                    <Show when={!loading} fallback={<CircularProgress size={"1.5rem"}/>}>
+                        {/*TODO error handling*/}
+                        <Show when={error === undefined} fallback={<strong>{error?.msg || "Error"}</strong>}>
+                            Confirm
                         </Show>
-                    </DarkButton>
-                    <OutlinedButton sx={{"flexGrow": "1"}}
-                                    onClick={() => setConfirmModalOpen(false)}>Cancel</OutlinedButton>
-                </Stack>
-            </Paper>
-        </Modal>
+                    </Show>
+                </DarkButton>
+                <OutlinedButton sx={{"flexGrow": "1"}}
+                                onClick={() => setConfirmModalOpen(false)}>Cancel</OutlinedButton>
+            </Stack>
+        </BaseModal>
 
     </Paper>
 }

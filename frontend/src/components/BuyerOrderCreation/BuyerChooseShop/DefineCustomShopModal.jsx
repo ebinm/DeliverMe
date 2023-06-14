@@ -1,32 +1,27 @@
-import React from 'react';
-import { Box } from '@mui/material';
+import React, {useState} from 'react';
+import {Box} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
-import { useTheme } from "@mui/material/styles"
-import { Autocomplete } from '@react-google-maps/api';
-import { useState } from 'react';
-import { useSnackbar } from 'notistack';
-import Snackbar from '@mui/material/Snackbar';
-
-import AlertTitle from '@mui/material/AlertTitle';
-import Alert from '@mui/material/Alert';
+import {useTheme} from "@mui/material/styles"
+import {Autocomplete} from '@react-google-maps/api';
+import {useSnackbar} from 'notistack';
 
 const DefineCustomShopModal = ({
-    showModal,
-    handleCloseModal,
-    searchValue,
-    setSearchValue,
-    handleCustomShopSelect
-}) => {
+                                   showModal,
+                                   handleCloseModal,
+                                   searchValue,
+                                   setSearchValue,
+                                   handleCustomShopSelect
+                               }) => {
 
     const theme = useTheme()
     const [autocomplete, setAutocomplete] = useState(null);
     const [name, setName] = useState('');
     const [address, setAddress] = useState('');
-    const { enqueueSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
 
     const style = {
         width: "100vh",
@@ -82,12 +77,11 @@ const DefineCustomShopModal = ({
                     <Box sx={style}>
 
 
-
-                        <Typography variant="h4" sx={{ mb: 2 }}>
+                        <Typography variant="h4" sx={{mb: 2}}>
                             Define Custom Shop
                         </Typography>
                         <Box
-                            sx={{ width: "100%" }}
+                            sx={{width: "100%"}}
                         >
                             <form onSubmit={handleSubmit}>
                                 <div>
@@ -95,7 +89,7 @@ const DefineCustomShopModal = ({
                                         required
                                         id="outlined"
                                         label="Shop Name"
-                                        sx={{ width: '100%', mb: 4, backgroundColor: 'white' }}
+                                        sx={{width: '100%', mb: 4, backgroundColor: 'white'}}
                                         onChange={(e) => setName(
                                             e.target.value
                                         )}
@@ -111,15 +105,15 @@ const DefineCustomShopModal = ({
                                             placeholder="Search for a place"
                                             value={address}
                                             onChange={e => setAddress(e.target.value)}
-                                            style={{ width: "100%" }}
+                                            style={{width: "100%"}}
                                         />
                                     </Autocomplete>
 
 
                                     <Stack
-                                        direction={{ xs: 'column', sm: 'row' }}
-                                        spacing={{ xs: 1, sm: 1, md: 1 }}
-                                        sx={{ mt: 4, justifyContent: 'space-between' }}
+                                        direction={{xs: 'column', sm: 'row'}}
+                                        spacing={{xs: 1, sm: 1, md: 1}}
+                                        sx={{mt: 4, justifyContent: 'space-between'}}
                                     >
                                         <Button variant="contained" onClick={handleCloseModal}>Back</Button>
                                         <Button variant="contained" type="submit">Select Shop</Button>

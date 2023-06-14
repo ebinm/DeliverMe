@@ -34,7 +34,7 @@ const ShopperChooseOrderView = () => {
 
     useEffect(() => {
         if (map) {
-            const defaultCenter = { lat: 48.137154, lng: 11.576124 }
+            const defaultCenter = {lat: 48.137154, lng: 11.576124}
             map.setCenter(defaultCenter);
         }
     }, [map]);
@@ -103,17 +103,17 @@ const ShopperChooseOrderView = () => {
                 </Grid>
                 <Grid item xs={6} md={8}>
                     <Stack
-                        direction={{ xs: 'column', sm: 'row' }}
-                        divider={<Divider orientation="vertical" flexItem />}
-                        spacing={{ xs: 1, sm: 1, md: 1 }}
-                        sx={{ mb: 2 }}
+                        direction={{xs: 'column', sm: 'row'}}
+                        divider={<Divider orientation="vertical" flexItem/>}
+                        spacing={{xs: 1, sm: 1, md: 1}}
+                        sx={{mb: 2}}
                     >
                         <TextField
                             id="location"
                             label="Filter Orders"
                             sx={{ width: '100%' }}
                         />
-                        <Button variant="contained" >Search</Button>
+                        <Button variant="contained">Search</Button>
                     </Stack>
                 </Grid>
             </Grid>

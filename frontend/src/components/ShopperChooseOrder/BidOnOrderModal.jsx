@@ -52,11 +52,11 @@ const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, Orde
             >
                 <>
                     <Box sx={style}>
-                        <Typography variant="h4" sx={{ mb: 2 }}>
+                        <Typography variant="h4" sx={{mb: 2}}>
                             Bid on this Order
                         </Typography>
                         <Box
-                            sx={{ width: "100%" }}
+                            sx={{width: "100%"}}
                         >
                             <form onSubmit={handleSubmit}>
                                 <div>

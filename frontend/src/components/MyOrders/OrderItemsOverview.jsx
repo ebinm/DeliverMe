@@ -15,7 +15,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {formatUnitNumerusClausus} from "../../util/util";
 
 
-export function OrderItemsOverview({items, defaultExpanded, title="Items"}) {
+export function OrderItemsOverview({items, defaultExpanded, title = "Overview"}) {
 
     const headerSx = {
         "color": "text.light"

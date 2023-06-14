@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Typography, Box} from '@mui/material';
+import {Box, Grid, Typography} from '@mui/material';
 
 
 const Journey = () => {
@@ -37,8 +37,10 @@ const Journey = () => {
         },
     ];
     return (
-        <Box sx={{display: 'grid', minHeight: '400px', backgroundColor: '#F8F9F5', justifyContent: 'center',
-            paddingTop: '50px', paddingBottom: '50px'}}>
+        <Box sx={{
+            display: 'grid', minHeight: '400px', backgroundColor: '#F8F9F5', justifyContent: 'center',
+            paddingTop: '50px', paddingBottom: '50px'
+        }}>
             <Typography variant="h3" sx={{
                 justifySelf: 'center',
                 textAlign: 'center',
