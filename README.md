@@ -6,7 +6,7 @@
 
 Make sure your ip is whitelisted on AtlasDB. Else the backend can not connect with the instance.
 
-Whenever pulling a branch, just assume the dependencies have changed and run `npm i` (twice: one in `./.` and once in `./frontend`).
+Whenever pulling a branch, just assume the dependencies have changed and run `npm i --force` (twice: one in `./.` and once in `./frontend`).
 
 ### Scripts
 
@@ -58,6 +58,8 @@ I would not recommend this option though as it in theory poses a security risk.
 ## Simons
 
 Backend: npm run watchCompileTS & npm run watchRunNode
+
+Install: npm i --force
 
 Frontend: npm start
 

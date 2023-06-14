@@ -14,7 +14,7 @@ import { Show } from '../util/ControlFlow';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { GoogleMap, Marker, useJsApiLoader, DirectionsRenderer, InfoWindow } from '@react-google-maps/api';
+import { GoogleMap, Marker, useJsApiLoader, DirectionsRenderer } from '@react-google-maps/api';
 
 const ShopperChooseOrderView = () => {
     const [map, setMap] = useState(null);
@@ -77,6 +77,10 @@ const ShopperChooseOrderView = () => {
     const handleCloseBidOnOrderModal = () => {
         setShowBidOnOrderModal(false);
         //setShowOrderDetailsModal(true);
+    };
+
+    const handleBidOnOrder = () => {
+        // TODO
     };
 
     return (
@@ -192,14 +196,13 @@ const ShopperChooseOrderView = () => {
                                         label="Destination"
                                     />
                                 </>
-
                             )}
                         </GoogleMap>
                     </Show>
                 </Grid>
             </Grid>
             <Box display='flex' alignItems='center' justifyContent="flex-end" >
-                <Button variant="contained">Bid on Order</Button>
+                <Button variant="contained" onClick={handleBidOnOrder}>Bid on Order</Button> 
             </Box>
         </>
     );
