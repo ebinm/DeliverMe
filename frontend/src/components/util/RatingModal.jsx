@@ -12,11 +12,12 @@ export function RatingModal({open, onClose, orderId}) {
 
 
     return <BaseModal open={open} onClose={onClose}>
-        <Stack direction={"column"} sx={{"alignItems": "center", "justifyContent": "center"}}>
+        <Stack direction={"column"} gap={"32px"} sx={{"alignItems": "center", "justifyContent": "center"}}>
             {/*TODO*/}
-            <Typography>Please leave a rating for TODO</Typography>
+            <Typography variant={"h5"} component={"h2"}>Please leave a rating for TODO</Typography>
 
             <Rating
+                size={"large"}
                 name="rating-input"
                 value={rating}
                 max={5}
@@ -26,9 +27,12 @@ export function RatingModal({open, onClose, orderId}) {
                 }}
             />
 
-            <Stack direction={"row"}>
-                <OutlinedButton>Cancel</OutlinedButton>
-                <DarkButton>Submit</DarkButton>
+            <Stack direction={"row"} sx={{"alignSelf": "end"}} gap={"8px"}>
+                <OutlinedButton onClick={() => onClose()}>Cancel</OutlinedButton>
+                <DarkButton onClick={() => {
+                    //TODO
+                    console.warn("TODO")
+                }}>Submit</DarkButton>
             </Stack>
         </Stack>
     </BaseModal>

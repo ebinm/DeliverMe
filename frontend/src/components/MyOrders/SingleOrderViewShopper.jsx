@@ -10,6 +10,7 @@ import {FileUploader} from "react-drag-drop-files";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {RatingModal} from "../util/RatingModal";
 import {BaseModal} from "../util/BaseModal"
+import {Show} from "../util/ControlFlow"
 
 export function SingleOrderViewShopper({order, orderName}) {
 
@@ -33,7 +34,9 @@ export function SingleOrderViewShopper({order, orderName}) {
             }
             buttons={
                 <Stack mt={"16px"}>
-                    <DarkButton onClick={() => setUploadOpen(true)}>Upload Receipt</DarkButton>
+                    <Show when={order?.status === "In Progress"}>
+                        <DarkButton onClick={() => setUploadOpen(true)}>Upload Receipt</DarkButton>
+                    </Show>
                 </Stack>
 
             }
