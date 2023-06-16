@@ -96,5 +96,21 @@ function useCacheLocalStorageForCustomer(key, initialState = null, storageCondit
     return [value, setValue, clear]
 }
 
+function useExternalScripts(url, channelId, token,  id){
+    useEffect(() => {
+        const head = document.querySelector("head");
+        const script = document.createElement("script");
 
-export {useFetch, useCacheLocalStorageForCustomer}
+        script.setAttribute("src", url);
+        script.setAttribute("channelId", channelId);
+        script.setAttribute("token", token);
+        script.setAttribute("id", id);
+        head.appendChild(script);
+
+        return () => {
+            head.removeChild(script);
+        };
+    }, [url]);
+}
+
+export {useFetch, useCacheLocalStorageForCustomer, useExternalScripts}
