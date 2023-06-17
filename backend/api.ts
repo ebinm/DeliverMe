@@ -29,7 +29,6 @@ api.use(cors({
     },
 }));
 
-console.log('hier1');
 
 // API routes
 api.use("/api/shopper", shopperRoutes);
@@ -38,7 +37,7 @@ api.use("/api/buyer", buyerRoutes);
 
 api.use("/api/me", userRoutes);
 
-api.use("/order", orderRoutes);
+api.use("/api/orders", orderRoutes);
 
 
 export default api;
