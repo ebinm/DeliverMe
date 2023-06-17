@@ -41,7 +41,7 @@ api.use("/api/orders", orderRoutes);
 
 // Error handling
 api.use((err, req, res, next) => {
-     res.status(500).json({msg: err}) //TODO: err = "Internal Server Error" ????
+     res.status(500).json({msg: err}) //TODO:  @Lukas err is always undefined, why not do: err = "Internal Server Error" ????
  })
 
 export default api;

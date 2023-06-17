@@ -3,12 +3,8 @@ import {OrderModel} from '../models/order';
 
 // Controller methods for CRUD operations
 const getAllOrders = async (req: Request, res: Response) => {
-  try {
     const orders = await OrderModel.find();
     res.json(orders);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
 };
 
 const getOrderById = async (req: Request, res: Response) => {
