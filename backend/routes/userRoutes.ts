@@ -1,6 +1,8 @@
 import express from "express";
 import {authenticated, AuthenticatedRequest} from "../middleware/auth";
-import {findBuyerById, findShopperById} from "../controllers/userController";
+import {findBuyerById} from "../controllers/buyerController";
+import {findShopperById} from "../controllers/shopperController";
+import {findOrdersByBuyer, findOrdersByShopper} from "../controllers/orderController";
 
 
 const router = express.Router();
@@ -16,5 +18,19 @@ router.get("", authenticated, async (req: AuthenticatedRequest, res, next) => {
         next(e)
     }
 })
+
+router.get("/orders", authenticated, async (req: AuthenticatedRequest, res, next) => {
+    try {
+        if (req.customerType === "BUYER") {
+            res.json(await findOrdersByBuyer(req.customerId))
+        } else {
+            res.json(await findOrdersByShopper(req.customerId))
+        }
+    } catch (e) {
+        next(e)
+    }
+})
+
+
 
 export default router;

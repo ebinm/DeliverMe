@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import {OrderModel} from '../models/order';
+import {Order, OrderModel} from '../models/order';
 
 // Controller methods for CRUD operations
 const getAllOrders = async (req: Request, res: Response) => {
@@ -55,6 +55,18 @@ const deleteOrder = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+export async function findOrdersByBuyer(id: number): Promise<Order[]> {
+  const orders = await OrderModel.find()
+      .where("createdBy").equals(id);
+  return orders;
+}
+
+export async function findOrdersByShopper(id: number): Promise<Order[]> {
+  const orders = await OrderModel.find()
+      .where("selectedBid.createdBy").equals(id);
+  return orders;
+}
 
 export default {
   getAllOrders,
