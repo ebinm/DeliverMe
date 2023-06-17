@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import OrderModel from '../models/order';
+import {OrderModel} from '../models/order';
 
 // Controller methods for CRUD operations
 const getAllOrders = async (req: Request, res: Response) => {
@@ -29,6 +29,7 @@ const createOrder = async (req: Request, res: Response) => {
     await order.save();
     res.status(201).json(order);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };

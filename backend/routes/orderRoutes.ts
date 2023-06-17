@@ -4,6 +4,7 @@ import orderController from '../controllers/orderController';
 const 
 router = express.Router();
 
+// TODO: Bring in same form as in buyerRoutes.ts
 
 router.get('/', orderController.getAllOrders);
 router.get('/:id', orderController.getOrderById);

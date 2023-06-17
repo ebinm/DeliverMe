@@ -1,8 +1,10 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import {Buyer, Shopper} from './customer';
+import { Item, itemSchema } from './item';
+import { Bid, BidModel, bidSchema } from './bid';
 
 type Location = {
-    _id: Schema.Types.ObjectId;
+    // _id: Schema.Types.ObjectId; // automatically created by MongoDB
     geometry: {
         location: {
             lat: number;
@@ -12,65 +14,16 @@ type Location = {
     formattedAddress: string;
 }
 
-type Item = {
-    // _id: Schema.Types.ObjectId; // automatically created by MongoDB
-    name: string;
-    quantity: number;
-    unit: string;
-    brandName: string;
-    ifItemUnavailable: string;
-    note: string;
-}
-
-const itemSchema = new Schema<Item>(
-    {
-      name: { type: String, required: true },
-      quantity: { type: Number, required: true },
-      unit: { type: String, required: true },
-      brandName: { type: String, required: true },
-      ifItemUnavailable: { type: String, required: true },
-      note: { type: String, required: true },
-    }
-  );
-
-type Bid = {
-    // _id: Schema.Types.ObjectId; // automatically created by MongoDB
-    moneyBid: {
-        currency: string;
-        amount: number;
-    },
-    moneyBidWithFee: {
-        currency: string;
-        amount: number;
-    },
-    timeBid: Date;
-    note: string;
-    createdBy: typeof Shopper; 
-}
-
-const bidSchema = new Schema<Bid>(
-    {
-      moneyBid: {
-        currency: { type: String, required: true },
-        amount: { type: Number, required: true },
-      },
-      moneyBidWithFee: {
-        currency: { type: String, required: true },
-        amount: { type: Number, required: true },
-      },
-      timeBid: { type: Date, required: true },
-      note: { type: String, required: true },
-      createdBy: { type: Schema.Types.ObjectId, ref: Shopper, required: true },
-    }
-  );
-
-// Create the Bid model
-const BidModel = mongoose.model<Bid>('Bid', bidSchema);
-
+export enum OrderStatus {
+    Open = "Open",
+    InDelivery = "In Delivery",
+    InPayment = "In Payment",
+    Finished = "Finished",
+  }
 
 export interface Order extends Document {
     //_id: Schema.Types.ObjectId;   // automatically created by MongoDB
-    status: string;
+    status: OrderStatus;
     creationDate: Date;
     latestDeliveryDate: Date;
     earliestDeliveryDate: Date;
@@ -86,7 +39,7 @@ export interface Order extends Document {
 
 const orderSchema = new Schema<Order>(
     {
-        status: { type: String, required: true },
+        status: { type: String, enum: Object.values(OrderStatus), required: true },
         creationDate: { type: Date, required: true },
         latestDeliveryDate: { type: Date, required: true },
         earliestDeliveryDate: { type: Date, required: true },
@@ -113,11 +66,11 @@ const orderSchema = new Schema<Order>(
               message: 'Invalid bid ID',
             },
           },
-        bids: { type: [bidSchema], required: false  },
+        bids: { type: [bidSchema],  default: null, required: false },
     },
     { timestamps: true }
 );
 
 const OrderModel = mongoose.model<Order>('Order', orderSchema);
 
-export default OrderModel;
+export {OrderModel}
