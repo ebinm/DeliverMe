@@ -68,6 +68,11 @@ export async function findOrdersByShopper(id: number): Promise<Order[]> {
   return orders;
 }
 
+export async function findBidOrdersByShopper(id: number): Promise<Order[]> {
+  const orders = await OrderModel.find( { bids: { $elemMatch: {createdBy: id } }})
+  return orders;
+}
+
 export default {
   getAllOrders,
   getOrderById,
