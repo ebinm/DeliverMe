@@ -1,24 +1,53 @@
 import express from 'express';
-import orderController from '../controllers/orderController';
+import {authenticated, AuthenticatedRequest} from "../middleware/auth";
+import {createOrder, deleteOrder, getAllOrders, getOrderById, updateOrder} from "../controllers/orderController";
 
-const 
-router = express.Router();
+const
+    router = express.Router();
 
-
-
-router.get('/', async (req, res, next) => {
+router.get("/", authenticated, async (req: AuthenticatedRequest, res, next) => {
     try {
-        await orderController.getAllOrders(req, res)
+        res.json(await getAllOrders())
     } catch (e) {
         console.log(e)
-        next(e)
+        next(e.message)
     }
-});
+})
 
-// TODO: Bring in same form as in buyerRoutes.ts
-router.get('/:id', orderController.getOrderById);
-router.post('/', orderController.createOrder);
-router.put('/:id', orderController.updateOrder);
-router.delete('/:id', orderController.deleteOrder);
+router.get("/:id", authenticated, async (req: AuthenticatedRequest, res, next) => {
+    try {
+        res.json(await getOrderById(req.params.id));
+    } catch (e) {
+        console.log(e)
+        next(e.message)
+    }
+})
+
+router.post("/", authenticated, async (req: AuthenticatedRequest, res, next) => {
+    try {
+        res.json(await createOrder(req.body))
+    } catch (e) {
+        console.log(e)
+        next(e.message)
+    }
+})
+
+router.put("/:id", authenticated, async (req: AuthenticatedRequest, res, next) => {
+    try {
+        res.json(await updateOrder(req.params.id, req.body))
+    } catch (e) {
+        console.log(e)
+        next(e.message)
+    }
+})
+
+router.delete("/:id", authenticated, async (req: AuthenticatedRequest, res, next) => {
+    try {
+        res.json(await deleteOrder(req.params.id))
+    } catch (e) {
+        console.log(e)
+        next(e.message)
+    }
+})
 
 export default router;
