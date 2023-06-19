@@ -4,10 +4,10 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import Modal from '@mui/material/Modal';
 import {useTheme} from "@mui/material/styles"
 import {Autocomplete} from '@react-google-maps/api';
 import {useSnackbar} from 'notistack';
+import {BaseModal} from "../../util/BaseModal"
 
 const DefineCustomShopModal = ({
                                    showModal,
@@ -67,7 +67,7 @@ const DefineCustomShopModal = ({
 
     return (
         <div>
-            <Modal
+            <BaseModal
                 open={showModal}
                 onClose={handleCloseModal}
                 aria-labelledby="modal-modal-title"
@@ -123,7 +123,7 @@ const DefineCustomShopModal = ({
                         </Box>
                     </Box>
                 </>
-            </Modal>
+            </BaseModal>
         </div>
     );
 };
