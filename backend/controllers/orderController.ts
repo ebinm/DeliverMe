@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import {Request, Response} from 'express';
 import {OrderModel} from '../models/order';
 
 // Controller methods for CRUD operations

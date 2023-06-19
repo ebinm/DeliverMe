@@ -1,12 +1,26 @@
-import mongoose from "mongoose";
+import mongoose, {Document} from "mongoose";
+
+export enum NotificationType {
+    MessageReceived = "MessageReceived"
+}
+
+// Redundant User prefix to avoid naming collision
+export interface UserNotification extends Document {
+    type: NotificationType
+}
 
 type Customer = {
     email: string,
     firstName: string,
     lastName: string,
     password: string,
-    profilePicture: string
+    profilePicture: string,
+    notifications: UserNotification[]
 }
+
+const NotificationSchema = new mongoose.Schema<Notification>({
+    type: {type: String, enum: Object.values(NotificationType), required: true},
+})
 
 type CustomerType = "BUYER" | "SHOPPER"
 
@@ -34,6 +48,9 @@ const CustomerSchema = new mongoose.Schema<Customer>({
     },
     profilePicture: {
         type: String
+    },
+    notifications: {
+        type: [NotificationSchema]
     }
 });
 
