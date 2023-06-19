@@ -1,8 +1,27 @@
 import {Order, OrderModel} from '../models/order';
+import {findBuyerById} from "./buyerController";
 
 export async function getAllOrders(): Promise<Order[]> {
 
     return await OrderModel.find();
+
+}
+
+export async function getAllOrdersWithCreator(): Promise<Order[]> {
+
+    const orders = await OrderModel.aggregate().lookup({from: "buyers", localField: "createdBy",
+        foreignField: "_id", as: "createdBy"})
+    let resultOrders;
+
+    /*
+    for (let i = 0; i < orders.length; i++) {
+
+        orders[i].createdBy = findBuyerById(orders[i].createdBy.toString())
+        resultOrders = resultOrders.push()
+    }
+
+     */
+    return orders;
 
 }
 
