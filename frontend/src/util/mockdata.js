@@ -10,21 +10,20 @@ const mockedOrders = [
         groceryShop: {
 
             ///// Google Maps API response object /////
-            place_id: "ChIJoeM2T0Q8nkcRJr9jNMktPow", // All maps objects have place_id
+            // place_id: "ChIJoeM2T0Q8nkcRJr9jNMktPow", // All maps objects have place_id
             geometry: { // All maps objects have geometry with location
                 location: {lat: 48.12838420000001, lng: 11.5977815}
             },
-            formatted_address: "Karlsplatz 25, München", //location object have formatted_address but no vicinity
-            vicinity: "Karlsplatz 25, München", // shop object have vicinity but no formatted_address
+            // formatted_address: "Karlsplatz 25, München", //location object have formatted_address but no vicinity
+            // vicinity: "Karlsplatz 25, München", // shop object have vicinity but no formatted_address
             ///////////////////////////////////////////
             
             name: "REWE",
             street: "Ungerstraße 54",
             city: "Munich",
-            state: "Bavaria",
-            postalCode: "80331",
-            country: "DE",
-
+            //state: "Bavaria",
+            //postalCode: "80331",
+            //country: "DE",
         },
         createdBy: {
             firstName: "Betty",
@@ -35,18 +34,18 @@ const mockedOrders = [
         },
         destination: {
             ///// Google Maps API response object /////
-            place_id: "ChIJwcfcMHIXdkcRVG-tsrdzL8U", // All maps objects have place_id
+            // place_id: "ChIJwcfcMHIXdkcRVG-tsrdzL8U", // All maps objects have place_id
             geometry: { // All maps objects have geometry with location
                 location: {lat: 48.1493467, lng: 11.5582261}
             },
-            formatted_address: "Karlsplatz 25, München", //location object have formatted_address but no vicinity
+            // formatted_address: "Münchernerstraße 32, München", //location object have formatted_address but no vicinity
             ///////////////////////////////////////////
 
             street: "Münchernerstraße 32",
             city: "Munich",
-            state: "Bavaria",
-            postalCode: "80331",
-            country: "DE"
+            //state: "Bavaria",
+            //postalCode: "80331",
+            //country: "DE"
         },
         items: [
             {
@@ -129,20 +128,20 @@ const mockedOrders = [
         note: "Please do not ring the doorbell",
         groceryShop: {
             ///// Google Maps API response object /////
-            place_id: "ChIJKRlMEYp1nkcR5-rTiWjgjTM",
+            // place_id: "ChIJKRlMEYp1nkcR5-rTiWjgjTM",
             geometry: {
                 location: {lat: 48.12838420000001, lng: 11.5977815}
             },
-            formatted_address: "Karlsplatz 25, München",
-            vicinity: "Karlsplatz 25, München",
+            // formatted_address: "Weißenburger Str. 20, München",
+            // vicinity: "Weißenburger Str. 20, München",
             ///////////////////////////////////////////
 
             name: "REWE",
             street: "Ungerstraße 54",
             city: "Munich",
-            state: "Bavaria",
-            postalCode: "80331",
-            country: "DE"
+            //state: "Bavaria",
+            //postalCode: "80331",
+            //country: "DE"
         },
         destination: {
 
@@ -151,16 +150,16 @@ const mockedOrders = [
             geometry: {
                 location: {lat: 47.7999339, lng: 12.1655022}
             },
-            formatted_address: "Karlsplatz 25, München",
-            vicinity: "Karlsplatz 25, München",
+            formatted_address: "Simons str. 33, Rohrdorf",
+            vicinity: "Simons str. 33, Rohrdorf",
             ///////////////////////////////////////////
 
             name: "Shop name",
             street: "Münchernerstraße 32",
             city: "Munich",
-            state: "Bavaria",
-            postalCode: "80331",
-            country: "DE"
+            //state: "Bavaria",
+            //postalCode: "80331",
+            //country: "DE"
         },
         createdBy: {
             firstName: "Betty",
