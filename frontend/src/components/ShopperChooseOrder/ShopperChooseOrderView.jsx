@@ -21,7 +21,7 @@ const ShopperChooseOrderView = () => {
     const [showOrderDetailsModal, setShowOrderDetailsModal] = useState(false);
     const [showBidOnOrderModal, setShowBidOnOrderModal] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
-    const [orders, setOrders] = useState([]);
+    const [orders, setOrders] = useState(mockedOrders); //todo: delete mockdata
     const [directions, setDirections] = useState(null);
     const [mapKey, setMapKey] = useState(0);
 
@@ -44,7 +44,12 @@ const ShopperChooseOrderView = () => {
 
         const fetchOrders = async () => {
           try {
-            const response = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders`);
+            const response = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/withCreator`, 
+            {
+                credentials: "include",
+                withCredentials: true
+            }
+              );
             const data = await response.json();
             console.log('Orders:', data);
             setOrders(data);

@@ -30,7 +30,8 @@ const mockedOrders = [
             lastName: "Zhang",
             ratingStarAverage: 4,
             phoneNumber: "2452462346236",
-            email: "betty.zhang@betty.zhang"
+            email: "betty.zhang@betty.zhang",
+            profilePicture: "https://www.w3schools.com/howto/img_avatar.png"
         },
         destination: {
             ///// Google Maps API response object /////
@@ -75,7 +76,8 @@ const mockedOrders = [
                 lastName: "Brumer",
                 ratingStarAverage: 4,
                 phoneNumber: "82371519824",
-                email: "simon.brumer@simon.brumer"
+                email: "simon.brumer@simon.brumer",
+                profilePicture: "https://www.w3schools.com/howto/img_avatar.png"
             }
         },
         bids: [
@@ -166,7 +168,8 @@ const mockedOrders = [
             lastName: "Zhang",
             ratingStarAverage: 4,
             phoneNumber: "2452462346236",
-            email: "betty.zhang@betty.zhang"
+            email: "betty.zhang@betty.zhang",
+            profilePicture: "https://www.w3schools.com/howto/img_avatar.png"
         },
         items: [
             {
