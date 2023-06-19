@@ -1,6 +1,13 @@
 import express from 'express';
 import {authenticated, AuthenticatedRequest} from "../middleware/auth";
-import {createOrder, deleteOrder, getAllOrders, getOrderById, updateOrder} from "../controllers/orderController";
+import {
+    createOrder,
+    deleteOrder,
+    getAllOrders,
+    getAllOrdersWithCreator,
+    getOrderById,
+    updateOrder
+} from "../controllers/orderController";
 
 const
     router = express.Router();
@@ -8,6 +15,15 @@ const
 router.get("/", authenticated, async (req: AuthenticatedRequest, res, next) => {
     try {
         res.json(await getAllOrders())
+    } catch (e) {
+        console.log(e)
+        next(e.message)
+    }
+})
+
+router.get("/withCreator", authenticated, async (req: AuthenticatedRequest, res, next) => {
+    try {
+        res.json(await getAllOrdersWithCreator())
     } catch (e) {
         console.log(e)
         next(e.message)

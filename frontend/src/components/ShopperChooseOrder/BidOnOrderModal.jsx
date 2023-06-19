@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import Modal from '@mui/material/Modal';
+import {BaseModal} from "../util/BaseModal"
 import { useTheme } from "@mui/material/styles"
 import { useSnackbar } from 'notistack';
 import { DateTimePicker } from "@mui/x-date-pickers";
@@ -44,7 +44,7 @@ const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, Orde
 
     return (
         <div>
-            <Modal
+            <BaseModal
                 open={showBidOnOrderModal}
                 onClose={handleCloseBidOnOrderModal}
                 aria-labelledby="modal-modal-title"
@@ -89,7 +89,7 @@ const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, Orde
                         </Box>
                     </Box>
                 </>
-            </Modal>
+            </BaseModal>
         </div>
     );
 };

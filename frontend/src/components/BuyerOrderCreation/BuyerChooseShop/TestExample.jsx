@@ -81,7 +81,7 @@ const TestExample = () => {
     const handleMarkerClick = (shop) => {
         setSelectedShop(shop);
     };
-    const handleInfoWindowClose = () => { //kann weg
+    const handleInfoWindowClose = () => { // TODO: kann weg
         setSelectedShop(null);
     };
 

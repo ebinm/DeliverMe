@@ -11,7 +11,9 @@ type Location = {
             lng: number;
         };
     };
-    formattedAddress: string;
+    name: string, // Only shop locations have a name 
+    street: string,
+    city: string | null,
 }
 
 export enum OrderStatus {

@@ -1,8 +1,34 @@
-import {Order, OrderModel} from '../models/order';
+import { Order, OrderModel } from '../models/order';
+import { findBuyerById } from "./buyerController";
 
 export async function getAllOrders(): Promise<Order[]> {
 
     return await OrderModel.find();
+
+}
+
+export async function getAllOrdersWithCreator(): Promise<Order[]> {
+
+    const orders = await OrderModel.aggregate().lookup({
+        from: "buyers",
+        localField: "createdBy",
+        foreignField: "_id",
+        as: "createdBy"
+    },
+    ).addFields({
+        createdBy: { $arrayElemAt: ["$createdBy", 0] } // extracts user from list
+    })
+
+
+    /*
+    for (let i = 0; i < orders.length; i++) {
+
+        orders[i].createdBy = findBuyerById(orders[i].createdBy.toString())
+        resultOrders = resultOrders.push()
+    }
+
+     */
+    return orders;
 
 }
 
@@ -48,13 +74,13 @@ export async function findOrdersByShopper(shopperId: number): Promise<Order[]> {
 export async function findBidOrdersByShopper(shopperId: number): Promise<Order[]> {
 
     return await OrderModel
-        .find({bids: {$elemMatch: {createdBy: shopperId}}});
+        .find({ bids: { $elemMatch: { createdBy: shopperId } } });
 
 }
 
 export async function order(buyerId: number, order: Order) {
 
-    if(order.createdBy.toString() !== buyerId.toString()) {
+    if (order.createdBy.toString() !== buyerId.toString()) {
         throw new Error("Order is unsupported: createdBy is not equal to customerId")
     } else {
         return createOrder(order);

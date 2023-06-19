@@ -29,7 +29,7 @@ export function SingleOrderViewShopper({ order }) {
                         <Typography color={"text.light"} variant={"h6"} component={"h3"}>My bid</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <SingleBidView bid={order.selectedBid} highlightOnHover={false}/>
+                       {order.selectedBid && (<SingleBidView bid={order.selectedBid} highlightOnHover={false}/>)} 
                     </AccordionDetails>
                 </Accordion>
             }
