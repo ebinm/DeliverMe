@@ -1,65 +1,65 @@
-import { Request, Response } from 'express';
-import {OrderModel} from '../models/order';
+import {Order, OrderModel} from '../models/order';
 
-// Controller methods for CRUD operations
-const getAllOrders = async (req: Request, res: Response) => {
-    const orders = await OrderModel.find();
-    res.json(orders);
-};
+export async function getAllOrders(): Promise<Order[]> {
 
-const getOrderById = async (req: Request, res: Response) => {
-  try {
-    const order = await OrderModel.findById(req.params.id);
-    if (!order) {
-      return res.status(404).json({ error: 'Order not found' });
-    }
-    res.json(order);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-};
+    return await OrderModel.find();
 
-const createOrder = async (req: Request, res: Response) => {
-  try {
-    const order = new OrderModel(req.body);
-    await order.save();
-    res.status(201).json(order);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-};
+}
 
-const updateOrder = async (req: Request, res: Response) => {
-  try {
-    const order = await OrderModel.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
+export async function getOrderById(orderId: string): Promise<Order> {
+    return await OrderModel.findById(orderId)
+}
+
+export async function createOrder(order: Order) {
+
+    const orderModel = new OrderModel(order);
+    return await orderModel.save();
+
+}
+
+export async function updateOrder(orderId: string, order: Order) {
+
+    return await OrderModel.findByIdAndUpdate(orderId, order, {
+        new: true,
     });
-    if (!order) {
-      return res.status(404).json({ error: 'Order not found' });
-    }
-    res.json(order);
-  } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-};
 
-const deleteOrder = async (req: Request, res: Response) => {
-  try {
-    const order = await OrderModel.findByIdAndDelete(req.params.id);
-    if (!order) {
-      return res.status(404).json({ error: 'Order not found' });
-    }
-    res.json({ message: 'Order deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-};
+}
 
-export default {
-  getAllOrders,
-  getOrderById,
-  createOrder,
-  updateOrder,
-  deleteOrder,
-};
+export async function deleteOrder(orderId: string) {
+
+    return await OrderModel.findByIdAndDelete(orderId);
+
+}
+
+export async function findOrdersByBuyer(buyerId: number): Promise<Order[]> {
+
+    return await OrderModel.find()
+        .where("createdBy").equals(buyerId);
+
+}
+
+export async function findOrdersByShopper(shopperId: number): Promise<Order[]> {
+
+    return await OrderModel.find()
+        .where("selectedBid.createdBy").equals(shopperId);
+
+}
+
+export async function findBidOrdersByShopper(shopperId: number): Promise<Order[]> {
+
+    return await OrderModel
+        .find({bids: {$elemMatch: {createdBy: shopperId}}});
+
+}
+
+export async function order(buyerId: number, order: Order) {
+
+    if(order.createdBy.toString() !== buyerId.toString()) {
+        throw new Error("Order is unsupported: createdBy is not equal to customerId")
+    } else {
+        return createOrder(order);
+    }
+
+}
+
+

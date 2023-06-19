@@ -1,6 +1,6 @@
 
 import {Shopper} from './customer';
-import mongoose, { Schema } from 'mongoose';
+import { Schema } from 'mongoose';
 
 
 type Bid = {
@@ -34,7 +34,4 @@ const bidSchema = new Schema<Bid>(
     }
   );
 
-// Create the Bid model
-const BidModel = mongoose.model<Bid>('Bid', bidSchema);
-
-export {Bid, BidModel, bidSchema}
+export {Bid, bidSchema}
