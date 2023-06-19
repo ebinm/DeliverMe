@@ -1,5 +1,6 @@
 import {createContext, useContext, useEffect, useState} from "react";
 import {CustomerContext} from "./CustomerContext";
+import {io} from "socket.io-client";
 
 
 const NotificationContext = createContext({
@@ -17,10 +18,11 @@ function NotificationProvider({children}) {
 
     useEffect(() => {
         // TODO make url dynamic
-        // Note: Do not import this from ws even if your ide tells you to :p
-        const ws = new WebSocket("wss://localhost:8443")
 
-        ws.addEventListener("message", (event) => {
+        const ws = io("wss://localhost:8443", {
+            withCredentials: true
+        })
+        ws.on("message", (event) => {
             // TODO actually filter the type of event that was received so we can support
             setNotifications(prev => [JSON.parse(event.data), ...prev])
         })
