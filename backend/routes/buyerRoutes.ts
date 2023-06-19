@@ -8,7 +8,8 @@ router.post("/signup", async (req, res, next) => {
     try {
         await signup(req, res, "BUYER")
     } catch (e) {
-        next(e)
+        console.log(e)
+        next(e.message)
     }
 })
 
@@ -18,7 +19,8 @@ router.post("/login", async (req, res, next) => {
     try {
         await login(req, res, "BUYER")
     } catch (e) {
-        next(e)
+        console.log(e)
+        next(e.message)
     }
 })
 
