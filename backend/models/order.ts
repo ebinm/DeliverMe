@@ -33,7 +33,7 @@ export interface Order extends Document {
     createdBy:  typeof Buyer; 
     destination: Location;
     items: Item[];
-    selectedBid: Schema.Types.ObjectId | null; // Allow null if no bid is selected
+    selectedBid: Bid | null; // Allow null if no bid is selected
     bids: Bid[];
 }
 

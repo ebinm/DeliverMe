@@ -1,7 +1,7 @@
 import express from 'express';
-import orderController, {findOrdersByBuyer, findOrdersByShopper} from '../controllers/orderController';
 import {authenticated, AuthenticatedRequest} from "../middleware/auth";
 import {Schema} from "mongoose";
+import {createOrder, deleteOrder, getAllOrders, getOrderById, updateOrder} from "../controllers/orderController";
 
 const
     router = express.Router();
@@ -24,7 +24,7 @@ const
 
 router.get("/", authenticated, async (req: AuthenticatedRequest, res, next) => {
     try {
-        res.json(await orderController.getAllOrders())
+        res.json(await getAllOrders())
     } catch (e) {
         next(e)
     }
@@ -32,7 +32,7 @@ router.get("/", authenticated, async (req: AuthenticatedRequest, res, next) => {
 
 router.get("/:id", authenticated, async (req: AuthenticatedRequest, res, next) => {
     try {
-        res.json(await orderController.getOrderById(req.params.id));
+        res.json(await getOrderById(req.params.id));
     } catch (e) {
         next(e)
     }
@@ -40,7 +40,7 @@ router.get("/:id", authenticated, async (req: AuthenticatedRequest, res, next) =
 
 router.post("/", authenticated, async (req: AuthenticatedRequest, res, next) => {
     try {
-        res.json(await orderController.createOrder(req.body))
+        res.json(await createOrder(req.body))
     } catch (e) {
         next(e)
     }
@@ -48,7 +48,7 @@ router.post("/", authenticated, async (req: AuthenticatedRequest, res, next) => 
 
 router.put("/:id", authenticated, async (req: AuthenticatedRequest, res, next) => {
     try {
-        res.json(await orderController.updateOrder(req.params.id, req.body))
+        res.json(await updateOrder(req.params.id, req.body))
     } catch (e) {
         next(e)
     }
@@ -56,7 +56,7 @@ router.put("/:id", authenticated, async (req: AuthenticatedRequest, res, next) =
 
 router.delete("/:id", authenticated, async (req: AuthenticatedRequest, res, next) => {
     try {
-        res.json(await orderController.deleteOrder(req.params.id))
+        res.json(await deleteOrder(req.params.id))
     } catch (e) {
         next(e)
     }

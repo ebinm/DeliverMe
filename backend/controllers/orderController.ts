@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 import {Order, OrderModel} from '../models/order';
-import {Bid} from "../models/bid";
+import {Bid, BidModel, bidSchema} from "../models/bid";
 
 // Controller methods for CRUD operations
 // const getAllOrders = async (req: Request, res: Response) => {
@@ -62,8 +62,8 @@ export async function getAllOrders(): Promise<Order[]> {
     return orders;
 }
 
-export async function getOrderById(id: string): Promise<Order> {
-    const order = await OrderModel.findById(id);
+export async function getOrderById(orderId: string): Promise<Order> {
+    const order = await OrderModel.findById(orderId);
     return order
 }
 
@@ -73,44 +73,34 @@ export async function createOrder(order: Order) {
     return savedOrder;
 }
 
-export async function updateOrder(id: string, order: Order) {
-    const updatedOrder = await OrderModel.findByIdAndUpdate(id, order, {
+export async function updateOrder(orderId: string, order: Order) {
+    const updatedOrder = await OrderModel.findByIdAndUpdate(orderId, order, {
         new: true,
     });
     return updatedOrder;
 }
 
-export async function deleteOrder(id: string) {
-    const deletedOrder = await OrderModel.findByIdAndDelete(id);
+export async function deleteOrder(orderId: string) {
+    const deletedOrder = await OrderModel.findByIdAndDelete(orderId);
     return deletedOrder;
 }
 
-export async function findOrdersByBuyer(id: number): Promise<Order[]> {
+export async function findOrdersByBuyer(buyerId: number): Promise<Order[]> {
     const orders = await OrderModel.find()
-        .where("createdBy").equals(id);
+        .where("createdBy").equals(buyerId);
     return orders;
 }
 
-export async function findOrdersByShopper(id: number): Promise<Order[]> {
+export async function findOrdersByShopper(shopperId: number): Promise<Order[]> {
     const orders = await OrderModel.find()
-        .where("selectedBid.createdBy").equals(id);
+        .where("selectedBid.createdBy").equals(shopperId);
     return orders;
 }
 
-export async function findBidOrdersByShopper(id: number): Promise<Order> {
-    const order = await OrderModel.findByIdAndDelete(id);
-    return order;
+export async function findBidOrdersByShopper(shopperId: number): Promise<Order[]> {
+    const orders = await OrderModel
+        .find({bids: {$elemMatch: {createdBy: shopperId}}})
+    return orders;
 }
-//
-// export async function bidOnOrder(id: number, bid: Bid): Promise<Order> {
-//     const order = await OrderModel.findByIdAndDelete(id);
-//     return order;
-// }
 
-export default {
-    getAllOrders,
-    getOrderById,
-    createOrder,
-    updateOrder,
-    deleteOrder,
-};
+
