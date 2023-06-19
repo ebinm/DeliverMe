@@ -9,6 +9,15 @@ import PaymentForm from './PaymentForm';
 
 const theme = createTheme();
 
+const baseURL = 'http://localhost:5000';
+
+const response = await axios.post(`${baseURL}/api/payment/verify`, {
+  cardNumber: '1234567890123456', // Replace with actual card number
+  cardName: 'John Doe', // Replace with actual cardholder name
+  expiration: '12/24', // Replace with actual expiration date
+  cvc: '123', // Replace with actual CVC
+});
+
 const containerStyle = {
   position: 'center',
   width: '845px',
@@ -62,8 +71,17 @@ const CheckoutPage = () => {
 
   const handleConfirm = () => {
     // Handle confirm order
-    console.log('Order confirmed');
-    handleClose();
+    
+    
+    axios.post('http://localhost:3001/api/checkout/payment', paymentData)
+    .then(response => {
+      // Handle success response
+      console.log('Payment confirmed');
+    })
+    .catch(error => {
+      // Handle error response
+      console.error('Error confirming payment:', error);
+    });
   };
 
   const buttonContainerStyle = {
