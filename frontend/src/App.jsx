@@ -16,8 +16,6 @@ import {NotificationProvider} from "./util/context/NotificationContext";
 import {SnackbarProvider} from 'notistack';
 import {BuyerOrderCreationView} from "./components/BuyerOrderCreation/BuyerOrderCreationView";
 import LandingPage from "./components/landingPage/LandingPage";
-
-import { Box } from "@mui/material";
 import './App.css';
 
 function App() {
@@ -33,8 +31,8 @@ function App() {
                             <Route path={"/shopper/signup"} element={<Signup type={"shopper"}/>}/>
                             <Route path={"/buyer/signup"} element={<Signup type={"buyer"}/>}/>
                             <Route path={"/login"} element={<Login/>}/>
-                            <Route path={"/buyer/my-orders"} element={<BuyerMyOrders/>}/>
-                            <Route path={"/shopper/my-orders"} element={<ShopperMyOrders/>}/>
+                            <Route path={"/buyer/my-orders/:id?"} element={<BuyerMyOrders/>}/>
+                            <Route path={"/shopper/my-orders/:id?"} element={<ShopperMyOrders/>}/>
                             <Route path={"/buyer/order/create/*"} element={<BuyerOrderCreationView/>}/>
                             <Route path={"/checkout"} element={<CheckoutForm/>} />
                             <Route path={"test/map-shop"} element={<BuyerChooseShopView/>}/>

@@ -19,12 +19,14 @@ import ListIcon from '@mui/icons-material/List';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import LogoutIcon from '@mui/icons-material/Logout';
 import GradeIcon from '@mui/icons-material/Grade';
-import ReceiptIcon from '@mui/icons-material/Receipt';
-import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import moment from "moment"
 import {NotificationContext} from "../util/context/NotificationContext";
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import ChecklistIcon from '@mui/icons-material/Checklist';
+import ClearIcon from '@mui/icons-material/Clear';
+import EmailIcon from '@mui/icons-material/Email';
+import PaymentIcon from '@mui/icons-material/Payment';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 
 export default function Header() {
     const {customer} = useContext(CustomerContext)
@@ -145,7 +147,7 @@ function AvatarDialogRaw({open, close}, ref) {
     const {logout, customer} = useContext(CustomerContext)
 
     // TODO mark if any notifications
-    const {notifications, markAsRead} = useContext(NotificationContext)
+    const {notifications} = useContext(NotificationContext)
 
     // For anchoring
     const notificationRef = useRef();
@@ -228,7 +230,7 @@ function AvatarDialogRaw({open, close}, ref) {
             </Menu>
             <Notifications close={() => {
                 setNotificationsOpen(false)
-                markAsRead()
+                // markAsRead()
             }} open={notificationsOpen}
                            ref={notificationRef?.current}/>
         </>
@@ -239,7 +241,9 @@ const Notifications = forwardRef(NotificationsRaw)
 
 function NotificationsRaw({open, close}, ref) {
 
-    const {notifications} = useContext(NotificationContext)
+    const {notifications, markAsRead} = useContext(NotificationContext)
+    const {customer} = useContext(CustomerContext)
+    const navigate = useNavigate()
 
     const menuItemSx = {
         "margin": "8px 0",
@@ -265,14 +269,36 @@ function NotificationsRaw({open, close}, ref) {
             }}>
                 <Typography variant={"h6"} component={"span"}>Notifications</Typography>
                 <For each={notifications} fallback={<Typography>No notifications</Typography>}>{notification =>
-                    <MenuItem key={notification._id} sx={menuItemSx}>
-                        <Box display={"grid"} gridTemplateColumns={"min-content auto"} alignItems={"center"}>
+                    <MenuItem key={notification._id} sx={menuItemSx} onClick={() => {
+                        const destination = notificationTypeToLink(notification.type, notification.orderId, customer.type)
+                        if (destination) {
+                            navigate(destination)
+                        }
+                    }}>
+                        <Box display={"grid"} gridTemplateColumns={"min-content auto min-content"} flexGrow={1}
+                             columnGap={"8px"} alignItems={"center"}>
                             <ListItemIcon sx={{"gridRow": "span 2"}}>
                                 {notificationTypeToIcon(notification.type)}
                             </ListItemIcon>
                             <ListItemText>{notification.msg}</ListItemText>
+                            <ListItemIcon onClick={(e) =>{
+                                e.stopPropagation()
+                                markAsRead(notification._id)
+                            }
+                            } sx={{
+                                "gridRow": "span 2", "gridColumn": 3, "&:hover": {
+                                    "color": "primary.dark"
+                                }
+                            }}>
+                                <ClearIcon/>
+                            </ListItemIcon>
                             <ListItemText
-                                sx={{color: "text.light"}}>{moment(notification.date).fromNow()}</ListItemText>
+                                sx={{
+                                    color: "text.light",
+                                    "alignSelf": "end",
+                                    "minWidth": "0"
+                                }}>{moment(notification.date).fromNow()}
+                            </ListItemText>
                         </Box>
                     </MenuItem>
                 }</For>
@@ -281,14 +307,32 @@ function NotificationsRaw({open, close}, ref) {
     )
 }
 
+function notificationTypeToLink(type, orderId, customerType) {
+    switch (type) {
+        case "ChatMessageReceived":
+            // TODO actual path
+            return `/${customerType.toLowerCase()}/${orderId || ""}/chat`
+        case "BidPlacedOnOrder":
+        case "BidAccepted":
+            return `/${customerType.toLowerCase()}/my-orders/${orderId || ""}`
+        case "PaymentRequired":
+            // TODO actual path
+            return "/checkout"
+        default:
+            return undefined
+    }
+}
+
 function notificationTypeToIcon(type) {
     switch (type) {
-        case "rating":
+        case "ChatMessageReceived":
+            return <EmailIcon/>
+        case "BidPlacedOnOrder":
+            return <LocalOfferIcon/>
+        case "PaymentRequired":
+            return <PaymentIcon/>
+        case "BidAccepted":
             return <GradeIcon/>
-        case "invoice":
-            return <ReceiptIcon/>
-        case "purchaseCompleted":
-            return <AssignmentTurnedInIcon/>
         default:
             return <></>
     }

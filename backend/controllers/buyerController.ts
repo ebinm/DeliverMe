@@ -1,4 +1,5 @@
 import {Buyer, Customer, Typed} from "../models/customer";
+import {clearNotificationsById} from "./userController";
 
 
 export async function findBuyerById(id: string): Promise<Customer & Typed> {
@@ -8,6 +9,10 @@ export async function findBuyerById(id: string): Promise<Customer & Typed> {
         type: "BUYER",
         ...buyer.toJSON()
     }
+}
+
+export async function clearNotificationsForBuyerById(id: string, notificationId?: string): Promise<void> {
+    await clearNotificationsById(Buyer, id, notificationId)
 }
 
 

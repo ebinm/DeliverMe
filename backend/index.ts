@@ -2,10 +2,11 @@ import fs from 'fs';
 import https from 'https';
 import dotenv from 'dotenv'
 import mongoose from "mongoose";
-import {WebSocketServer} from "ws";
 import * as http from "http";
-import {getMockNotification} from "./datamock/notifications";
 import api from "./api";
+import io from "socket.io"
+import {createNotificationService} from "./services/notificationService";
+import {NotificationType} from "./models/notification";
 
 dotenv.config();
 console.log("MongoDB URL: ", process.env.MONGO_URL);
@@ -27,19 +28,28 @@ try {
 }
 
 
-const wss = new WebSocketServer({server})
+const socketIOSerer = new io.Server(server,
+    {
+        cors: {
+            //TODO similarly to cors in main server: do not hardcode
+            origin: "https://localhost:3000",
+            methods: ["GET", "POST"],
+            credentials: true
+        },
+    });
+const notificationService = createNotificationService(socketIOSerer)
 
-
-wss.on("connection", (ws) => {
-    const tm = setInterval(() => {
-        ws.send(JSON.stringify(getMockNotification()))
-    }, 8000)
-
-    ws.on("error", () => {
-        clearTimeout(tm)
+setInterval(() => {
+    notificationService.notifyShopperById("6473979f6b18270b0d682b22", {
+        msg: "awd",
+        date: new Date(),
+        orderId: "tq28uhzajpa21233tt242t3423t4356793474pajc9j",
+        type: NotificationType.BidAccepted
     })
-})
+
+}, 4000)
 
 
 server.listen(PORT, () => console.log(`Listening on port: ${PORT}.`));
 
+export {notificationService}

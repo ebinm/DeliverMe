@@ -1,6 +1,8 @@
 import {Order, OrderModel} from '../models/order';
 import {getOrderById, updateOrder} from "./orderController";
 import {Bid} from "../models/bid";
+import {notificationService} from "../index";
+import {NotificationType} from "../models/notification";
 
 //TODO
 export async function getAllBids(): Promise<Bid[]> {
@@ -26,7 +28,7 @@ export async function getBidById(id: string): Promise<Bid> {
     })
     return bids[0];
 }
-export async function bidOnOrder(shopperId: number, orderId: string, bid: Bid): Promise<Order> {
+export async function bidOnOrder(shopperId: string, orderId: string, bid: Bid): Promise<Order> {
 
     const order = await getOrderById(orderId);
 
@@ -41,6 +43,14 @@ export async function bidOnOrder(shopperId: number, orderId: string, bid: Bid): 
         } else {
             order.bids[oldBid] = bid;
         }
+
+        await notificationService.notifyBuyerById(order.createdBy.name, {
+            orderId: order._id,
+            type: NotificationType.BidPlacedOnOrder,
+            msg: `${order.createdBy.name} placed a bid on your order.`,
+            date: new Date()
+        })
+
         return updateOrder(orderId, order);
     }
 }
@@ -80,7 +90,7 @@ async function getBidandOrderByBid(bidId: string): Promise<{ bid: Bid, order: Or
     };
 }
 
-export async function selectBid(buyerId: number, bidId: string): Promise<Order> {
+export async function selectBid(buyerId: string, bidId: string): Promise<Order> {
     const bidAndOrder = await getBidandOrderByBid(bidId);
     const bid = bidAndOrder.bid;
     const order = bidAndOrder.order;
