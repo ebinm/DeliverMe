@@ -9,7 +9,7 @@ import cookie from "cookie"
 
 
 type AuthenticatedRequest = Request & {
-    customerId: number,
+    customerId: string,
     customerType: CustomerType
 }
 
@@ -17,9 +17,11 @@ type AuthenticatedRequest = Request & {
  * Middleware to read, decode and verify the jwt token from the handshake of a socket.io connection.
  */
 function authenticatedSocket(socket: io.Socket<DefaultEventsMap, DefaultEventsMap>, next: (err?: ExtendedError) => void) {
-    const jwtToken = cookie.parse(socket.handshake.headers.cookie)?.["jwt"]
+    const c = socket.handshake.headers.cookie
+    const jwtToken = c && cookie.parse(c)?.["jwt"]
 
     if (!jwtToken) {
+        socket.disconnect()
         next(new Error("Not authenticated"))
         return
     }

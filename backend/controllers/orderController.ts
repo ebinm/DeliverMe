@@ -1,5 +1,4 @@
-import { Order, OrderModel } from '../models/order';
-import { findBuyerById } from "./buyerController";
+import {Order, OrderModel} from '../models/order';
 
 export async function getAllOrders(): Promise<Order[]> {
 
@@ -57,28 +56,28 @@ export async function deleteOrder(orderId: string) {
 
 }
 
-export async function findOrdersByBuyer(buyerId: number): Promise<Order[]> {
+export async function findOrdersByBuyer(buyerId: string): Promise<Order[]> {
 
     return await OrderModel.find()
         .where("createdBy").equals(buyerId);
 
 }
 
-export async function findOrdersByShopper(shopperId: number): Promise<Order[]> {
+export async function findOrdersByShopper(shopperId: string): Promise<Order[]> {
 
     return await OrderModel.find()
         .where("selectedBid.createdBy").equals(shopperId);
 
 }
 
-export async function findBidOrdersByShopper(shopperId: number): Promise<Order[]> {
+export async function findBidOrdersByShopper(shopperId: string): Promise<Order[]> {
 
     return await OrderModel
         .find({ bids: { $elemMatch: { createdBy: shopperId } } });
 
 }
 
-export async function order(buyerId: number, order: Order) {
+export async function order(buyerId: string, order: Order) {
 
     if (order.createdBy.toString() !== buyerId.toString()) {
         throw new Error("Order is unsupported: createdBy is not equal to customerId")

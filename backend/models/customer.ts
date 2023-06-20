@@ -1,15 +1,10 @@
-import mongoose, {Document} from "mongoose";
+import mongoose from "mongoose";
+import {NotificationSchema, UserNotification} from "./notification";
 
-export enum NotificationType {
-    MessageReceived = "MessageReceived"
-}
 
-// Redundant User prefix to avoid naming collision
-export interface UserNotification extends Document {
-    type: NotificationType
-}
+type CustomerType = "BUYER" | "SHOPPER"
 
-type Customer = {
+interface Customer extends mongoose.Document {
     email: string,
     firstName: string,
     lastName: string,
@@ -17,13 +12,6 @@ type Customer = {
     profilePicture: string,
     notifications: UserNotification[]
 }
-
-const NotificationSchema = new mongoose.Schema<Notification>({
-    type: {type: String, enum: Object.values(NotificationType), required: true},
-})
-
-type CustomerType = "BUYER" | "SHOPPER"
-
 
 /**
  * A type to be used in a type union with the CustomerType to distinguish buyers from shoppers.
@@ -57,7 +45,23 @@ const CustomerSchema = new mongoose.Schema<Customer>({
 const Buyer = mongoose.model('Buyer', CustomerSchema);
 const Shopper = mongoose.model('Shopper', CustomerSchema);
 
+
+/**
+ * Quick helper for selecting the right model based on the type.
+ */
+function customerModelByType(type: CustomerType) {
+    if (type === "SHOPPER") {
+        return Shopper
+    } else if (type === "BUYER") {
+        return Buyer
+    } else {
+        //TODO: panic
+    }
+}
+
+
 export {
+    customerModelByType,
     Typed,
     CustomerType,
     Customer,

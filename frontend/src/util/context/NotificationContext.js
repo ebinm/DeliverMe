@@ -5,7 +5,7 @@ import {io} from "socket.io-client";
 
 const NotificationContext = createContext({
     notifications: [],
-    markAsRead: () => undefined
+    markAsRead: () => Promise.resolve()
 })
 
 
@@ -22,12 +22,13 @@ function NotificationProvider({children}) {
         const ws = io("wss://localhost:8443", {
             withCredentials: true
         })
-        ws.on("message", (event) => {
+        ws.on("notification", (event) => {
             // TODO actually filter the type of event that was received so we can support
-            setNotifications(prev => [JSON.parse(event.data), ...prev])
+            setNotifications(prev => [JSON.parse(event), ...prev])
         })
 
         return () => {
+            setNotifications([])
             ws.close()
         }
     }, [customer?._id])
@@ -35,7 +36,23 @@ function NotificationProvider({children}) {
 
     return <NotificationContext.Provider value={{
         notifications: notifications,
-        markAsRead: () => setNotifications([])
+        markAsRead: async (notificationId) => {
+            // id === undefined -> mark all as read
+
+            // optimistic update
+            if (notificationId === undefined) {
+                setNotifications([])
+            } else {
+                setNotifications(n => n.filter(it => it._id !== notificationId))
+            }
+
+            await fetch(`${process.env.REACT_APP_BACKEND}/api/me/notification?` + new URLSearchParams({
+                "notificationId": notificationId
+            }).toString(), {
+                method: "DELETE",
+                credentials: 'include'
+            })
+        }
     }}>
         {children}
     </NotificationContext.Provider>
