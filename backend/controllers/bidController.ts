@@ -1,34 +1,61 @@
 import {Order, OrderModel} from '../models/order';
-import {getOrderById, updateOrder} from "./orderController";
+import {getOrderByBid, getOrderById, updateOrder} from "./orderController";
 import {Bid} from "../models/bid";
+import mongoose from "mongoose";
 
-//TODO
 export async function getAllBids(): Promise<Bid[]> {
-    return OrderModel.aggregate().unwind("$bids").project({
-        "_id": "$bids._id",
-        "moneyBid": "$bids.moneyBid",
-        "moneyBisWithFee": "$bids.moneyBidWithFee",
-        "timeBid": "$bids.timeBid",
-        "note": "§bids.note",
-        "createdBy": "$bids.createdBy"
-    });
+    return OrderModel.aggregate().unwind("$bids").replaceRoot("bids");
 }
 
-//TODO
-export async function getBidById(id: string): Promise<Bid> {
-    const bids = await OrderModel.aggregate().unwind("$bids").match({"$bids._id": id}).project({
-        "_id": "$bids._id",
-        "moneyBid": "$bids.moneyBid",
-        "moneyBisWithFee": "$bids.moneyBidWithFee",
-        "timeBid": "$bids.timeBid",
-        "note": "§bids.note",
-        "createdBy": "$bids.createdBy"
-    })
-    return bids[0];
+export async function getBidById(bidId: string): Promise<Bid> {
+    const id = new mongoose.Types.ObjectId(bidId);
+    const resultBid = await OrderModel.aggregate().unwind("$bids").replaceRoot("bids").match({"_id": id});
+    return resultBid[0];
 }
+
+export async function createBid(orderId: string, bid: Bid) {
+
+    const order = await getOrderById(orderId);
+
+    const oldBid = order.bids.findIndex(p => (p.createdBy.toString() === bid.createdBy.toString()));
+
+    if (oldBid === -1) {
+        throw new Error("Bid already exists for order");
+    } else {
+        order.bids[oldBid] = bid;
+    }
+    return updateOrder(orderId, order);
+
+}
+
+export async function updateBid(bidId: string, bid: Bid) {
+
+    const bidInOrder = await getBidInOrder(bidId);
+
+    const order = bidInOrder.order;
+    order.bids[bidInOrder.index] = bid;
+    return updateOrder(order._id, order);
+
+}
+
+export async function deleteBid(bidId: string) {
+
+    const bidInOrder = await getBidInOrder(bidId);
+
+    const order = bidInOrder.order;
+    order.bids.splice(bidInOrder.index, 1);
+    return updateOrder(order._id, order);
+
+}
+
 export async function bidOnOrder(shopperId: number, orderId: string, bid: Bid): Promise<Order> {
 
     const order = await getOrderById(orderId);
+
+    if (!order) {
+        throw new Error("Order with orderId does not exist")
+    }
+    console.log(bid)
 
     if (bid.createdBy.toString() !== shopperId.toString()) {
         throw new Error("Bid is unsupported: createdBy is not equal to customerId")
@@ -45,45 +72,26 @@ export async function bidOnOrder(shopperId: number, orderId: string, bid: Bid): 
     }
 }
 
-async function getOrderByBid(bidId: string) {
-    return OrderModel
-        .findOne({bids: {$elemMatch: {_id: bidId}}});
-
-}
-
-/*
-async function getBidById2(bidId: string): Promise<Bid> {
+async function getBidInOrder(bidId: string): Promise<{ index: number, order: Order }> {
     const order = await getOrderByBid(bidId)
-    const bids = order.get("bids");
-    let resultBid;
-    for (let i = 0; i < bids.length; i++) {
-        if (bids[i]._id.toString() === bidId) {
-            resultBid = bids[i]
 
-        }
+    if(!order) {
+        throw new Error("bidId does not exist")
     }
-    return resultBid;
-}
-
- */
-
-async function getBidandOrderByBid(bidId: string): Promise<{ bid: Bid, order: Order }> {
-    const order = await getOrderByBid(bidId)
 
     const bids = order.get("bids");
     const index = bids.findIndex(p => p._id.toString() === bidId);
-    console.log(index);
 
     return {
-        bid: order.bids[index],
+        index: index,
         order: order
     };
 }
 
 export async function selectBid(buyerId: number, bidId: string): Promise<Order> {
-    const bidAndOrder = await getBidandOrderByBid(bidId);
-    const bid = bidAndOrder.bid;
-    const order = bidAndOrder.order;
+    const bidInOrder = await getBidInOrder(bidId);
+    const bid = bidInOrder.order.get("bids")[bidInOrder.index];
+    const order = bidInOrder.order;
     if (order.createdBy.toString() !== buyerId.toString()) {
         throw new Error("Bid is unsupported: createdBy is not equal to customerId")
     } else {
@@ -92,4 +100,6 @@ export async function selectBid(buyerId: number, bidId: string): Promise<Order> 
     }
 
 }
+
+
 
