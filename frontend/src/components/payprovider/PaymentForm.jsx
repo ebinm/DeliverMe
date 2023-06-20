@@ -45,11 +45,9 @@ const PaymentForm = () => {
   };
 
   const handlePayNow = () => {
-    // Handle payment with credit card
     console.log('Processing payment with credit card:', amount);
   };
   const handlePaymentSuccess = (data, actions) => {
-    // Handle successful payment
     console.log('Payment successful:', data);
     return Promise.resolve(); //check this out!!
   };

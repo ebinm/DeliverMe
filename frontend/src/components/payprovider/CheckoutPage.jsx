@@ -6,17 +6,27 @@ import Paper from '@mui/material/Paper';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Modal from '@mui/material/Modal';
 import PaymentForm from './PaymentForm';
+import axios from 'axios';
 
 const theme = createTheme();
 
-const baseURL = 'http://localhost:5000';
+const baseURL = 'http://localhost:3000';
 
-const response = await axios.post(`${baseURL}/api/payment/verify`, {
+/* const response = await axios.post(`${baseURL}/api/payment/verify`, {
   cardNumber: '1234567890123456', // Replace with actual card number
   cardName: 'John Doe', // Replace with actual cardholder name
   expiration: '12/24', // Replace with actual expiration date
   cvc: '123', // Replace with actual CVC
-});
+}); */
+
+const paymentData = {
+  amount: 70,
+  cardNumber: '1234 5678 9012 3456',
+  // Add other necessary payment data
+};
+
+console.log(paymentData.amount);
+
 
 const containerStyle = {
   position: 'center',
@@ -66,28 +76,26 @@ const CheckoutPage = () => {
   const handleCancel = () => {
     // Handle cancel order
     console.log('Order canceled');
-    handleClose(); // Close the popup window
+    handleClose(); 
   };
 
   const handleConfirm = () => {
     // Handle confirm order
     
     
-    axios.post('http://localhost:3001/api/checkout/payment', paymentData)
+    axios.post('http://localhost:3000/api/checkout/payment', paymentData)
     .then(response => {
-      // Handle success response
       console.log('Payment confirmed');
     })
     .catch(error => {
-      // Handle error response
       console.error('Error confirming payment:', error);
     });
   };
 
   const buttonContainerStyle = {
     display: 'flex',
-    justifyContent: 'flex-end', // Align buttons to the right
-    marginTop: '20px', // Add some margin for spacing
+    justifyContent: 'flex-end', 
+    marginTop: '20px', 
     marginRight: '60px',
   };
 
@@ -96,7 +104,7 @@ const CheckoutPage = () => {
     width: '200px',
     background: '#AAC0AA',
     borderRadius: '10px',
-    marginLeft: '10px', // Add some spacing between buttons
+    marginLeft: '10px', 
   };
   
   const cancelButtonStyle = {
