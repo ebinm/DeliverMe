@@ -1,4 +1,4 @@
-import {Order, OrderModel} from '../models/order';
+import {Order, OrderModel, OrderStatus} from '../models/order';
 
 export async function getAllOrders(): Promise<Order[]> {
 
@@ -101,6 +101,37 @@ export async function removeOrder(buyerId: number, orderId: string) {
         new Error("You are not allowed to delete this order")
     } else {
         return deleteOrder(orderId);
+    }
+
+}
+
+export async function changeStatus(buyerId: number, orderId: string, status: string) {
+
+    const order = await getOrderById(orderId)
+
+    if(!order) {
+        new Error("Order with orderId does not exist")
+    } else if (order.createdBy.toString() !== buyerId.toString()) {
+        new Error("You are not allowed to change this order")
+    } else {
+        switch (status) {
+            case "Open":
+                order.status = OrderStatus.Open;
+                break
+            case "In Delivery":
+                order.status = OrderStatus.InDelivery;
+                break
+            case "In Payment":
+                order.status = OrderStatus.InPayment;
+                break
+            case "Finished":
+                order.status = OrderStatus.Finished;
+                break
+            default:
+                throw new Error("Order status is not valid")
+        }
+
+        return updateOrder(orderId, order);
     }
 
 }

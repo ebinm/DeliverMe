@@ -1,7 +1,7 @@
 import express from 'express';
 import {authenticated, AuthenticatedRequest} from "../middleware/auth";
 import {
-    changeOrder, getAllOrders, getOpenOrders, getOrderById, order, removeOrder
+    changeOrder, changeStatus, getAllOrders, getOpenOrders, getOrderById, order, removeOrder
 } from "../controllers/orderController";
 import {bidOnOrder, selectBid} from "../controllers/bidController";
 
@@ -101,5 +101,17 @@ router.put("/:id/selectBid", authenticated, async (req: AuthenticatedRequest, re
     }
 })
 
+router.put("/:id/changeStatus", authenticated, async (req: AuthenticatedRequest, res, next) => {
+    try {
+        if (req.customerType === "BUYER") {
+            res.json(await changeStatus(req.customerId, req.params.id, req.body.status))
+        } else {
+            res.json({msg: "This call is only for buyers"})
+        }
+    } catch (e) {
+        console.log(e)
+        next(e.message)
+    }
+})
 
 export default router;
