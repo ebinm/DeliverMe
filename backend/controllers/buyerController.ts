@@ -2,7 +2,7 @@ import {Buyer, Customer, Typed} from "../models/customer";
 import {clearNotificationsById} from "./userController";
 
 
-export async function findBuyerById(id: string): Promise<Customer & Typed> {
+export async function findBuyerById(id: number): Promise<Customer & Typed> {
     const buyer = await Buyer.findById(id)
         .select("-password -__v")
     return {

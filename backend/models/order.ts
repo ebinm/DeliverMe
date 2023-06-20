@@ -58,7 +58,6 @@ const orderSchema = new Schema<Order>(
           },
         bids: { type: [bidSchema],  default: null, required: false },
     },
-    { timestamps: true }
 );
 
 const OrderModel = mongoose.model<Order>('Order', orderSchema);

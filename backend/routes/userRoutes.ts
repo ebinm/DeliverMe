@@ -1,9 +1,8 @@
 import express from "express";
 import {authenticated, AuthenticatedRequest} from "../middleware/auth";
-import {findBidOrdersByShopper, findOrdersByBuyer, findOrdersByShopper, order} from "../controllers/orderController";
-import {bidOnOrder, selectBid} from "../controllers/bidController";
-import {clearNotificationsForBuyerById, findBuyerById} from "../controllers/buyerController";
-import {clearNotificationsForShopperById, findShopperById} from "../controllers/shopperController";
+import {findBuyerById} from "../controllers/buyerController";
+import {findShopperById} from "../controllers/shopperController";
+import {findBidOrdersByShopper, findOrdersByBuyer, findOrdersByShopper} from "../controllers/orderController";
 
 
 const router = express.Router();
@@ -40,57 +39,6 @@ router.get("/bidOrders", authenticated, async (req: AuthenticatedRequest, res, n
             res.json({msg: "This call is only for shoppers"})
         } else {
             res.json(await findBidOrdersByShopper(req.customerId))
-        }
-    } catch (e) {
-        console.log(e)
-        next(e.message)
-    }
-})
-
-router.put("/bid", authenticated, async (req: AuthenticatedRequest, res, next) => {
-    try {
-        if (req.customerType === "BUYER") {
-            res.json({msg: "This call is only for shoppers"})
-        } else {
-            res.json(await bidOnOrder(req.customerId, req.body.orderId, req.body.bid))
-        }
-    } catch (e) {
-        console.log(e)
-        next(e.message)
-    }
-})
-
-router.post("/order", authenticated, async (req: AuthenticatedRequest, res, next) => {
-    try {
-        if (req.customerType === "BUYER") {
-            res.json(await order(req.customerId, req.body))
-        } else {
-            res.json({msg: "This call is only for buyers"})
-        }
-    } catch (e) {
-        console.log(e)
-        next(e.message)
-    }
-})
-
-router.delete("/notification", authenticated, async (req: AuthenticatedRequest, res, next) => {
-    try {
-        const notificationId = req.query.notificationId
-        const clearNotifications = req.customerType === "BUYER" ?
-            clearNotificationsForBuyerById : clearNotificationsForShopperById
-        await clearNotifications(req.customerId, notificationId === undefined ? undefined : notificationId.toString())
-        res.sendStatus(200)
-    } catch (e) {
-        next(e)
-    }
-})
-
-router.put("/selectBid", authenticated, async (req: AuthenticatedRequest, res, next) => {
-    try {
-        if (req.customerType === "BUYER") {
-            res.json(await selectBid(req.customerId, req.body.bidId))
-        } else {
-            res.json({msg: "This call is only for buyers"})
         }
     } catch (e) {
         console.log(e)
