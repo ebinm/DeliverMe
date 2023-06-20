@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-    apiVersion: '2022-11-15', // Specify the Stripe API version you want to use
+    apiVersion: '2022-11-15', 
 });
 
 const app = express();
@@ -13,7 +13,6 @@ app.post('/api/verify-card', async (req: Request, res: Response) => {
   try {
     const { cardNumber, expirationMonth, expirationYear, cvc } = req.body;
 
-    // Create a Stripe PaymentMethod with the card details
     const paymentMethod = await stripe.paymentMethods.create({
       type: 'card',
       card: {
@@ -24,7 +23,6 @@ app.post('/api/verify-card', async (req: Request, res: Response) => {
       },
     });
 
-    // Verify the PaymentMethod
     const verificationResult = await stripe.paymentIntents.create({
         payment_method: paymentMethod.id,
         amount: 100,
@@ -32,7 +30,6 @@ app.post('/api/verify-card', async (req: Request, res: Response) => {
         confirm: true,
       });
 
-    // Return the verification result
     res.json({ verified: verificationResult.status === 'succeeded' });
   } catch (error) {
     console.error('Error verifying card:', error);
@@ -41,7 +38,7 @@ app.post('/api/verify-card', async (req: Request, res: Response) => {
 });
 
 // Start the server
-const port = 3001; // Choose any port you prefer
+const port = 3000; 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
