@@ -75,7 +75,7 @@ export async function order(buyerId: string, order: Order) {
 
 }
 
-export async function changeOrder(buyerId: number, orderId: string, order: Order) {
+export async function changeOrder(buyerId: string, orderId: string, order: Order) {
 
     const oldOrder = await getOrderById(orderId)
 
@@ -91,7 +91,7 @@ export async function changeOrder(buyerId: number, orderId: string, order: Order
 
 }
 
-export async function removeOrder(buyerId: number, orderId: string) {
+export async function removeOrder(buyerId: string, orderId: string) {
 
     const oldOrder = await getOrderById(orderId)
 
@@ -105,7 +105,7 @@ export async function removeOrder(buyerId: number, orderId: string) {
 
 }
 
-export async function changeStatus(buyerId: number, orderId: string, status: string) {
+export async function changeStatus(buyerId: string, orderId: string, status: string) {
 
     const order = await getOrderById(orderId)
 
