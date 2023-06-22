@@ -21,7 +21,7 @@ const ShopperChooseOrderView = () => {
     const [showOrderDetailsModal, setShowOrderDetailsModal] = useState(false);
     const [showBidOnOrderModal, setShowBidOnOrderModal] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
-    const [orders] = useState(mockedOrders);
+    const [orders, setOrders] = useState(mockedOrders); //todo: delete mockdata
     const [directions, setDirections] = useState(null);
     const [mapKey, setMapKey] = useState(0);
 
@@ -39,9 +39,32 @@ const ShopperChooseOrderView = () => {
         }
     }, [map]);
 
+    useEffect(() => {
+        console.log('Fetching orders from backend...');
+
+        const fetchOrders = async () => {
+          try {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/withCreator`, 
+            {
+                credentials: "include",
+                withCredentials: true
+            }
+              );
+            const data = await response.json();
+            console.log('Orders:', data);
+            setOrders(data);
+            console.log('Orders successfully fetched!');
+          } catch (error) {
+            console.error('Error fetching orders:', error);
+          }
+        };
+    
+        fetchOrders();
+      }, []);
+
 
     useEffect(() => {
-        setDirections(null); //TODO ask lukas
+        setDirections(null); //TODO ask lukas why this is working
         setMapKey(prevKey => prevKey + 1);
 
         if (selectedOrder && selectedOrder.groceryShop && selectedOrder.destination) {

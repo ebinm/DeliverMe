@@ -2,10 +2,10 @@ import fs from 'fs';
 import https from 'https';
 import dotenv from 'dotenv'
 import mongoose from "mongoose";
-import {WebSocketServer} from "ws";
 import * as http from "http";
-import {getMockNotification} from "./datamock/notifications";
 import api from "./api";
+import io from "socket.io"
+import {createNotificationService} from "./services/notificationService";
 
 dotenv.config();
 console.log("MongoDB URL: ", process.env.MONGO_URL);
@@ -27,19 +27,17 @@ try {
 }
 
 
-const wss = new WebSocketServer({server})
-
-
-wss.on("connection", (ws) => {
-    const tm = setInterval(() => {
-        ws.send(JSON.stringify(getMockNotification()))
-    }, 8000)
-
-    ws.on("error", () => {
-        clearTimeout(tm)
-    })
-})
-
+const socketIOSerer = new io.Server(server,
+    {
+        cors: {
+            //TODO similarly to cors in main server: do not hardcode
+            origin: "https://localhost:3000",
+            methods: ["GET", "POST"],
+            credentials: true
+        },
+    });
+const notificationService = createNotificationService(socketIOSerer)
 
 server.listen(PORT, () => console.log(`Listening on port: ${PORT}.`));
 
+export {notificationService}

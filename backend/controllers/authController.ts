@@ -7,7 +7,7 @@ import {buyerPicture, shopperPicture} from "../datamock/defaultPictures";
 
 
 type JWTPayload = {
-    id: number,
+    id: string,
     type: CustomerType
 }
 
@@ -67,7 +67,7 @@ async function login(req: Request, res: Response, customerType: CustomerType) {
     sendJWT(res, customer.id, customerType)
 }
 
-function sendJWT(res: Response, customerId: number, type: CustomerType) {
+function sendJWT(res: Response, customerId: string, type: CustomerType) {
     const jwtPayload: JWTPayload = {
         id: customerId,
         type: type

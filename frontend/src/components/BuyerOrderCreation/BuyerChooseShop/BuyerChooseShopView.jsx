@@ -45,7 +45,7 @@ const BuyerChooseShopView = ({onSubmitShop}) => {
 
     useEffect(() => {
         if (map && mapCenter) {
-            console.log("Fetching Shops of Location: ", mapCenter);
+            console.log("Fetching shops next to location: ", mapCenter);
             const placesService = new window.google.maps.places.PlacesService(map);
             const request = {
                 location: mapCenter,
@@ -54,6 +54,8 @@ const BuyerChooseShopView = ({onSubmitShop}) => {
             };
 
             placesService.nearbySearch(request, (results, status) => {
+                // !!!!! for low API usage !!!!!
+
                 // if (status === window.google.maps.places.PlacesServiceStatus.OK) {
                 //     // Fetch operating hours for each shop
                 //     const shopPromises = results.map((place) => {
@@ -79,6 +81,7 @@ const BuyerChooseShopView = ({onSubmitShop}) => {
                 //     });
                 // }
                 setShops(results);
+                console.log("Fetched shops: ", results);
             });
         }
     }, [map, mapCenter]);

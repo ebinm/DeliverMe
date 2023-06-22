@@ -11,7 +11,9 @@ type Location = {
             lng: number;
         };
     };
-    formattedAddress: string;
+    name: string, // Only shop locations have a name 
+    street: string,
+    city: string | null,
 }
 
 export enum OrderStatus {
@@ -56,7 +58,6 @@ const orderSchema = new Schema<Order>(
           },
         bids: { type: [bidSchema],  default: null, required: false },
     },
-    { timestamps: true }
 );
 
 const OrderModel = mongoose.model<Order>('Order', orderSchema);

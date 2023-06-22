@@ -7,6 +7,8 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import {DateDisplay} from "./DateDisplay";
 import {OrderItemsOverview} from "./OrderItemsOverview";
 import Stack from "@mui/material/Stack";
+import {useEffect, useRef} from "react";
+import {useParams} from "react-router-dom";
 
 
 export function SingleOrderViewCommon({order, contact, buttons, bidView, orderName, showDeliveryAddress = false}) {
@@ -21,7 +23,16 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
         "ml": "8px"
     }
 
-    return <Box boxShadow={1} borderRadius={"8px"} padding={"16px"} mt={"16px"} display={"flex"}
+    const ref = useRef()
+    const params = useParams()
+    useEffect(() => {
+        // onMount
+        if (params.id === order._id) {
+            ref.current.scrollIntoView({behavior: "smooth"})
+        }
+    }, [])
+
+    return <Box ref={ref} boxShadow={1} borderRadius={"8px"} padding={"16px"} mt={"16px"} display={"flex"}
                 flexDirection={"column"} backgroundColor={"white"}>
         <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"} alignItems={"center"}>
 
