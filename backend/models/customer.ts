@@ -10,6 +10,7 @@ interface Customer extends mongoose.Document {
     lastName: string,
     password: string,
     profilePicture: string,
+    rating: number,
     notifications: UserNotification[]
 }
 
@@ -39,6 +40,9 @@ const CustomerSchema = new mongoose.Schema<Customer>({
     },
     notifications: {
         type: [NotificationSchema]
+    },
+    rating: {
+        type: Number
     }
 });
 

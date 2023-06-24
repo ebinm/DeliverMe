@@ -77,7 +77,7 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
 
         <Divider sx={{"margin": "8px 0"}}/>
 
-        <OrderItemsOverview items={order?.items}/>
+        <OrderItemsOverview items={order?.items} defaultExpanded={true} />
 
         <Divider sx={{"margin": "8px 0"}}/>
 

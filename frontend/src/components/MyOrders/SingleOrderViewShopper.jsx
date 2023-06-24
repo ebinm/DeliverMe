@@ -2,15 +2,15 @@ import { SingleOrderViewCommon } from "./SingleOrderViewCommon";
 import { SingleBidView } from "./SingleBidView";
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import {DarkButton, OutlinedButton} from "../util/Buttons";
+import { DarkButton, OutlinedButton } from "../util/Buttons";
 import Stack from "@mui/material/Stack";
-import React, {useRef, useState} from "react";
-import {CurrencyInput} from "../util/CurrencyInput";
-import {FileUploader} from "react-drag-drop-files";
+import React, { useRef, useState } from "react";
+import { CurrencyInput } from "../util/CurrencyInput";
+import { FileUploader } from "react-drag-drop-files";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import {RatingModal} from "../util/RatingModal";
-import {BaseModal} from "../util/BaseModal"
-import {Show} from "../util/ControlFlow"
+import { RatingModal } from "../util/RatingModal";
+import { BaseModal } from "../util/BaseModal"
+import { Show } from "../util/ControlFlow"
 
 export function SingleOrderViewShopper({ order }) {
 
@@ -25,11 +25,11 @@ export function SingleOrderViewShopper({ order }) {
             contact={order.createdBy}
             bidView={
                 <Accordion defaultExpanded={true}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography color={"text.light"} variant={"h6"} component={"h3"}>My bid</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                       {order.selectedBid && (<SingleBidView bid={order.selectedBid} highlightOnHover={false}/>)} 
+                        {order.selectedBid ? (<SingleBidView bid={order.selectedBid} highlightOnHover={false} />) : (<Typography>No bid given yet</Typography>)}
                     </AccordionDetails>
                 </Accordion>
             }
@@ -47,12 +47,12 @@ export function SingleOrderViewShopper({ order }) {
         }} onSuccess={() => {
             setUploadOpen(false)
             setRatingOpen(true)
-        }}/>
-        <RatingModal open={ratingOpen} onClose={() => setRatingOpen(false)} orderId={order?.id}/>
+        }} />
+        <RatingModal open={ratingOpen} onClose={() => setRatingOpen(false)} orderId={order?.id} />
     </>
 }
 
-function ReceiptUploadModal({open, onClose, onSuccess}) {
+function ReceiptUploadModal({ open, onClose, onSuccess }) {
     const [amount, setAmount] = useState(0)
     const formRef = useRef()
 
@@ -61,31 +61,44 @@ function ReceiptUploadModal({open, onClose, onSuccess}) {
     return <BaseModal open={open} onClose={onClose}>
         <form ref={formRef}>
             <Stack direction={"column"} gap={"16px"} alignItems={"center"}>
-                <CurrencyInput amount={amount} setAmount={setAmount}/>
+                <CurrencyInput amount={amount} setAmount={setAmount} />
 
                 <FileUploader maxSize={32} id={"receipt"}
-                              required={true} multiple={false} name="file" types={["JPG", "PNG"]}
-                              onTypeError={(err) => setUploadFeedback(err)}
-                              onSizeError={(err) => setUploadFeedback(err)}
-                              handleChange={() => setUploadFeedback("Successfully uploaded. (Upload again to replace)")}
+                    required={true} multiple={false} name="file" types={["JPG", "PNG"]}
+                    onTypeError={(err) => setUploadFeedback(err)}
+                    onSizeError={(err) => setUploadFeedback(err)}
+                    handleChange={() => setUploadFeedback("Successfully uploaded. (Upload again to replace)")}
                 >
-                    <Stack direction={"column"} gap={"16px"} height={"20vh"} justifyContent={"center"}
-                           alignItems={"center"} sx={{
-                        "borderWidth": "3px",
-                        "borderStyle": "dashed",
-                        "borderRadius": "16px",
-                        "padding": "16px",
-                        "borderColor": "primary.dark"
-                    }}>
-                        <CloudUploadIcon sx={{"color": "primary.dark", "fontSize": "2rem"}}/>
-                        <Typography sx={{"color": "primary.dark"}}> {uploadFeedback}</Typography>
+                    <Stack direction={"column"} gap={"16px"} height={"10vh"} justifyContent={"center"}
+                        alignItems={"center"} sx={{
+                            "borderWidth": "3px",
+                            "borderStyle": "dashed",
+                            "borderRadius": "16px",
+                            "padding": "16px",
+                            "borderColor": "primary.dark"
+                        }}>
+                        <CloudUploadIcon sx={{ "color": "primary.dark", "fontSize": "2rem" }} />
+                        <Typography sx={{ "color": "primary.dark" }}> {uploadFeedback}</Typography>
+                    </Stack>
+
+                    <Stack direction={"column"} gap={"16px"} height={"10vh"} justifyContent={"center"} //TODO: Add camera upload here
+                        alignItems={"center"} sx={{
+                            "mt":1,
+                            "borderWidth": "3px",
+                            "borderStyle": "dashed",
+                            "borderRadius": "16px",
+                            "padding": "16px",
+                            "borderColor": "primary.dark"
+                        }}>
+                        <CloudUploadIcon sx={{ "color": "primary.dark", "fontSize": "2rem" }} />
+                        <Typography sx={{ "color": "primary.dark" }}> {uploadFeedback}</Typography>
                     </Stack>
                 </FileUploader>
 
             </Stack>
         </form>
 
-        <Stack direction={"row-reverse"} mt={"16px"} gap={"8px"}>
+        <Stack direction={"row-reverse"} sx={{ mt:2, justifyContent: 'space-between', width: "100%" }}>
             <DarkButton onClick={() => {
                 if (formRef.current?.reportValidity()) {
                     // TODO upload stuff and check

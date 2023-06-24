@@ -102,10 +102,10 @@ const DefineCustomShopModal = ({
                                         <input
                                             required
                                             type="text"
-                                            placeholder="Search for a place"
+                                            placeholder=" Search for a place *"
                                             value={address}
                                             onChange={e => setAddress(e.target.value)}
-                                            style={{width: "100%"}}
+                                            style={{width: "100%", height: "3rem" }}
                                         />
                                     </Autocomplete>
 
