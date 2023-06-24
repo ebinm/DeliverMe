@@ -30,6 +30,10 @@ package-lock.json
 
 .env
 
+#SSL
+
+cert/
+
 # Node
 node_modules
 /frontend/.env
