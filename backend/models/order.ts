@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import {Buyer, Shopper} from './customer';
+import {Buyer} from './customer';
 import { Item, itemSchema } from './item';
-import { Bid, BidModel, bidSchema } from './bid';
+import { Bid, bidSchema } from './bid';
 
 type Location = {
     // _id: Schema.Types.ObjectId; // automatically created by MongoDB
@@ -11,7 +11,9 @@ type Location = {
             lng: number;
         };
     };
-    formattedAddress: string;
+    name: string, // Only shop locations have a name 
+    street: string,
+    city: string | null,
 }
 
 export enum OrderStatus {
@@ -33,7 +35,7 @@ export interface Order extends Document {
     createdBy:  typeof Buyer; 
     destination: Location;
     items: Item[];
-    selectedBid: Schema.Types.ObjectId | null; // Allow null if no bid is selected
+    selectedBid: Bid | null; // Allow null if no bid is selected
     bids: Bid[];
 }
 
@@ -50,25 +52,12 @@ const orderSchema = new Schema<Order>(
         destination: { type: Schema.Types.Mixed, required: true },
         items: { type: [itemSchema], required: true },
         selectedBid: {
-            type: Schema.Types.ObjectId,
+            type: bidSchema,
             required: false,
-            ref: BidModel, 
             default: null,
-            validate: {
-              validator: async function (bidId: Schema.Types.ObjectId) {
-                if (!bidId) {
-                  // Allow null value
-                  return true;
-                }
-                const bidCount = await BidModel.countDocuments({ _id: bidId }).exec();
-                return bidCount > 0;
-              },
-              message: 'Invalid bid ID',
-            },
           },
         bids: { type: [bidSchema],  default: null, required: false },
     },
-    { timestamps: true }
 );
 
 const OrderModel = mongoose.model<Order>('Order', orderSchema);

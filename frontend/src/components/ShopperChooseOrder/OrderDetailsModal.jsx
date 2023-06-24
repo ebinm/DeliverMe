@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import Modal from '@mui/material/Modal';
+import {BaseModal} from "../util/BaseModal"
 import { useTheme } from "@mui/material/styles"
 import { SingleOrderViewShopper } from '../MyOrders/SingleOrderViewShopper';
 
@@ -25,7 +25,7 @@ const OrderDetailsModal = ({showOrderDetailsModal, handleCloseOrderDetailsModal,
         borderRadius: '10px',
         flexDirection: 'column',
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'center', 
         alignItems: 'center',
         overflow: 'auto', // TODO: Take Lukas Modal!!!! (Also in all other occurrences of Modal)
     };
@@ -38,7 +38,7 @@ const OrderDetailsModal = ({showOrderDetailsModal, handleCloseOrderDetailsModal,
 
     return (
         <div>
-            <Modal
+            <BaseModal
                 open={showOrderDetailsModal}
                 onClose={handleCloseOrderDetailsModal}
                 aria-labelledby="modal-modal-title"
@@ -47,7 +47,7 @@ const OrderDetailsModal = ({showOrderDetailsModal, handleCloseOrderDetailsModal,
                 <>
                     <Box sx={style}>
 
-                        <SingleOrderViewShopper order={Order} orderName={"TODO"} />
+                        <SingleOrderViewShopper order={Order} />
 
                         <Stack
                             direction={{ xs: 'column', sm: 'row' }}
@@ -60,7 +60,7 @@ const OrderDetailsModal = ({showOrderDetailsModal, handleCloseOrderDetailsModal,
 
                     </Box>
                 </>
-            </Modal>
+            </BaseModal>
         </div>
     );
 };

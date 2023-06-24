@@ -1,27 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { CircularProgress, Box, Grid, List, ListItem, ListItemButton, ListItemAvatar } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
-import ImageIcon from '@mui/icons-material/Image';
+import { CircularProgress, Grid, List } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
-import TextField from '@mui/material/TextField';
 import OrderDetailsModal from './OrderDetailsModal';
 import BidOnOrderModal from './BidOnOrderModal';
-import { mockedOrders } from '../../util/mockdata';
 import { Show } from '../util/ControlFlow';
-import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { GoogleMap, Marker, useJsApiLoader, DirectionsRenderer } from '@react-google-maps/api';
+import { OrderFilter } from './OrderFilter';
+import { OrderListItem } from './OrderListItem';
+
 
 const ShopperChooseOrderView = () => {
     const [map, setMap] = useState(null);
     const [showOrderDetailsModal, setShowOrderDetailsModal] = useState(false);
     const [showBidOnOrderModal, setShowBidOnOrderModal] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
-    const [orders] = useState(mockedOrders);
+    const [orders, setOrders] = useState([]);
+    const [filteredOrders, setFilteredOrders] = useState([]);
     const [directions, setDirections] = useState(null);
     const [mapKey, setMapKey] = useState(0);
 
@@ -34,14 +29,38 @@ const ShopperChooseOrderView = () => {
 
     useEffect(() => {
         if (map) {
-            const defaultCenter = {lat: 48.137154, lng: 11.576124}
+            const defaultCenter = { lat: 48.137154, lng: 11.576124 }
             map.setCenter(defaultCenter);
         }
     }, [map]);
 
+    useEffect(() => {
+        console.log('Fetching orders from backend...');
+
+        const fetchOrders = async () => {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/open`,
+                    {
+                        credentials: "include",
+                        withCredentials: true
+                    }
+                );
+                const data = await response.json();
+                console.log('Orders:', data);
+                setOrders(data);
+                setFilteredOrders(data);
+                console.log('Orders successfully fetched!');
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+            }
+        };
+
+        fetchOrders();
+    }, []);
+
 
     useEffect(() => {
-        setDirections(null); //TODO ask lukas
+        setDirections(null); //TODO ask lukas why this is working
         setMapKey(prevKey => prevKey + 1);
 
         if (selectedOrder && selectedOrder.groceryShop && selectedOrder.destination) {
@@ -76,11 +95,7 @@ const ShopperChooseOrderView = () => {
 
     const handleCloseBidOnOrderModal = () => {
         setShowBidOnOrderModal(false);
-        //setShowOrderDetailsModal(true);
-    };
-
-    const handleBidOnOrder = () => {
-        // TODO
+        setShowOrderDetailsModal(true);
     };
 
     return (
@@ -97,69 +112,22 @@ const ShopperChooseOrderView = () => {
                 Order={selectedOrder}
             />
 
-            <Grid container spacing={5}>
-                <Grid item xs={6} md={4}>
-                    <Typography variant="h4" component="h1" sx={{ paddingLeft: '16px' }}>Orders</Typography>
-                </Grid>
-                <Grid item xs={6} md={8}>
-                    <Stack
-                        direction={{xs: 'column', sm: 'row'}}
-                        divider={<Divider orientation="vertical" flexItem/>}
-                        spacing={{xs: 1, sm: 1, md: 1}}
-                        sx={{mb: 2}}
-                    >
-                        <TextField
-                            id="location"
-                            label="Filter Orders"
-                            sx={{ width: '100%' }}
-                        />
-                        <Button variant="contained">Search</Button>
-                    </Stack>
-                </Grid>
+            <Grid container sx={{ mb: 2 }}>
+                <Typography variant="h4" component="h1" sx={{ paddingLeft: '16px' }}>Open Orders</Typography>
             </Grid>
             <Grid container spacing={5} sx={{ mb: 2 }}>
                 <Grid item xs={6} md={4} sx={{ maxHeight: '70vh', overflow: 'auto' }}>
-                    <List >
-                        {orders.map((order) => (
-                            <ListItem key={order._id}>
-                                <ListItemButton
-                                    selected={selectedOrder === order}
-                                    onClick={() => {
-                                        setSelectedOrder(order);
-                                    }}
-                                    sx={{ bgcolor: "white", borderRadius: '10px', boxShadow: 3 }}
-                                >
-                                    <Box sx={{ width: "100%" }}>
-                                        <Stack
-                                            direction={{ xs: 'column', sm: 'row' }}
-                                            spacing={{ xs: 1, sm: 1, md: 1 }}
-                                            sx={{ mb: 2 }}
-                                        >
-                                            <Box display='flex' alignItems='center'>
-                                                <ListItemAvatar>
-                                                    <Avatar>
-                                                        <ImageIcon />
-                                                    </Avatar>
-                                                </ListItemAvatar>
-                                            </Box>
-                                            <Box>
-                                                <Typography variant={"h6"} fontWeight="bold">{order?.createdBy?.firstName}, {order?.createdBy?.lastName}</Typography>
-                                                <Box display={"grid"} gridTemplateColumns={"min-content auto"} gap={"1px"} >
-                                                    <ShoppingCartOutlinedIcon />
-                                                    <Typography variant={"body1"}>Shop: {order?.groceryShop?.name}, {order?.groceryShop?.street}, {order?.groceryShop?.city}</Typography>
-                                                    <LocationOnOutlinedIcon />
-                                                    <Typography variant={"body1"}>Destination: {order?.destination?.street}, {order?.destination?.city}</Typography>
-                                                </Box>
-                                            </Box>
-                                        </Stack>
 
-                                        <Divider />
-                                        <Button sx={{ width: '100%', color: 'gray', textTransform: 'none', justifyContent: 'space-between', mt: 1, mb: 2 }} endIcon={<ArrowForwardIosIcon />} onClick={handleOpenOrderDetailsModal}>
-                                            <Typography variant="body1">See more details & place bid</Typography>
-                                        </Button>
-                                    </Box>
-                                </ListItemButton>
-                            </ListItem>
+                    <OrderFilter orders={orders} setFilteredOrders={setFilteredOrders} />
+
+                    <Divider />
+
+                    <List >
+                        {filteredOrders.map((order) => (
+                            <OrderListItem order={order} 
+                            handleOpenOrderDetailsModal={handleOpenOrderDetailsModal} 
+                            selectedOrder={selectedOrder} 
+                            setSelectedOrder={setSelectedOrder} />
                         ))}
                     </List>
                 </Grid>
@@ -201,9 +169,6 @@ const ShopperChooseOrderView = () => {
                     </Show>
                 </Grid>
             </Grid>
-            <Box display='flex' alignItems='center' justifyContent="flex-end" >
-                <Button variant="contained" onClick={handleBidOnOrder}>Bid on Order</Button> 
-            </Box>
         </>
     );
 };

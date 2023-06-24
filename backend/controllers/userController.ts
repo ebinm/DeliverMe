@@ -1,21 +1,22 @@
-import {Buyer, Customer, Shopper, Typed} from "../models/customer";
+/**
+ * This file only contains helper functions for the shopper and buyer controller
+ */
 
 
-export async function findBuyerById(id: number): Promise<Customer & Typed> {
-    const buyer = await Buyer.findById(id)
-        .select("-password -__v")
-    return {
-        type: "BUYER",
-        ...buyer.toJSON()
+import {Buyer, Shopper} from "../models/customer";
+
+
+export async function clearNotificationsById(model: typeof Buyer | typeof Shopper, id: string, notificationId?: string) {
+    if (notificationId === undefined) {
+        return model.findByIdAndUpdate(id, {notifications: []});
+    } else {
+        await model.findByIdAndUpdate(id, {
+            "$pull": {
+                notifications: {
+                    _id: notificationId
+                }
+            }
+        });
     }
 }
 
-
-export async function findShopperById(id: number): Promise<Customer & Typed> {
-    const shopper = await Shopper.findById(id)
-        .select("-password -__v")
-    return {
-        type: "SHOPPER",
-        ...shopper.toJSON()
-    }
-}

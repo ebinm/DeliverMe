@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import Modal from '@mui/material/Modal';
+import {BaseModal} from "../util/BaseModal"
 import { useTheme } from "@mui/material/styles"
 import { useSnackbar } from 'notistack';
 import { DateTimePicker } from "@mui/x-date-pickers";
@@ -44,7 +44,7 @@ const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, Orde
 
     return (
         <div>
-            <Modal
+            <BaseModal
                 open={showBidOnOrderModal}
                 onClose={handleCloseBidOnOrderModal}
                 aria-labelledby="modal-modal-title"
@@ -59,15 +59,15 @@ const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, Orde
                             sx={{width: "100%"}}
                         >
                             <form onSubmit={handleSubmit}>
-                                <div>
-                                    <Typography justifySelf={"flex-end"} sx={{ mt: 3 }}>Bid Amount</Typography>
+                       
+                                    <Typography justifySelf={"flex-end"} sx={{ mt: 3}}>Bid Amount</Typography>
                                     <Input
                                         id="BidAmount"
                                         endAdornment={<InputAdornment position="end">€</InputAdornment>}
                                         onChange={(e) => setBidHight(e.currentTarget.value)}
                                         value={bidHight}
+                                        style={{width: "100%"}}
                                     />
-
                                     <Typography justifySelf={"flex-end"} sx={{ mt: 3 }}>Expected Deliver Time</Typography>
                                     <DateTimePicker
                                         disablePast
@@ -76,7 +76,9 @@ const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, Orde
                                         onChange={value => !isNaN(value) && setBidDate(value)}
                                         slots={{ "actionBar": ((props) => <CustomDateTimePickerActionBar {...props} />) }}
                                         slotProps={{ "textField": { variant: "standard" } }} />
-                                </div>
+                                       
+                            
+
                                 <Stack
                                     direction={{ xs: 'column', sm: 'row' }}
                                     spacing={{ xs: 1, sm: 1, md: 1 }}
@@ -89,7 +91,7 @@ const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, Orde
                         </Box>
                     </Box>
                 </>
-            </Modal>
+            </BaseModal>
         </div>
     );
 };
