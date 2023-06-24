@@ -2,20 +2,25 @@ import {Order, OrderModel, OrderStatus} from '../models/order';
 
 export async function getAllOrders(): Promise<Order[]> {
 
-    return OrderModel.find();
+    return OrderModel.find()
 
+}
+
+export async function getOrdersForBuyer(buyerId: string): Promise<Order[]> {
+    return OrderModel.find({"createdBy": buyerId})
+        .populate({path: "bids.createdBy", select: "firstName lastName"});
 }
 
 export async function getOpenOrders(): Promise<Order[]> {
 
-        return OrderModel.aggregate().lookup({
-            from: "buyers", localField: "createdBy",
-            foreignField: "_id", as: "createdBy"
-        }).addFields({
-            createdBy: {$arrayElemAt: ["$createdBy", 0]} // extracts user from list
-        }).project({
-            "createdBy.password": 0
-        }).match({"status": "Open"});
+    return OrderModel.aggregate().lookup({
+        from: "buyers", localField: "createdBy",
+        foreignField: "_id", as: "createdBy"
+    }).addFields({
+        createdBy: {$arrayElemAt: ["$createdBy", 0]} // extracts user from list
+    }).project({
+        "createdBy.password": 0
+    }).match({"status": "Open"});
 
 }
 
@@ -79,11 +84,11 @@ export async function changeOrder(buyerId: string, orderId: string, order: Order
 
     const oldOrder = await getOrderById(orderId)
 
-    if(!oldOrder) {
+    if (!oldOrder) {
         new Error("Order with orderId does not exist")
     } else if (oldOrder.createdBy.toString() !== buyerId.toString()) {
         new Error("You are not allowed to change this order")
-    } else if(order.createdBy.toString() !== buyerId.toString()) {
+    } else if (order.createdBy.toString() !== buyerId.toString()) {
         throw new Error("Order is unsupported: createdBy is not equal to customerId")
     } else {
         return updateOrder(orderId, order);
@@ -95,7 +100,7 @@ export async function removeOrder(buyerId: string, orderId: string) {
 
     const oldOrder = await getOrderById(orderId)
 
-    if(!oldOrder) {
+    if (!oldOrder) {
         new Error("Order with orderId does not exist")
     } else if (oldOrder.createdBy.toString() !== buyerId.toString()) {
         new Error("You are not allowed to delete this order")
@@ -109,7 +114,7 @@ export async function changeStatus(buyerId: string, orderId: string, status: str
 
     const order = await getOrderById(orderId)
 
-    if(!order) {
+    if (!order) {
         new Error("Order with orderId does not exist")
     } else if (order.createdBy.toString() !== buyerId.toString()) {
         new Error("You are not allowed to change this order")

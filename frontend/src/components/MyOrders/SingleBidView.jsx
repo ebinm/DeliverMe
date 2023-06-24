@@ -2,8 +2,7 @@ import {useMemo} from "react";
 import {Avatar, Box, Typography} from "@mui/material";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import AccessAlarmOutlinedIcon from "@mui/icons-material/AccessAlarmOutlined";
-import {For} from "../util/ControlFlow";
-import GradeIcon from '@mui/icons-material/Grade';
+import Rating from "@mui/material/Rating";
 
 export function SingleBidView({bid, selected = false, setSelected = () => undefined, highlightOnHover = true}) {
 
@@ -34,15 +33,7 @@ export function SingleBidView({bid, selected = false, setSelected = () => undefi
                             component={"h4"}
                             style={{"gridColumn": "span 2"}}>{bid.createdBy.firstName} {bid.createdBy.lastName}</Typography>
 
-                <Box alignItems={"center"} display={"flex"} flexDirection={"row"}>
-                    <For each={Array(stars).fill(1).map((_, i) => i)}>{(i) =>
-                        <GradeIcon key={i} sx={{"color": "#FFAC33"}}/>
-                    }</For>
-                    <For each={Array(5 - stars).fill(1).map((_, i) => i)}>{(i) =>
-                        <GradeIcon key={i} sx={{"color": "text.light"}}/>
-                    }</For>
-                </Box>
-
+                <Rating readOnly defaultValue={stars}/>
 
                 <LightbulbOutlinedIcon/>
                 <Typography mr={"64px"}>Bid offered:</Typography>

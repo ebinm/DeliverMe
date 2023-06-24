@@ -1,7 +1,14 @@
 import express from 'express';
 import {authenticated, AuthenticatedRequest} from "../middleware/auth";
 import {
-    changeOrder, changeStatus, getAllOrders, getOpenOrders, getOrderById, order, removeOrder
+    changeOrder,
+    changeStatus,
+    getAllOrders,
+    getOpenOrders,
+    getOrderById,
+    getOrdersForBuyer,
+    order,
+    removeOrder
 } from "../controllers/orderController";
 import {bidOnOrder, selectBid} from "../controllers/bidController";
 
@@ -10,7 +17,12 @@ const
 
 router.get("/", authenticated, async (req: AuthenticatedRequest, res, next) => {
     try {
-        res.json(await getAllOrders())
+        if (req.customerType === "BUYER") {
+            res.json(await getOrdersForBuyer(req.customerId))
+        } else {
+            // TODO correct response
+            res.json(await getAllOrders())
+        }
     } catch (e) {
         console.log(e)
         next(e.message)
@@ -19,7 +31,7 @@ router.get("/", authenticated, async (req: AuthenticatedRequest, res, next) => {
 
 router.get("/open", authenticated, async (req: AuthenticatedRequest, res, next) => {
     try {
-                res.json(await getOpenOrders())
+        res.json(await getOpenOrders())
 
     } catch (e) {
         console.log(e)
