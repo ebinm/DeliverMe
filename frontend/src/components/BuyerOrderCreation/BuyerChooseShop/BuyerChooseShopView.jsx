@@ -186,7 +186,7 @@ const BuyerChooseShopView = ({ onSubmitShop }) => {
                             onKeyDown={handleInputKeyDown}
                             sx={{ width: '100%' }}
                         />
-                        <OutlinedButton  onClick={handlePlaceSelect}>Search</OutlinedButton>
+                        <Button variant="contained" sx={{ bgcolor: "primary.dark" }} onClick={handlePlaceSelect}>Search</Button>
                     </Stack>
                 </Grid>
             </Grid>
