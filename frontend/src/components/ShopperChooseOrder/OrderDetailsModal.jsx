@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import {BaseModal} from "../util/BaseModal"
 import { useTheme } from "@mui/material/styles"
-import { SingleOrderViewCommon } from '../MyOrders/SingleOrderViewCommon';
+import { SingleOrderViewShopper } from '../MyOrders/SingleOrderViewShopper';
 
 
 const OrderDetailsModal = ({showOrderDetailsModal, handleCloseOrderDetailsModal, handleOpenBidModal, Order}) => {
@@ -47,7 +47,7 @@ const OrderDetailsModal = ({showOrderDetailsModal, handleCloseOrderDetailsModal,
                 <>
                     <Box sx={style}>
 
-                        <SingleOrderViewCommon order={Order} orderName={"TODO"}/>
+                        <SingleOrderViewShopper order={Order} />
 
                         <Stack
                             direction={{ xs: 'column', sm: 'row' }}

@@ -4,8 +4,7 @@ import {BuyerMyOrders} from "./components/MyOrders/BuyerMyOrders";
 import {ShopperMyOrders} from "./components/MyOrders/ShopperMyOrders";
 import CheckoutForm from "./components/payprovider/CheckoutPage";
 import {Route, Routes} from "react-router-dom";
-import {BuyerChooseShopView} from "./components/BuyerOrderCreation/BuyerChooseShop/BuyerChooseShopView";
-import {TestExample} from "./components/BuyerOrderCreation/BuyerChooseShop/TestExample";
+import {TestExample} from "./components/TestExample";
 import {ShopperChooseOrderView} from "./components/ShopperChooseOrder/ShopperChooseOrderView";
 import {Signup} from "./components/authentication/Signup";
 import {CustomerProvider} from "./util/context/CustomerContext";
@@ -31,13 +30,15 @@ function App() {
                             <Route path={"/shopper/signup"} element={<Signup type={"shopper"}/>}/>
                             <Route path={"/buyer/signup"} element={<Signup type={"buyer"}/>}/>
                             <Route path={"/login"} element={<Login/>}/>
-                            <Route path={"/buyer/my-orders/:id?"} element={<BuyerMyOrders/>}/>
+
                             <Route path={"/shopper/my-orders/:id?"} element={<ShopperMyOrders/>}/>
+                            <Route path={"/shopper/browseorders"} element={<ShopperChooseOrderView/>}/>
+                            
+                            <Route path={"/buyer/my-orders/:id?"} element={<BuyerMyOrders/>}/>
                             <Route path={"/buyer/order/create/*"} element={<BuyerOrderCreationView/>}/>
                             <Route path={"/checkout"} element={<CheckoutForm/>} />
-                            <Route path={"test/map-shop"} element={<BuyerChooseShopView/>}/>
-                            <Route path={"test/map-order"} element={<ShopperChooseOrderView/>}/>
-                            <Route path={"test/simonstest"} element={<TestExample/>}/>
+                            
+                            <Route path={"test"} element={<TestExample/>}/>
                         </Routes>
                     </main>
                 </LocalizationProvider>
