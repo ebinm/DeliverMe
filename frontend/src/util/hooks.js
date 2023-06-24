@@ -32,6 +32,7 @@ function useFetch(endpoint, options, onSuccess = undefined, onFinally = undefine
                 }
             }).then(res => {
             setItem(res)
+            onSuccess && onSuccess()
             setError(undefined)
             setLoading(false)
         }).catch(err => {

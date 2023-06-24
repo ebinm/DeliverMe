@@ -67,12 +67,12 @@ export async function findBidOrdersByShopper(shopperId: string): Promise<Order[]
 
 export async function order(buyerId: string, order: Order) {
 
-    if(order.createdBy.toString() !== buyerId.toString()) {
-        throw new Error("Order is unsupported: createdBy is not equal to customerId")
-    } else {
-        return createOrder(order);
-    }
+    // @ts-ignore
+    order.createdBy = buyerId
+    order.status = OrderStatus.Open
+    order.creationDate = new Date()
 
+    return createOrder(order);
 }
 
 export async function changeOrder(buyerId: string, orderId: string, order: Order) {
