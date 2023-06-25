@@ -8,7 +8,7 @@ import {
     getOrdersForBuyer,
     getOrdersForShopper,
     order,
-    removeOrder
+    removeOrder, uploadReceipt
 } from "../controllers/orderController";
 import {bidOnOrder, selectBid} from "../controllers/bidController";
 
@@ -31,9 +31,17 @@ router.get("/", authenticated, async (req: AuthenticatedRequest, res, next) => {
 router.get("/open", authenticated, async (req: AuthenticatedRequest, res, next) => {
     try {
         res.json(await getOpenOrders())
-
     } catch (e) {
         console.log(e)
+        next(e.message)
+    }
+})
+
+router.put("/:id/receipt", authenticated, async (req: AuthenticatedRequest, res, next)=> {
+    try {
+        res.json(await uploadReceipt(req.customerId, req.params.id, req.body))
+    }catch (e){
+        console.warn(e)
         next(e.message)
     }
 })

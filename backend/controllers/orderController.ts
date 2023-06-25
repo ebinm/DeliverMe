@@ -1,4 +1,5 @@
 import {Order, OrderModel, OrderStatus} from '../models/order';
+import {Receipt} from "../models/receipt";
 
 export async function getAllOrders(): Promise<Order[]> {
 
@@ -28,6 +29,20 @@ export async function getOrdersForShopper(shopperId: string) {
 
 
     return orders
+}
+
+export async function uploadReceipt(customerId, orderId: string, receipt: Receipt) {
+    const order = await OrderModel.findById(orderId)
+    if (orderId !== order?.selectedBid?.createdBy?.toString()) {
+        throw Error("Customer is not authorized to upload a receipt for this order.")
+    }
+
+    if (order.status !== OrderStatus.InDelivery) {
+        throw Error("Order is not in the correct status for receipt upload.")
+    }
+    order.groceryBill = receipt
+    order.status = OrderStatus.InPayment
+    return order.save()
 }
 
 export async function getOpenOrders(): Promise<Order[]> {

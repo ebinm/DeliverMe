@@ -2,6 +2,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 import {Buyer} from './customer';
 import { Item, itemSchema } from './item';
 import { Bid, bidSchema } from './bid';
+import {Receipt} from "./receipt";
 
 type Location = {
     // _id: Schema.Types.ObjectId; // automatically created by MongoDB
@@ -26,6 +27,7 @@ export enum OrderStatus {
 export interface Order extends Document {
     //_id: Schema.Types.ObjectId;   // automatically created by MongoDB
     status: OrderStatus;
+    groceryBill: Receipt;
     creationDate: Date;
     latestDeliveryDate: Date;
     earliestDeliveryDate: Date;
@@ -51,6 +53,7 @@ const orderSchema = new Schema<Order>(
         createdBy: { type: Schema.Types.ObjectId,ref: Buyer, required: true },
         destination: { type: Schema.Types.Mixed, required: true },
         items: { type: [itemSchema], required: true },
+        groceryBill: {type: Schema.Types.Mixed, required: false},
         selectedBid: {
             type: bidSchema,
             required: false,
