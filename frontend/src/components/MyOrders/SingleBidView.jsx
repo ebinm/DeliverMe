@@ -33,7 +33,7 @@ export function SingleBidView({bid, selected = false, setSelected = () => undefi
                             component={"h4"}
                             style={{"gridColumn": "span 2"}}>{bid.createdBy.firstName} {bid.createdBy.lastName}</Typography>
 
-                <Rating readOnly defaultValue={stars}/>
+                <Rating readOnly defaultValue={stars || null}/>
 
                 <LightbulbOutlinedIcon/>
                 <Typography mr={"64px"}>Bid offered:</Typography>

@@ -60,7 +60,8 @@ export function createNotificationService(server: io.Server): NotificationServic
             // We send the persisted notification mostly because this allows us to send the id
             // which can be used as a key in the frontend
             sockets.forEach((it) => it.emit("notification", JSON.stringify(newNotification)))
-        } catch {
+        } catch(e) {
+            console.warn(e)
             // TODO
         }
     }

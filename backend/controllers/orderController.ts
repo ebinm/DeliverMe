@@ -8,7 +8,26 @@ export async function getAllOrders(): Promise<Order[]> {
 
 export async function getOrdersForBuyer(buyerId: string): Promise<Order[]> {
     return OrderModel.find({"createdBy": buyerId})
-        .populate({path: "bids.createdBy", select: "firstName lastName"});
+        .populate({path: "bids.createdBy", select: "firstName lastName"})
+        .sort({creationDate: -1});
+}
+
+export async function getOrdersForShopper(shopperId: string) {
+    const orders = await OrderModel.find({"bids": {"$elemMatch": {"createdBy": shopperId}}})
+        .populate({path: "createdBy", select: "firstName lastName _id"})
+        .populate({path: "bids.createdBy", select: "firstName lastName"})
+        .populate({path: "selectedBid.createdBy", select: "firstName lastName"})
+        .sort({creationDate: -1});
+
+
+    // TODO figure out how to do this in the query
+    orders.forEach(order => {
+        // @ts-ignore
+        order.bids = order.bids.filter(bid => bid.createdBy._id = shopperId)
+    })
+
+
+    return orders
 }
 
 export async function getOpenOrders(): Promise<Order[]> {

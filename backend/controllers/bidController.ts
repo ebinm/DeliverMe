@@ -1,4 +1,4 @@
-import {Order, OrderModel} from '../models/order';
+import {Order, OrderModel, OrderStatus} from '../models/order';
 import {getOrderByBid, getOrderById, updateOrder} from "./orderController";
 import {Bid} from "../models/bid";
 import mongoose from "mongoose";
@@ -57,35 +57,41 @@ export async function bidOnOrder(shopperId: string, orderId: string, bid: Bid): 
     if (!order) {
         throw new Error("Order with orderId does not exist")
     }
-    console.log(bid)
 
-    if (bid.createdBy.toString() !== shopperId.toString()) {
-        throw new Error("Bid is unsupported: createdBy is not equal to customerId")
-    } else {
-
-        const oldBid = order.bids.findIndex(p => (p.createdBy.toString() === shopperId.toString()));
-
-        if (oldBid === -1) {
-            order.bids.push(bid);
-        } else {
-            order.bids[oldBid] = bid;
-        }
-
-        await notificationService.notifyBuyerById(order.createdBy.name, {
-            orderId: order._id,
-            type: NotificationType.BidPlacedOnOrder,
-            msg: `${order.createdBy.name} placed a bid on your order.`,
-            date: new Date()
-        })
-
-        return updateOrder(orderId, order);
+    //@ts-ignore
+    bid.createdBy = shopperId.toString()
+    // TODO move the rate to some constants file
+    bid.moneyBidWithFee = {
+        amount: bid.moneyBid.amount * (1 + 0.3),
+        currency: bid.moneyBid.currency
     }
+
+    const oldBid = order.bids.findIndex(p => (p.createdBy.toString() === shopperId.toString()));
+
+    if (oldBid === -1) {
+        order.bids.push(bid);
+    } else {
+        order.bids[oldBid] = bid;
+    }
+
+    const updatedOrder = await updateOrder(orderId, order);
+
+    // @ts-ignore
+    notificationService.notifyBuyerById(order.createdBy._id.toString(), {
+        orderId: order._id,
+        type: NotificationType.BidPlacedOnOrder,
+        msg: `A bid was placed on your order.`,
+        date: new Date()
+    })
+
+    return updatedOrder
+
 }
 
 async function getBidInOrder(bidId: string): Promise<{ index: number, order: Order }> {
     const order = await getOrderByBid(bidId)
 
-    if(!order) {
+    if (!order) {
         throw new Error("bidId does not exist")
     }
 
@@ -102,13 +108,23 @@ export async function selectBid(buyerId: string, bidId: string): Promise<Order> 
     const bidInOrder = await getBidInOrder(bidId);
     const bid = bidInOrder.order.get("bids")[bidInOrder.index];
     const order = bidInOrder.order;
+
     if (order.createdBy.toString() !== buyerId.toString()) {
         throw new Error("Bid is unsupported: createdBy is not equal to customerId")
     } else {
         order.selectedBid = bid;
+        order.status = OrderStatus.InDelivery
+
+        await notificationService.notifyShopperById(bid.createdBy._id.toString(), {
+            type: NotificationType.BidAccepted,
+            orderId: order._id,
+            date: new Date(),
+            msg: "One of your bids has been accepted"
+        })
+
+
         return updateOrder(order._id, order);
     }
-
 }
 
 

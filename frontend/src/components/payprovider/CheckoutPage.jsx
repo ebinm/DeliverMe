@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Typography from '@mui/material/Typography';
-import  Button  from '@mui/material/Button';
+import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {createTheme, ThemeProvider} from '@mui/material/styles';
 import Modal from '@mui/material/Modal';
 import PaymentForm from './PaymentForm';
 

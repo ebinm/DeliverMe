@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, {useCallback, useRef, useState} from "react";
 import Webcam from "react-webcam";
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -8,8 +8,6 @@ function TestExample() {
     const webcamRef = useRef();
 
     const videoConstraints = {
-        //width: 420,
-        //height: 420,
         facingMode: "user",
     };
 

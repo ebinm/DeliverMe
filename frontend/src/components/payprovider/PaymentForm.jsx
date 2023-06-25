@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Typography from '@mui/material/Typography';
-import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Box, TextField } from '@mui/material';
-import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
-import { FaCcMastercard, FaCcVisa, FaPaypal } from 'react-icons/fa';
-import { styled } from '@mui/system';
+import {Box, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField} from '@mui/material';
+import {PayPalButtons, PayPalScriptProvider} from '@paypal/react-paypal-js';
+import {FaCcMastercard, FaCcVisa, FaPaypal} from 'react-icons/fa';
+import {styled} from '@mui/system';
 
 const IconContainer = styled(Box)({
   display: 'flex',

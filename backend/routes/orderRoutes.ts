@@ -3,10 +3,10 @@ import {authenticated, AuthenticatedRequest} from "../middleware/auth";
 import {
     changeOrder,
     changeStatus,
-    getAllOrders,
     getOpenOrders,
     getOrderById,
     getOrdersForBuyer,
+    getOrdersForShopper,
     order,
     removeOrder
 } from "../controllers/orderController";
@@ -20,8 +20,7 @@ router.get("/", authenticated, async (req: AuthenticatedRequest, res, next) => {
         if (req.customerType === "BUYER") {
             res.json(await getOrdersForBuyer(req.customerId))
         } else {
-            // TODO correct response
-            res.json(await getAllOrders())
+            res.json(await getOrdersForShopper(req.customerId))
         }
     } catch (e) {
         console.log(e)

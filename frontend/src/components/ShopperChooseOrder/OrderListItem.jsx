@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { CircularProgress, Box, Grid, List, ListItem, ListItemButton, ListItemAvatar } from '@mui/material';
+import React from 'react';
+import {Box, ListItem, ListItemAvatar, ListItemButton} from '@mui/material';
 import Avatar from '@mui/material/Avatar';
-import ImageIcon from '@mui/icons-material/Image';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
@@ -36,7 +35,7 @@ const OrderListItem = ({ order, handleOpenOrderDetailsModal, selectedOrder, setS
                         </ListItemAvatar>
                     </Box>
                     <Box>
-                        <Typography sx={{mb:1}}variant={"h6"} fontWeight="bold">{order?.createdBy?.firstName} {order?.createdBy?.lastName}</Typography>
+                        <Typography sx={{mb:1}} variant={"h6"} fontWeight="bold">{order?.createdBy?.firstName} {order?.createdBy?.lastName}</Typography>
                         <Box display={"grid"} gridTemplateColumns={"min-content auto"} gap={"2px"} >
                             <ShoppingCartOutlinedIcon />
                             <Typography variant={"body1"}>Shop: {order?.groceryShop?.name}, {order?.groceryShop?.street}, {order?.groceryShop?.city}</Typography>

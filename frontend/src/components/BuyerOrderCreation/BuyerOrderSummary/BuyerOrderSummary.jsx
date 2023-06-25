@@ -12,7 +12,7 @@ import {OrderItemsOverview} from "../../MyOrders/OrderItemsOverview";
 import {createSearchParams, Navigate, useLocation, useNavigate} from "react-router-dom";
 import React, {useContext, useEffect, useRef, useState} from "react";
 import {CustomerContext} from "../../../util/context/CustomerContext";
-import {useCacheLocalStorageForCustomer, useFetch} from "../../../util/hooks";
+import {useCacheLocalStorageForCustomer} from "../../../util/hooks";
 import Stack from "@mui/material/Stack";
 import {DarkButton, OutlinedButton} from "../../util/Buttons";
 import {Show} from "../../util/ControlFlow";
@@ -141,10 +141,10 @@ export function BuyerOrderSummary({
                         credentials: 'include',
                         body: JSON.stringify(
                             {
-                                items, to, from, notes, shop, destination: {
+                                items, to, from, notes, groceryShop: shop, destination: {
                                     name: shippingAddressName,
                                     street: shippingAddressStreetAndNumber,
-                                    city: `${shippingAddressZipCode}, shippingAddressCity`
+                                    city: `${shippingAddressZipCode}, ${shippingAddressCity}`
                                 }
                             }
                         )
@@ -158,6 +158,7 @@ export function BuyerOrderSummary({
                             setError("Unknown Error.")
                         }
                     } else {
+                        onSubmit()
                         navigate("/buyer/my-orders")
                     }
                 }

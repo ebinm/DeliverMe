@@ -1,4 +1,3 @@
-import {useState} from "react";
 import {BuyerChooseShopView} from "./BuyerChooseShop/BuyerChooseShopView";
 import {Route, Routes, useNavigate} from "react-router-dom";
 import {BuyerChooseItems} from "./BuyerChooseItems/BuyerChooseItems";
@@ -12,7 +11,7 @@ export function BuyerOrderCreationView() {
 
     // TODO cache
     // TODO pull state management from shop selection view to this view
-    const [selectedShop, setSelectedShop] = useState(null);
+    const [selectedShop, setSelectedShop, clearShop] = useCacheLocalStorageForCustomer("shop-cache", null);
 
 
     const [from, setFrom, clearFrom] = useCacheLocalStorageForCustomer("from-cache", null)
@@ -23,7 +22,7 @@ export function BuyerOrderCreationView() {
 
     return <Routes>
         <Route index={true} path={"/"} element={
-            <BuyerChooseShopView onSubmitShop={(shop) => {
+            <BuyerChooseShopView setSelectedShop={setSelectedShop} selectedShop={selectedShop} onSubmitShop={(shop) => {
                 setSelectedShop(shop)
                 navigate("./items")
             }}/>
@@ -42,6 +41,7 @@ export function BuyerOrderCreationView() {
                 clearTo()
                 clearNotes()
                 clearItems()
+                clearShop()
             }}/>
         }/>
 
