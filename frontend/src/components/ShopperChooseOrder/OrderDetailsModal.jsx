@@ -37,13 +37,14 @@ const OrderDetailsModal = ({showOrderDetailsModal, handleCloseOrderDetailsModal,
     return (
         <div>
             <BaseModal
+                sx={{"width": "100vh"}}
                 open={showOrderDetailsModal}
                 onClose={handleCloseOrderDetailsModal}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
                 <>
-                    <Box sx={style}>
+                    <Box sx={{"width": "100%"}}>
 
                         <SingleOrderViewShopper order={order}/>
 

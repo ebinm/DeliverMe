@@ -47,8 +47,6 @@ const orderSchema = new Schema<Order>(
         creationDate: { type: Date, required: true },
         latestDeliveryDate: { type: Date, required: false },
         earliestDeliveryDate: { type: Date, required: false },
-        totalCostOfItems: { type: Number, required: false },
-        totalCostOfOrder: { type: Number, required: false },
         groceryShop: { type: Schema.Types.Mixed, required: false },
         createdBy: { type: Schema.Types.ObjectId,ref: Buyer, required: true },
         destination: { type: Schema.Types.Mixed, required: true },

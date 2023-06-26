@@ -5,7 +5,7 @@ import {DarkButton, OutlinedButton} from "./Buttons";
 import {BaseModal} from "./BaseModal";
 
 
-export function RatingModal({open, onClose, orderId}) {
+export function RatingModal({open, onClose, order}) {
 
     // TODO move state upward or send rating from here (would require information on self and order)
     const [rating, setRating] = useState(5.0)
@@ -14,7 +14,7 @@ export function RatingModal({open, onClose, orderId}) {
     return <BaseModal open={open} onClose={onClose}>
         <Stack direction={"column"} gap={"32px"} sx={{"alignItems": "center", "justifyContent": "center"}}>
             {/*TODO*/}
-            <Typography variant={"h5"} component={"h2"}>Please leave a rating for TODO</Typography>
+            <Typography variant={"h5"} component={"h2"}>Please leave a rating for {order.createdBy.firstName} {order.createdBy.lastName}</Typography>
 
             <Rating
                 size={"large"}

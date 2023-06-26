@@ -1,5 +1,7 @@
 import {Order, OrderModel, OrderStatus} from '../models/order';
 import {Receipt} from "../models/receipt";
+import {notificationService} from "../index";
+import {NotificationType} from "../models/notification";
 
 export async function getAllOrders(): Promise<Order[]> {
 
@@ -33,7 +35,8 @@ export async function getOrdersForShopper(shopperId: string) {
 
 export async function uploadReceipt(customerId, orderId: string, receipt: Receipt) {
     const order = await OrderModel.findById(orderId)
-    if (orderId !== order?.selectedBid?.createdBy?.toString()) {
+
+    if (customerId !== order?.selectedBid?.createdBy?.toString()) {
         throw Error("Customer is not authorized to upload a receipt for this order.")
     }
 
@@ -42,6 +45,15 @@ export async function uploadReceipt(customerId, orderId: string, receipt: Receip
     }
     order.groceryBill = receipt
     order.status = OrderStatus.InPayment
+
+    //@ts-ignore
+    notificationService.notifyBuyerById(order.createdBy, {
+        msg: "You order has been completed",
+        orderId: order._id,
+        date: new Date(),
+        type: NotificationType.PaymentRequired
+    })
+
     return order.save()
 }
 
@@ -110,6 +122,8 @@ export async function order(buyerId: string, order: Order) {
     order.createdBy = buyerId
     order.status = OrderStatus.Open
     order.creationDate = new Date()
+    order.selectedBid = null
+    order.bids = []
 
     return createOrder(order);
 }

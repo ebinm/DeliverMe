@@ -5,7 +5,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {DarkButton, OutlinedButton} from "../util/Buttons";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
-import React, {useCallback, useRef, useState} from "react";
+import React, {useCallback, useContext, useRef, useState} from "react";
 import {CurrencyInput} from "../util/CurrencyInput";
 import {FileUploader} from "react-drag-drop-files";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -14,8 +14,13 @@ import {BaseModal} from "../util/BaseModal"
 import {Show} from "../util/ControlFlow"
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import Webcam from "react-webcam";
+import CameraIcon from '@mui/icons-material/Camera';
+import NoPhotographyIcon from '@mui/icons-material/NoPhotography';
+import {CustomerContext} from "../../util/context/CustomerContext";
 
 export function SingleOrderViewShopper({order, setOrders}) {
+
+    const {customer} = useContext(CustomerContext)
 
     const [uploadOpen, setUploadOpen] = useState(false)
     const [ratingOpen, setRatingOpen] = useState(false)
@@ -39,14 +44,14 @@ export function SingleOrderViewShopper({order, setOrders}) {
             }
             buttons={
                 <Stack mt={"16px"}>
-                    <Show when={order?.status === "In Delivery"}>
+                    <Show when={order?.status === "In Delivery" && order?.selectedBid?.createdBy._id === customer._id}>
                         <DarkButton onClick={() => setUploadOpen(true)}>Upload Receipt</DarkButton>
                     </Show>
                 </Stack>
 
             }
         />
-        <ReceiptUploadModal open={uploadOpen} onClose={() => {
+        <ReceiptUploadModal orderId={order?._id} open={uploadOpen} onClose={() => {
             setUploadOpen(false)
         }} onSuccess={() => {
             // setOrders may be undefined for example in the order selection screen.
@@ -54,11 +59,11 @@ export function SingleOrderViewShopper({order, setOrders}) {
             setUploadOpen(false)
             setRatingOpen(true)
         }}/>
-        <RatingModal open={ratingOpen} onClose={() => setRatingOpen(false)} orderId={order?.id}/>
+        <RatingModal open={ratingOpen} onClose={() => setRatingOpen(false)} order={order}/>
     </>
 }
 
-function ReceiptUploadModal({open, onClose, onSuccess}) {
+function ReceiptUploadModal({orderId, open, onClose, onSuccess}) {
     const [amount, setAmount] = useState(0)
     const [currency, setCurrency] = useState("EUR")
 
@@ -83,14 +88,14 @@ function ReceiptUploadModal({open, onClose, onSuccess}) {
 
     const [uploadFeedback, setUploadFeedback] = useState("Upload or drop your receipt here.")
 
-    return <BaseModal open={open} onClose={onClose}>
+    return <BaseModal open={open} onClose={onClose} sx={{"maxHeight": "80vh", "overflowY": "auto"}}>
         <form ref={formRef}>
-            <Stack direction={"column"} gap={"16px"} alignItems={"center"}>
+            <Stack direction={"column"} gap={"16px"} alignItems={"center"} padding={"8px 0"}>
                 <CurrencyInput label={"Total amount spent"} amount={amount} setAmount={setAmount} currency={currency}
                                setCurrency={setCurrency}/>
 
                 <FileUploader maxSize={32} id={"receipt"}
-                              required={true} multiple={false} name="file" types={["JPG", "PNG"]}
+                              required={!img} multiple={false} name="file" types={["JPG", "PNG"]}
                               onTypeError={(err) => setUploadFeedback(err)}
                               onSizeError={(err) => setUploadFeedback(err)}
                               handleChange={(file) => {
@@ -135,20 +140,39 @@ function ReceiptUploadModal({open, onClose, onSuccess}) {
                         videoConstraints={videoConstraints}
                     />
                     <DarkButton sx={{"width": "100%"}} onClick={() => capture()}
-                                startIcon={<CameraAltIcon sx={{"fontSize": "2rem"}}/>}>
+                                startIcon={<CameraIcon sx={{"fontSize": "2rem"}}/>}>
                         Take photo
                     </DarkButton>
+                    <DarkButton sx={{"width": "100%"}} onClick={() => setWebcamOpen(false)}
+                                startIcon={<NoPhotographyIcon sx={{"fontSize": "2rem"}}/>}>
+                        Close Camera
+                    </DarkButton>
                 </Show>
-
-
             </Stack>
         </form>
 
         <Stack direction={"row-reverse"} gap={"8px"} mt={"16px"}>
-            <DarkButton onClick={() => {
+            <DarkButton onClick={async () => {
                 if (formRef.current?.reportValidity()) {
-                    // TODO upload stuff and check
-                    onSuccess()
+                    // TODO extract common fetch options
+                    const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/${orderId}/receipt`, {
+                        method: "PUT",
+                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            "image": img,
+                            "costAmount": amount,
+                            "costCurrency": currency
+                        })
+                    })
+
+                    if (res.ok) {
+                        onSuccess()
+                    } else {
+                        // TODO panic
+                    }
                 }
             }}>Upload</DarkButton>
             <OutlinedButton onClick={onClose}>Cancel</OutlinedButton>
