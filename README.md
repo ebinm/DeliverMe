@@ -66,4 +66,4 @@ Frontend: npm start
 Mongo: https://cloud.mongodb.com/v2/646b6578d7b432020c271dab#/clusters
 
 - Name: l.rossi@tum.de
-- pw: VQrcNNkTuK0Kv9Mg
+- pw: Ne5?eyDKcPReet*

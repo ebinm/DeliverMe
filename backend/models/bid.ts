@@ -1,9 +1,9 @@
 
 import {Shopper} from './customer';
-import { Schema } from 'mongoose';
+import { Schema, Document } from 'mongoose';
 
 
-type Bid = {
+interface Bid extends Document {
     // _id: Schema.Types.ObjectId; // automatically created by MongoDB
     moneyBid: {
         currency: string;
@@ -15,7 +15,7 @@ type Bid = {
     },
     timeBid: Date;
     note: string;
-    createdBy: typeof Shopper; 
+    createdBy: typeof Shopper
 }
 
 const bidSchema = new Schema<Bid>(
@@ -30,7 +30,7 @@ const bidSchema = new Schema<Bid>(
       },
       timeBid: { type: Date, required: true },
       note: { type: String, required: true },
-      createdBy: { type: Schema.Types.ObjectId, ref: Shopper, required: true },
+      createdBy: { type: Schema.Types.ObjectId, ref: Shopper, required: true }
     }
   );
 

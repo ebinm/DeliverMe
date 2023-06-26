@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import {NotificationSchema, UserNotification} from "./notification";
+import {Review, ReviewSchema} from "./review";
 
 
 type CustomerType = "BUYER" | "SHOPPER"
@@ -10,8 +11,9 @@ interface Customer extends mongoose.Document {
     lastName: string,
     password: string,
     profilePicture: string,
-    rating: number,
-    notifications: UserNotification[]
+    avgRating: number,
+    notifications: UserNotification[],
+    reviews?: Review[]
 }
 
 /**
@@ -41,9 +43,10 @@ const CustomerSchema = new mongoose.Schema<Customer>({
     notifications: {
         type: [NotificationSchema]
     },
-    rating: {
+    avgRating: {
         type: Number
-    }
+    },
+    reviews: { type: [ReviewSchema],  default: null, required: false }
 });
 
 const Buyer = mongoose.model('Buyer', CustomerSchema);
