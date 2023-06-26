@@ -1,49 +1,9 @@
 import React, { useState } from 'react';
 import Typography from '@mui/material/Typography';
-import  Button  from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Paper from '@mui/material/Paper';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Modal from '@mui/material/Modal';
+import Stack from "@mui/material/Stack";
+import {BaseModal} from '../util/BaseModal';
+import {DarkButton, OutlinedButton} from "../util/Buttons";
 import PaymentForm from './PaymentForm';
-import axios from 'axios';
-
-const theme = createTheme();
-
-const baseURL = 'http://localhost:3000';
-
-/* const response = await axios.post(`${baseURL}/api/payment/verify`, {
-  cardNumber: '1234567890123456', // Replace with actual card number
-  cardName: 'John Doe', // Replace with actual cardholder name
-  expiration: '12/24', // Replace with actual expiration date
-  cvc: '123', // Replace with actual CVC
-}); */
-
-const paymentData = {
-  amount: 70,
-  cardNumber: '1234 5678 9012 3456',
-  // Add other necessary payment data
-};
-
-console.log(paymentData.amount);
-
-
-const containerStyle = {
-  position: 'center',
-  width: '845px',
-  height: '860px',
-  /* left: '297px',
-  top: '35px', */
-  background: '#FFFFFF',
-  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-  borderRadius: '10px',
-};
-
-const modalStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-};
 
 const lineStyle = {
   borderBottom: '1px solid #E2E8F0',
@@ -52,7 +12,7 @@ const lineStyle = {
 };
 
 const contentStyle = {
-  margin: '40px',
+  margin: '20px',
   flex: 1,
 };
 
@@ -76,51 +36,18 @@ const CheckoutPage = () => {
   const handleCancel = () => {
     // Handle cancel order
     console.log('Order canceled');
-    handleClose(); 
+    handleClose(); // Close the popup window
   };
 
   const handleConfirm = () => {
     // Handle confirm order
-    
-    
-    axios.post('http://localhost:3000/api/checkout/payment', paymentData)
-    .then(response => {
-      console.log('Payment confirmed');
-    })
-    .catch(error => {
-      console.error('Error confirming payment:', error);
-    });
+    console.log('Order confirmed');
+    handleClose();
   };
 
-  const buttonContainerStyle = {
-    display: 'flex',
-    justifyContent: 'flex-end', 
-    marginTop: '20px', 
-    marginRight: '60px',
-  };
-
-  const confirmButtonStyle = {
-    height: '59.71940612792969px',
-    width: '200px',
-    background: '#AAC0AA',
-    borderRadius: '10px',
-    marginLeft: '10px', 
-  };
-  
-  const cancelButtonStyle = {
-    height: '59.71940612792969px',
-    width: '200px',
-    background: 'white',
-    color: '#4A5568',
-    borderRadius: '10px',
-  };
-  
   return (
-    <Modal open={open} onClose={handleClose} style={modalStyle}>
+    <BaseModal open={open} onClose={handleClose} >
       <div>
-        <ThemeProvider theme={theme}>
-          <Container>
-            <Paper variant="outlined" sx={containerStyle}>
               <div className="payment-details" style={paymentDetailsStyle}>
                 <Typography component="h1" variant="h5" align="left">
                   Payment Details
@@ -144,19 +71,15 @@ const CheckoutPage = () => {
               <div style={lineStyle} />
               <PaymentForm  />
               <div style={lineStyle} />
-              <div style={buttonContainerStyle}>
-  <Button sx={cancelButtonStyle} variant="contained" onClick={handleCancel}>
-    Cancel
-  </Button>
-  <Button sx={confirmButtonStyle} variant="contained" color="primary" onClick={handleConfirm}>
-    Confirm Order
-  </Button>
-</div>
-            </Paper>
-          </Container>
-        </ThemeProvider>
+              
+              <Stack direction={"row-reverse"} gap={"16px"}>
+              <DarkButton  variant={"text"} onClick={handleConfirm}>Add
+                    Item</DarkButton>
+              <OutlinedButton onClick={handleCancel}>Go Back</OutlinedButton>
+              </Stack>
+  
       </div>
-    </Modal>
+    </BaseModal>
   );
 };
 
