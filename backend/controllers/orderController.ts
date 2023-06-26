@@ -16,7 +16,10 @@ export async function getOrdersForBuyer(buyerId: string): Promise<Order[]> {
 }
 
 export async function getOrdersForShopper(shopperId: string) {
-    const orders = await OrderModel.find({"bids": {"$elemMatch": {"createdBy": shopperId}}})
+    const orders = await OrderModel.find({ "$or": [
+            {"status": OrderStatus.Open, "bids": {"$elemMatch": {"createdBy": shopperId}}},
+            {"selectedBid.createdBy": shopperId}
+        ]})
         .populate({path: "createdBy", select: "firstName lastName _id"})
         .populate({path: "bids.createdBy", select: "firstName lastName"})
         .populate({path: "selectedBid.createdBy", select: "firstName lastName"})
