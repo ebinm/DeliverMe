@@ -55,7 +55,7 @@ export default function CreditCard() {
 
   return (
     <>
-      {!success ? (
+      {!success ? 
         <form onSubmit={handlePayment}>
           <fieldset className="FormGroup">
             <div className="FormRow">
@@ -64,11 +64,11 @@ export default function CreditCard() {
           </fieldset>
           <button>Pay</button>
         </form>
-      ) : (
+       : 
         <div>
           <h2>Your payment was successfully sent!</h2>
         </div>
-      )}
+      }
     </>
   );
 }

@@ -68,8 +68,9 @@ export default function CheckoutPage () {
                 </div>
               </div>
               <div style={lineStyle} />
+              <div width="100%">
                 <PaymentForm  />
-              
+              </div>
               <div style={lineStyle} />
               
               <Stack direction={"row-reverse"} gap={"16px"}>

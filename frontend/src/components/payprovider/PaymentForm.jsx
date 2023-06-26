@@ -51,12 +51,10 @@ export default function PaymentForm () {
             }
           />
           {paymentMethod === 'credit_card' && (
-            <Box display="flex" flexDirection="column" alignItems="stretch">
-            <Elements stripe={stripeTestPromise}>
+            <Elements stripe={stripeTestPromise} >
                <CreditCard/>
             </Elements>
 
-            </Box>
           )}
           <FormControlLabel
             value="paypal"
