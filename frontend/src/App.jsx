@@ -2,7 +2,6 @@ import React from "react";
 import Header from "./components/Header";
 import {BuyerMyOrders} from "./components/MyOrders/BuyerMyOrders";
 import {ShopperMyOrders} from "./components/MyOrders/ShopperMyOrders";
-import PaymentModal from "./components/payprovider/PaymentModal";
 import CheckoutPage from "./components/payprovider/CheckoutPage";
 import {Route, Routes} from "react-router-dom";
 import {TestExample} from "./components/TestExample";
