@@ -5,6 +5,7 @@ import {BaseModal} from '../util/BaseModal';
 import {DarkButton, OutlinedButton} from "../util/Buttons";
 import PaymentForm from './PaymentForm';
 
+
 const lineStyle = {
   borderBottom: '1px solid #E2E8F0',
   width: '95%',
@@ -16,9 +17,6 @@ const contentStyle = {
   flex: 1,
 };
 
-const paymentDetailsStyle = {
-  margin: '20px',
-};
 
 const rowStyle = {
   display: 'flex',
@@ -26,9 +24,10 @@ const rowStyle = {
   marginBottom: '10px',
 };
 
-const CheckoutPage = () => {
+export default function CheckoutPage () {
   const [open, setOpen] = useState(true);
 
+   
   const handleClose = () => {
     setOpen(false);
   };
@@ -42,13 +41,13 @@ const CheckoutPage = () => {
   const handleConfirm = () => {
     // Handle confirm order
     console.log('Order confirmed');
-    handleClose();
   };
 
   return (
+    <>
     <BaseModal open={open} onClose={handleClose} >
       <div>
-              <div className="payment-details" style={paymentDetailsStyle}>
+              <div className="payment-details" margin="20px">
                 <Typography component="h1" variant="h5" align="left">
                   Payment Details
                 </Typography>
@@ -69,7 +68,8 @@ const CheckoutPage = () => {
                 </div>
               </div>
               <div style={lineStyle} />
-              <PaymentForm  />
+                <PaymentForm  />
+              
               <div style={lineStyle} />
               
               <Stack direction={"row-reverse"} gap={"16px"}>
@@ -80,7 +80,9 @@ const CheckoutPage = () => {
   
       </div>
     </BaseModal>
+    
+    </>
   );
-};
 
-export default CheckoutPage;
+
+};

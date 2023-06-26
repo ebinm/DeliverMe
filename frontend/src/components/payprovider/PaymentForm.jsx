@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import Typography from '@mui/material/Typography';
 import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Box, TextField } from '@mui/material';
-import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import { FaCcMastercard, FaCcVisa, FaPaypal } from 'react-icons/fa';
 import { styled } from '@mui/system';
+import PayPal from './PayPal';
+import CreditCard from './CreditCard';
+import {loadStripe} from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 
 const IconContainer = styled(Box)({
   display: 'flex',
@@ -14,63 +17,15 @@ const Icon = styled('div')(({ theme }) => ({
   marginLeft: theme.spacing(1),
 }));
 
-const PaymentForm = () => {
-  const clientId = process.env.REACT_APP_CLIENT_ID;
+export default function PaymentForm () {
+  
   const [paymentMethod, setPaymentMethod] = useState('paypal');
-  const [cardName, setCardName] = useState('');
-  const [cardNumber, setCardNumber] = useState('');
-  const [expiration, setExpiration] = useState('');
-  const [cvc, setCVC] = useState('');
-
-  const [amount, setAmount] = useState('70');
+  
+  const PUBLIC_KEY = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
+  const stripeTestPromise = loadStripe(PUBLIC_KEY);
 
   const handlePaymentMethodChange = (event) => {
     setPaymentMethod(event.target.value);
-  };
-
-  const handleCardNameChange = (event) => {
-    setCardName(event.target.value);
-  };
-
-  const handleCardNumberChange = (event) => {
-    setCardNumber(event.target.value);
-  };
-
-  const handleExpirationChange = (event) => {
-    setExpiration(event.target.value);
-  };
-
-  const handleCVCChange = (event) => {
-    setCVC(event.target.value);
-  };
-
-  const handlePayNow = () => {
-    // Handle payment with credit card
-    console.log('Processing payment with credit card:', amount);
-  };
-  const handlePaymentSuccess = (data, actions) => {
-    // Handle successful payment
-    console.log('Payment successful:', data);
-    return Promise.resolve(); //check this out!!
-  };
-
-  const handlePaymentError = (err) => {
-    console.log(err);
-  };
-  const createPayPalOrder = (data, actions) => {
-    return actions.order.create({
-      purchase_units: [
-        {
-          amount: {
-            currency_code: 'USD',
-            value: '70',
-          },
-        },
-      ],
-    });
-  };
-  const textFieldStyle = {
-    backgroundColor: '#EFF3EF',
   };
 
   return (
@@ -97,56 +52,10 @@ const PaymentForm = () => {
           />
           {paymentMethod === 'credit_card' && (
             <Box display="flex" flexDirection="column" alignItems="stretch">
-              <Box>
-                <Typography variant="subtitle1">Cardholder Name</Typography>
-                <TextField
-                  label=""
-                  variant="outlined"
-                  value={cardName}
-                  onChange={handleCardNameChange}
-                  fullWidth
-                  margin="normal"
-                  style={textFieldStyle}
-                />
-              </Box>
-              <Box>
-                <Typography variant="subtitle1">Card Number</Typography>
-                <TextField
-                  label=""
-                  variant="outlined"
-                  value={cardNumber}
-                  onChange={handleCardNumberChange}
-                  fullWidth
-                  margin="normal"
-                  style={{ backgroundColor: '#EFF3EF' }}
-                />
-              </Box>
-              <Box display="flex" flexDirection="row">
-                <Box flex={1}>
-                  <Typography variant="subtitle1">Expiration Date</Typography>
-                  <TextField
-                    label=""
-                    variant="outlined"
-                    value={expiration}
-                    onChange={handleExpirationChange}
-                    fullWidth
-                    margin="normal"
-                    style={{ backgroundColor: '#EFF3EF' }}
-                  />
-                </Box>
-                <Box flex={1} marginLeft={2}>
-                  <Typography variant="subtitle1">CVC</Typography>
-                  <TextField
-                    label=""
-                    variant="outlined"
-                    value={cvc}
-                    onChange={handleCVCChange}
-                    fullWidth
-                    margin="normal"
-                    style={{ backgroundColor: '#EFF3EF' }}
-                  />
-                </Box>
-              </Box>
+            <Elements stripe={stripeTestPromise}>
+               <CreditCard/>
+            </Elements>
+
             </Box>
           )}
           <FormControlLabel
@@ -165,13 +74,7 @@ const PaymentForm = () => {
           />
           {paymentMethod === 'paypal' && (
             <Box flex={1} display="flex" justifyContent="center" alignItems="center" marginTop={2}>
-              <PayPalScriptProvider options={{ 'client-id': clientId }}>
-                <PayPalButtons
-                  createOrder={createPayPalOrder}
-                  onApprove={handlePaymentSuccess}
-                  onError={handlePaymentError}
-                />
-              </PayPalScriptProvider>
+              <PayPal/>
             </Box>
           )}
         </RadioGroup>
@@ -179,6 +82,4 @@ const PaymentForm = () => {
     </Box>
     
   );
-};
-
-export default PaymentForm;
+}

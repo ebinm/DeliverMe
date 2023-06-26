@@ -11,6 +11,7 @@ import {useEffect, useRef} from "react";
 import {useParams} from "react-router-dom";
 
 
+
 export function SingleOrderViewCommon({order, contact, buttons, bidView, orderName, showDeliveryAddress = false}) {
     const iconSx = {
         "padding": "8px",
@@ -22,6 +23,14 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
         "aspectRatio": 1,
         "ml": "8px"
     }
+
+   /*  const history = useHistory();
+
+    const handleStatusCheckout = () => {
+        if (order.status === "To be paid") {
+          history.push("/components/payprovider/CheckoutPage"); // checkout path
+        }
+      }; */
 
     const ref = useRef()
     const params = useParams()
@@ -38,7 +47,9 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
 
             <Box display={"flex"} flexDirection={"row"} gap={"32px"} alignItems={"center"}>
                 <Typography variant={"h5"} component={"h2"} fontWeight={"bold"}>{orderName}</Typography>
-                <Box bgcolor={getStatusColor(order.status)} padding={"0 24px"} borderRadius={"8px"}>
+                <Box bgcolor={getStatusColor(order.status)}
+            padding={"0 24px"}
+            borderRadius={"8px"}>
                     <Typography component={"span"} variant={"h6"}>{order.status}</Typography>
                 </Box>
             </Box>
