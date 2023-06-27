@@ -6,21 +6,22 @@ const CARD_OPTIONS = {
   iconStyle: 'solid',
   style: {
     base: {
-      iconColor: '#c4f0ff',
-      color: '#fff',
+      iconColor: '#AAC0AA',
+      color: '#424A57',
       fontWeight: 500,
       fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif',
       fontSize: '16px',
       fontSmoothing: 'antialiased',
-      ':-webkit-autofill': { color: '#fce883' },
-      '::placeholder': { color: '#87bbfd' },
+      ':-webkit-autofill': { color: '#AAC0AA' },
+      '::placeholder': { color: '#AAC0AA' },
     },
     invalid: {
-      iconColor: '#ffc7ee',
-      color: '#ffc7ee',
+      iconColor: '#AAC0AA',
+      color: '#424A57',
     },
   },
 };
+
 
 export default function CreditCard() {
   const [success, setSuccess] = useState(false);
@@ -56,7 +57,7 @@ export default function CreditCard() {
   return (
     <>
       {!success ? 
-        <form onSubmit={handlePayment}>
+        <form wid onSubmit={handlePayment}>
           <fieldset className="FormGroup">
             <div className="FormRow">
               <CardElement options={CARD_OPTIONS} />

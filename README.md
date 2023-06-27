@@ -67,3 +67,10 @@ Mongo: https://cloud.mongodb.com/v2/646b6578d7b432020c271dab#/clusters
 
 - Name: l.rossi@tum.de
 - pw: VQrcNNkTuK0Kv9Mg
+
+
+
+## Anxhelas
+
+pm2 start yarn --name "my-app" -- start
+pm2 stop my-app
