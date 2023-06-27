@@ -19,7 +19,7 @@ function NotificationProvider({children}) {
     useEffect(() => {
         // TODO make url dynamic
 
-        const ws = io("wss://localhost:8443", {
+        const ws = io(process.env.REACT_APP_WEBSOCKET, {
             withCredentials: true
         })
         ws.on("notification", (event) => {
