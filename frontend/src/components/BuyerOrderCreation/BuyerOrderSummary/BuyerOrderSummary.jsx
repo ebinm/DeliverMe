@@ -9,10 +9,10 @@ import {
     Typography
 } from "@mui/material";
 import {OrderItemsOverview} from "../../MyOrders/OrderItemsOverview";
-import {createSearchParams, Navigate, useLocation} from "react-router-dom";
+import {createSearchParams, Navigate, useLocation, useNavigate} from "react-router-dom";
 import React, {useContext, useEffect, useRef, useState} from "react";
 import {CustomerContext} from "../../../util/context/CustomerContext";
-import {useCacheLocalStorageForCustomer, useFetch} from "../../../util/hooks";
+import {useCacheLocalStorageForCustomer} from "../../../util/hooks";
 import Stack from "@mui/material/Stack";
 import {DarkButton, OutlinedButton} from "../../util/Buttons";
 import {Show} from "../../util/ControlFlow";
@@ -30,7 +30,6 @@ export function BuyerOrderSummary({
     const {customer, ready} = useContext(CustomerContext)
     const location = useLocation()
 
-    const [shippingAddressCountry, setShippingAddressCountry] = useCacheLocalStorageForCustomer("address-country-cache", "")
     const [shippingAddressName, setShippingAddressName] = useCacheLocalStorageForCustomer("address-name-cache", "")
     const [shippingAddressStreetAndNumber, setShippingAddressStreetAndNumber] = useCacheLocalStorageForCustomer("address-street-cache", "")
     const [shippingAddressZipCode, setShippingAddressZipCode] = useCacheLocalStorageForCustomer("address-zip-code-cache", "")
@@ -39,26 +38,10 @@ export function BuyerOrderSummary({
     const [confirmModalOpen, setConfirmModalOpen] = useState(false)
     const [shippingOpen, setShippingOpen] = useState(true)
 
-    // We use the endpoint state as a trigger for the fetch. Whilst it is undefined, we do not issue a fetch
-    const [postEndpointSignal, setPostEndpointSignal] = useState(undefined)
-    const [, , loading, error] = useFetch(postEndpointSignal, {
-        method: "POST",
-        body: JSON.stringify({
-            items, to, from, notes, shop, shippingAddress: {
-                country: shippingAddressCountry,
-                name: shippingAddressName,
-                street: shippingAddressStreetAndNumber,
-                zipCode: shippingAddressZipCode,
-                city: shippingAddressCity,
-            }
-        })
-    }, () => {
-        // TODO handle success
-        console.log("TODO success")
-        setPostEndpointSignal(undefined)
-        // Clear caches
-        onSubmit()
-    })
+    const navigate = useNavigate()
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState()
+
 
     useEffect(() => {
         // Used to set the default value as soon as the customer is available. The default value prop cannot be used
@@ -99,9 +82,6 @@ export function BuyerOrderSummary({
                 <form ref={formRef} onSubmit={e => e.preventDefault()}>
                     <FormGroup>
                         <Stack direction={"column"} gap={"16px"}>
-                            <TextField label={"Country"} onChange={e => setShippingAddressCountry(e.target.value)}
-                                       required
-                                       value={shippingAddressCountry}/>
                             <TextField label={"Full name"} required
                                        onChange={e => setShippingAddressName(e.target.value)}
                                        value={shippingAddressName}/>
@@ -152,11 +132,40 @@ export function BuyerOrderSummary({
             <Typography sx={{"padding": "16px"}}>Are you sure you want to place the order?</Typography>
             <Stack direction={"row-reverse"} justifyContent={"space-between"} gap={"16px"} padding={"16px"}>
                 <DarkButton sx={{"flexGrow": "1"}} onClick={async () => {
-                    setPostEndpointSignal("/api/buyer/order")
-                }}>
+                    setLoading(true)
+                    const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        credentials: 'include',
+                        body: JSON.stringify(
+                            {
+                                items, to, from, notes, groceryShop: shop, destination: {
+                                    name: shippingAddressName,
+                                    street: shippingAddressStreetAndNumber,
+                                    city: `${shippingAddressZipCode}, ${shippingAddressCity}`
+                                }
+                            }
+                        )
+                    })
+                    setLoading(false)
+
+                    if (!res.ok) {
+                        try {
+                            setError((await res)?.msg?.toString() || "Unknown Error.")
+                        } catch (e) {
+                            setError("Unknown Error.")
+                        }
+                    } else {
+                        onSubmit()
+                        navigate("/buyer/my-orders")
+                    }
+                }
+                }>
                     <Show when={!loading} fallback={<CircularProgress size={"1.5rem"}/>}>
                         {/*TODO error handling*/}
-                        <Show when={error === undefined} fallback={<strong>{error?.msg || "Error"}</strong>}>
+                        <Show when={error === undefined} fallback={<strong>{error || "Error"}</strong>}>
                             Confirm
                         </Show>
                     </Show>

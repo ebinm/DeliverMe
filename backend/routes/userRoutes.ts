@@ -1,7 +1,7 @@
 import express from "express";
 import {authenticated, AuthenticatedRequest} from "../middleware/auth";
-import {findBuyerById} from "../controllers/buyerController";
-import {findShopperById} from "../controllers/shopperController";
+import {clearNotificationsForBuyerById, findBuyerById} from "../controllers/buyerController";
+import {clearNotificationsForShopperById, findShopperById} from "../controllers/shopperController";
 import {findBidOrdersByShopper, findOrdersByBuyer, findOrdersByShopper} from "../controllers/orderController";
 
 
@@ -32,6 +32,21 @@ router.get("/orders", authenticated, async (req: AuthenticatedRequest, res, next
         next(e.message)
     }
 })
+
+
+router.delete("/notification", authenticated, async (req: AuthenticatedRequest, res, next) => {
+    try {
+        const notificationId = req.query.notificationId
+        const clearNotifications = req.customerType === "BUYER" ?
+            clearNotificationsForBuyerById : clearNotificationsForShopperById
+        await clearNotifications(req.customerId, notificationId === undefined ? undefined : notificationId.toString())
+        res.sendStatus(200)
+    } catch (e) {
+        next(e)
+    }
+})
+
+
 
 router.get("/bidOrders", authenticated, async (req: AuthenticatedRequest, res, next) => {
     try {

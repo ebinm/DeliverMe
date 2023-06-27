@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListItem, ListItemButton, ListItemText } from '@mui/material';
+import {ListItem, ListItemButton, ListItemText} from '@mui/material';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';

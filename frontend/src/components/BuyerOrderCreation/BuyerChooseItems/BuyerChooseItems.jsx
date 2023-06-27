@@ -1,17 +1,5 @@
 import Typography from "@mui/material/Typography";
-import {
-    Box,
-    DialogActions,
-    MenuItem,
-    Paper,
-    Popover,
-    Select,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow
-} from "@mui/material";
+import {Box, MenuItem, Paper, Popover, Select, Table, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Divider from "@mui/material/Divider";
 import {For, Show} from "../../util/ControlFlow";
@@ -26,9 +14,8 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import Button from "@mui/material/Button";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import InfoIcon from '@mui/icons-material/Info';
-import {DarkButton, darkButtonSx, OutlinedButton, outlinedButtonSx} from "../../util/Buttons";
-import {useLocaleText} from "@mui/x-date-pickers/internals";
-import { CustomDateTimePickerActionBar } from "../../util/CustomDateTimePickerActionBar";
+import {DarkButton, OutlinedButton} from "../../util/Buttons";
+import {CustomDateTimePickerActionBar} from "../../util/CustomDateTimePickerActionBar";
 
 
 export function BuyerChooseItems({
