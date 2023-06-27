@@ -4,6 +4,7 @@ import {Request, Response} from "express";
 import jsonwebtoken from 'jsonwebtoken'
 import bcrypt from "bcrypt";
 import {buyerPicture, shopperPicture} from "../datamock/defaultPictures";
+import {validate} from "email-validator"
 
 
 type JWTPayload = {
@@ -17,8 +18,13 @@ async function signup(req: Request, res: Response, customerType: CustomerType) {
 
     // Note: the password used here is the actual password. The password stored in the Buyer/Shopper Document
     // is obviously hashed
-    // TODO validate email
-    const {firstName, lastName, email, password}: Partial<Customer> = req.body;
+    const {firstName, lastName, email: emailRaw, password}: Partial<Customer> = req.body;
+    const email = emailRaw.toLowerCase()
+
+    if(!validate(email)){
+        res.status(400).json({msg: `'${email}' was not recognized as a valid email address.`})
+        return
+    }
 
     const document = customerType === "BUYER" ? Buyer : Shopper;
     let profilePicture: String;
@@ -48,7 +54,8 @@ async function signup(req: Request, res: Response, customerType: CustomerType) {
 }
 
 async function login(req: Request, res: Response, customerType: CustomerType) {
-    const {email, password}: { email: string, password: string } = req.body
+    const {email: emailRaw, password}: { email: string, password: string } = req.body
+    const email = emailRaw.toLowerCase()
 
     const document = customerType === "BUYER" ? Buyer : Shopper
 
