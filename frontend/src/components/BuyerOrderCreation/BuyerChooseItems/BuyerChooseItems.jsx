@@ -16,6 +16,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import InfoIcon from '@mui/icons-material/Info';
 import {DarkButton, OutlinedButton} from "../../util/Buttons";
 import {CustomDateTimePickerActionBar} from "../../util/CustomDateTimePickerActionBar";
+import moment from "moment";
 
 
 export function BuyerChooseItems({
@@ -31,7 +32,6 @@ export function BuyerChooseItems({
                                      notes,
                                      setNotes
                                  }) {
-
 
     const setItemsSimple = useCallback(
         (newItem, localId) => {
@@ -86,7 +86,7 @@ export function BuyerChooseItems({
                         <Typography color={"text.light"}>From</Typography>
                         <DateTimePicker
                             name={"order-time-from-input"}
-                            value={from}
+                            value={from ? moment(from) : from}
                             onChange={value => !isNaN(value) && setFrom(value)}
                             disablePast
                             sx={dateInputSx}
@@ -96,7 +96,7 @@ export function BuyerChooseItems({
                         <Typography color={"text.light"} justifySelf={"flex-end"}>To</Typography>
                         <DateTimePicker
                             disablePast
-                            value={to}
+                            value={to ? moment(to) : to}
                             onChange={value => !isNaN(value) && setTo(value)}
                             name={"order-time-to-input"}
                             sx={dateInputSx}
