@@ -4,11 +4,12 @@ import Stack from "@mui/material/Stack";
 import {BaseModal} from '../util/BaseModal';
 import {DarkButton, OutlinedButton} from "../util/Buttons";
 import PaymentForm from './PaymentForm';
+import { Grid } from '@mui/material';
 
 
 const lineStyle = {
   borderBottom: '1px solid #E2E8F0',
-  width: '95%',
+  width: '90%',
   margin: '10px',
 };
 
@@ -46,31 +47,31 @@ export default function CheckoutPage () {
   return (
     <>
     <BaseModal open={open} onClose={handleClose} >
-      <div>
-              <div className="payment-details" margin="20px">
+      <Grid>
+              <Grid className="payment-details" margin="20px">
                 <Typography component="h1" variant="h5" align="left">
                   Payment Details
                 </Typography>
-              </div>
+              </Grid>
               <div style={lineStyle} />
-              <div style={contentStyle}>
-                <div style={rowStyle}>
+              <Grid style={contentStyle}>
+                <Grid style={rowStyle}>
                   <Typography variant="body1">Delivery Costs (with fee)</Typography>
                   <Typography variant="body1">20 euro</Typography>
-                </div>
-                <div style={rowStyle}>
+                </Grid>
+                <Grid style={rowStyle}>
                   <Typography variant="body1">Grocery Bill</Typography>
                   <Typography variant="body1">50 euro</Typography>
-                </div>
-                <div style={rowStyle}>
+                </Grid>
+                <Grid style={rowStyle}>
                   <Typography variant="body1">Total</Typography>
                   <Typography variant="body1">70 euro</Typography>
-                </div>
-              </div>
+                </Grid>
+              </Grid>
               <div style={lineStyle} />
-              <div width="100%">
+              <Grid >
                 <PaymentForm  />
-              </div>
+              </Grid>
               <div style={lineStyle} />
               
               <Stack direction={"row-reverse"} gap={"16px"}>
@@ -79,7 +80,7 @@ export default function CheckoutPage () {
               <OutlinedButton onClick={handleCancel}>Go Back</OutlinedButton>
               </Stack>
   
-      </div>
+      </Grid>
     </BaseModal>
     
     </>
