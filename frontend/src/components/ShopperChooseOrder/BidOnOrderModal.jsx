@@ -11,6 +11,7 @@ import {CustomDateTimePickerActionBar} from "../util/CustomDateTimePickerActionB
 import {CurrencyInput} from "../util/CurrencyInput";
 import {GuardCustomerType} from "../util/GuardCustomerType";
 import {DarkButton, OutlinedButton} from "../util/Buttons";
+import {PUT_FETCH_OPTIONS} from "../../util/util";
 
 
 const BidOnOrderModal = ({showBidOnOrderModal, handleCloseBidOnOrderModal, order}) => {
@@ -45,11 +46,7 @@ const BidOnOrderModal = ({showBidOnOrderModal, handleCloseBidOnOrderModal, order
     const handleSubmit = async () => {
 
         const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/${order._id}/bid`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "include",
+            ...PUT_FETCH_OPTIONS,
             body: JSON.stringify({
                 moneyBid: {
                     currency: bidCurrency,
