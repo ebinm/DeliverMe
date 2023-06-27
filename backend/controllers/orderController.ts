@@ -141,5 +141,3 @@ export async function getOrderByBid(bidId: string) {
         .findOne({bids: {$elemMatch: {_id: bidId}}});
 
 }
-
-

@@ -4,6 +4,7 @@ import {
     changeOrder, changeStatus, getAllOrders, getOpenOrders, getOrderById, order, removeOrder
 } from "../controllers/orderController";
 import {bidOnOrder, selectBid} from "../controllers/bidController";
+import {rateBuyer, rateShopper} from "../controllers/reviewController";
 
 const
     router = express.Router();
@@ -107,6 +108,19 @@ router.put("/:id/changeStatus", authenticated, async (req: AuthenticatedRequest,
             res.json(await changeStatus(req.customerId, req.params.id, req.body.status))
         } else {
             res.json({msg: "This call is only for buyers"})
+        }
+    } catch (e) {
+        console.log(e)
+        next(e.message)
+    }
+})
+
+router.put("/:id/rate", authenticated, async (req: AuthenticatedRequest, res, next) => {
+    try {
+        if (req.customerType === "BUYER") {
+            res.json(await rateShopper(req.customerId, req.params.id, req.body))
+        } else {
+            res.json(await rateBuyer(req.customerId, req.params.id, req.body))
         }
     } catch (e) {
         console.log(e)

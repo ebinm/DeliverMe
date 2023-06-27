@@ -1,11 +1,13 @@
 
-import {Buyer, Customer, CustomerType, Shopper} from './customer';
+import {Buyer, Shopper} from './customer';
 import mongoose, {Schema, Types} from 'mongoose';
-import {Order, OrderModel} from "./order";
+import {OrderModel} from "./order";
 
 
 interface Review extends mongoose.Document {
     // _id: Schema.Types.ObjectId; // automatically created by MongoDB
+    type: "Buyer" | "Shopper";
+    customer: Types.ObjectId;
     rating: number;
     creationTime: Date;
     note: string;
@@ -15,8 +17,14 @@ interface Review extends mongoose.Document {
 
 
 
-const ReviewSchema = new Schema<Review>(
+const reviewSchema = new Schema<Review>(
     {
+        type: {
+            type: String,
+            required: true,
+            enum: ["Buyer", "Shopper"]
+        },
+        customer: { type: Schema.Types.ObjectId, refPath: 'type', required: true },
         rating: { type: Number, required: true },
         creationTime: { type: Date, required: true },
         note: { type: String, required: true },
@@ -26,4 +34,6 @@ const ReviewSchema = new Schema<Review>(
     }
 );
 
-export {Review, ReviewSchema}
+const ReviewModel = mongoose.model<Review>('Review', reviewSchema);
+
+export {Review, reviewSchema, ReviewModel}

@@ -1,7 +1,7 @@
 import express from "express";
 import {login, signup} from "../controllers/authController";
 import {authenticated, AuthenticatedRequest} from "../middleware/auth";
-import {rateBuyer} from "../controllers/reviewController";
+import {getReviewsOfCustomer} from "../controllers/reviewController";
 
 
 const router = express.Router();
@@ -26,13 +26,9 @@ router.post("/login", async (req, res, next) => {
     }
 })
 
-router.put("/:id/review", authenticated, async (req: AuthenticatedRequest, res, next) => {
+router.get("/:id/reviews", authenticated, async (req: AuthenticatedRequest, res, next) => {
     try {
-        if (req.customerType === "BUYER") {
-            res.json({msg: "This call is only for shoppers"})
-        } else {
-            res.json(await rateBuyer(req.customerId, req.params.id, req.body))
-        }
+        res.json(await getReviewsOfCustomer("Buyer", req.params.id));
     } catch (e) {
         console.log(e)
         next(e.message)
