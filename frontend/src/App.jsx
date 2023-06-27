@@ -21,28 +21,28 @@ function App() {
     return (
         <CustomerProvider>
             <SnackbarProvider>
-            <NotificationProvider>
-                <LocalizationProvider dateAdapter={AdapterMoment}>
-                    <Header/>
-                    <main>
-                        <Routes>
-                            <Route path={"/"} element={<LandingPage/>}/>
-                            <Route path={"/shopper/signup"} element={<Signup type={"shopper"}/>}/>
-                            <Route path={"/buyer/signup"} element={<Signup type={"buyer"}/>}/>
-                            <Route path={"/login"} element={<Login/>}/>
+                <NotificationProvider>
+                    <LocalizationProvider dateAdapter={AdapterMoment}>
+                        <Header/>
+                        <main>
+                            <Routes>
+                                <Route path={"/"} element={<LandingPage/>}/>
+                                <Route path={"/shopper/signup"} element={<Signup type={"shopper"}/>}/>
+                                <Route path={"/buyer/signup"} element={<Signup type={"buyer"}/>}/>
+                                <Route path={"/login"} element={<Login/>}/>
 
-                            <Route path={"/shopper/my-orders/:id?"} element={<ShopperMyOrders/>}/>
-                            <Route path={"/shopper/browseorders"} element={<ShopperChooseOrderView/>}/>
-                            
-                            <Route path={"/buyer/my-orders/:id?"} element={<BuyerMyOrders/>}/>
-                            <Route path={"/buyer/order/create/*"} element={<BuyerOrderCreationView/>}/>
-                            <Route path={"/checkout"} element={<CheckoutForm/>} />
-                            
-                            <Route path={"test"} element={<TestExample/>}/>
-                        </Routes>
-                    </main>
-                </LocalizationProvider>
-            </NotificationProvider>
+                                <Route path={"/shopper/my-orders/:id?"} element={<ShopperMyOrders/>}/>
+                                <Route path={"/shopper/browseorders"} element={<ShopperChooseOrderView/>}/>
+
+                                <Route path={"/buyer/my-orders/:id?"} element={<BuyerMyOrders/>}/>
+                                <Route path={"/buyer/order/create/*"} element={<BuyerOrderCreationView/>}/>
+                                <Route path={"/checkout"} element={<CheckoutForm/>}/>
+
+                                <Route path={"test"} element={<TestExample/>}/>
+                            </Routes>
+                        </main>
+                    </LocalizationProvider>
+                </NotificationProvider>
             </SnackbarProvider>
         </CustomerProvider>
     );

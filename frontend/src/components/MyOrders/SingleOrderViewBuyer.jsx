@@ -8,8 +8,9 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {BaseModal} from "../util/BaseModal";
 import Stack from "@mui/material/Stack";
 import {DarkButton, OutlinedButton} from "../util/Buttons";
+import {PUT_FETCH_OPTIONS} from "../../util/util";
 
-export function SingleOrderViewBuyer({order, orderName}) {
+export function SingleOrderViewBuyer({order, orderName, setOrders}) {
 
     const [selectedBid, setSelectedBid] = useState()
     const [confirmOrderModalOpen, setConfirmOrderModalOpen] = useState(false)
@@ -20,10 +21,30 @@ export function SingleOrderViewBuyer({order, orderName}) {
             <Typography sx={{"margin": "8px"}}>Are you sure you want to accept this bid? This cannot be
                 undone.</Typography>
             <Stack direction={"row-reverse"} gap={"8px"} sx={{"mt": "32px"}}>
-                <DarkButton onClick={() => {
-                    // TODO Set selected order
-                    console.warn("TODO set selected order")
-                    setConfirmOrderModalOpen(false)
+                <DarkButton onClick={async () => {
+                    const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/${order._id}/selectBid`, {
+                        ...PUT_FETCH_OPTIONS,
+                        body: JSON.stringify({
+                            bidId: selectedBid
+                        })
+                    })
+
+
+                    if (res.ok) {
+                        setSelectedBid(undefined)
+                        // We should probably just refetch instead of doing these client side updates
+                        setOrders(orders =>
+                            orders.map(it => it !== order ? it : {
+                                ...it,
+                                status: "In Delivery",
+                                selectedBid: it.bids.find(b => b._id === selectedBid)
+                            })
+                        )
+                        setConfirmOrderModalOpen(false)
+                    } else {
+                        // TODO error handling
+                    }
+
                 }}>Confirm</DarkButton>
                 <OutlinedButton onClick={() => {
                     setConfirmOrderModalOpen(false)

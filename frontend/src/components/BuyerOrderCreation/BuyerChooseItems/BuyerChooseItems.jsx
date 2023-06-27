@@ -1,24 +1,12 @@
 import Typography from "@mui/material/Typography";
-import {
-    Box,
-    DialogActions,
-    MenuItem,
-    Paper,
-    Popover,
-    Select,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow
-} from "@mui/material";
+import {Box, MenuItem, Paper, Popover, Select, Table, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Divider from "@mui/material/Divider";
 import {For, Show} from "../../util/ControlFlow";
 import SpeakerNotesOutlinedIcon from '@mui/icons-material/SpeakerNotesOutlined';
 import AccessAlarmsOutlinedIcon from '@mui/icons-material/AccessAlarmsOutlined';
 import {DateTimePicker} from "@mui/x-date-pickers";
-import {memo, useCallback, useState} from "react";
+import {memo, useCallback, useRef, useState} from "react";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import {formatUnitNumerusClausus} from "../../../util/util";
@@ -26,9 +14,9 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import Button from "@mui/material/Button";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import InfoIcon from '@mui/icons-material/Info';
-import {DarkButton, darkButtonSx, OutlinedButton, outlinedButtonSx} from "../../util/Buttons";
-import {useLocaleText} from "@mui/x-date-pickers/internals";
-import { CustomDateTimePickerActionBar } from "../../util/CustomDateTimePickerActionBar";
+import {DarkButton, OutlinedButton} from "../../util/Buttons";
+import {CustomDateTimePickerActionBar} from "../../util/CustomDateTimePickerActionBar";
+import moment from "moment";
 
 
 export function BuyerChooseItems({
@@ -45,6 +33,7 @@ export function BuyerChooseItems({
                                      setNotes
                                  }) {
 
+    const formRef = useRef()
 
     const setItemsSimple = useCallback(
         (newItem, localId) => {
@@ -99,7 +88,7 @@ export function BuyerChooseItems({
                         <Typography color={"text.light"}>From</Typography>
                         <DateTimePicker
                             name={"order-time-from-input"}
-                            value={from}
+                            value={from ? moment(from) : from}
                             onChange={value => !isNaN(value) && setFrom(value)}
                             disablePast
                             sx={dateInputSx}
@@ -109,7 +98,7 @@ export function BuyerChooseItems({
                         <Typography color={"text.light"} justifySelf={"flex-end"}>To</Typography>
                         <DateTimePicker
                             disablePast
-                            value={to}
+                            value={to ? moment(to) : to}
                             onChange={value => !isNaN(value) && setTo(value)}
                             name={"order-time-to-input"}
                             sx={dateInputSx}
@@ -142,34 +131,39 @@ export function BuyerChooseItems({
 
 
         <Paper sx={paperSx}>
+
             <Stack direction={"column"} gap={"32px"}>
                 <DarkButton startIcon={<AddCircleIcon/>} variant={"text"} onClick={addNewItem}>Add
                     Item</DarkButton>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell itemType={"head"}>Product Name</TableCell>
-                            <TableCell itemType={"head"}>Quantity</TableCell>
-                            <TableCell itemType={"head"}>Brand (Optional)</TableCell>
-                            <TableCell itemType={"head"}>If unavailable</TableCell>
-                            <TableCell itemType={"head"}
-                                       sx={{"display": "flex", "alignItems": "center", gap: "8px"}}>Additional
-                                notes <InfoPopover/>
-                            </TableCell>
-                            <TableCell itemType={"head"}/>
-                        </TableRow>
-                    </TableHead>
+                <form ref={formRef}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell itemType={"head"}>Product Name</TableCell>
+                                <TableCell itemType={"head"}>Quantity</TableCell>
+                                <TableCell itemType={"head"}>Brand (Optional)</TableCell>
+                                <TableCell itemType={"head"}>If unavailable</TableCell>
+                                <TableCell itemType={"head"}
+                                           sx={{"display": "flex", "alignItems": "center", gap: "8px"}}>Additional
+                                    notes <InfoPopover/>
+                                </TableCell>
+                                <TableCell itemType={"head"}/>
+                            </TableRow>
+                        </TableHead>
 
-                    <TableBody>
-                        <For each={items}>{(item) =>
-                            <SingleItemView key={item.localId} item={item} setSelf={setItemsSimple}/>
-                        }</For>
-                    </TableBody>
-                </Table>
+                        <TableBody>
+                            <For each={items}>{(item) =>
+                                <SingleItemView key={item.localId} item={item} setSelf={setItemsSimple}/>
+                            }</For>
+                        </TableBody>
+                    </Table>
+                </form>
 
                 <Stack direction={"row-reverse"} gap={"16px"}>
                     <DarkButton onClick={() => {
-                        onSubmit(items, from, to, notes)
+                        if (formRef.current.reportValidity()) {
+                            onSubmit(items, from, to, notes)
+                        }
                     }}>Next</DarkButton>
                     <OutlinedButton onClick={onGoBack}>Go Back</OutlinedButton>
                 </Stack>
@@ -216,6 +210,7 @@ const SingleItemView = memo(({item, setSelf}) => {
     return <TableRow>
         <TableCell>
             <TextField value={item.name} name={"grocery-item-name-input"}
+                       required
                        variant={"standard"}
                        onChange={(e) => {
                            // e is a synthetic event which might change value between now and when the callback

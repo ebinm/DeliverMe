@@ -1,21 +1,30 @@
-import React, { useState } from 'react';
-import { Box, InputAdornment, OutlinedInput, FilledInput, Input } from '@mui/material';
+import React, {useState} from 'react';
+import {Box} from '@mui/material';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import {BaseModal} from "../util/BaseModal"
-import { useTheme } from "@mui/material/styles"
-import { useSnackbar } from 'notistack';
-import { DateTimePicker } from "@mui/x-date-pickers";
-import { CustomDateTimePickerActionBar } from "../util/CustomDateTimePickerActionBar";
+import {useTheme} from "@mui/material/styles"
+import {useSnackbar} from 'notistack';
+import {DateTimePicker} from "@mui/x-date-pickers";
+import {CustomDateTimePickerActionBar} from "../util/CustomDateTimePickerActionBar";
+import {CurrencyInput} from "../util/CurrencyInput";
+import {GuardCustomerType} from "../util/GuardCustomerType";
+import {DarkButton, OutlinedButton} from "../util/Buttons";
+import {PUT_FETCH_OPTIONS} from "../../util/util";
 
 
-const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, Order }) => {
-    const [bidHight, setBidHight] = useState(0);
-    const [bidDate, setBidDate] = useState();
-    const { enqueueSnackbar } = useSnackbar();
+const BidOnOrderModal = ({showBidOnOrderModal, handleCloseBidOnOrderModal, order}) => {
+
+    const [bidAmount, setBidAmount] = useState(0);
+    const [bidCurrency, setBidCurrency] = useState("EUR");
+    const [bidDate, setBidDate] = useState(null);
+    const [bidNotes, setBidNotes] = useState("");
+
+
+    const {enqueueSnackbar} = useSnackbar();
     const theme = useTheme()
+
 
     const style = {
         width: "100vh",
@@ -34,65 +43,79 @@ const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, Orde
     };
 
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        handleCloseBidOnOrderModal();
-        enqueueSnackbar('Snackbar message', { variant: 'success' });
+    const handleSubmit = async () => {
 
-        console.log("bid submitted", bidHight)
+        const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/${order._id}/bid`, {
+            ...PUT_FETCH_OPTIONS,
+            body: JSON.stringify({
+                moneyBid: {
+                    currency: bidCurrency,
+                    amount: bidAmount,
+                },
+                timeBid: bidDate,
+                note: bidNotes,
+            })
+        })
+
+        if (res.ok) {
+            handleCloseBidOnOrderModal();
+            enqueueSnackbar('Snackbar message', {variant: 'success'});
+        }
+
+
+        console.log("bid submitted", bidAmount)
     };
 
+
     return (
-        <div>
-            <BaseModal
-                open={showBidOnOrderModal}
-                onClose={handleCloseBidOnOrderModal}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <>
-                    <Box sx={style}>
-                        <Typography variant="h4" sx={{mb: 2}}>
-                            Bid on this Order
-                        </Typography>
-                        <Box
-                            sx={{width: "100%"}}
-                        >
-                            <form onSubmit={handleSubmit}>
-                       
-                                    <Typography justifySelf={"flex-end"} sx={{ mt: 3}}>Bid Amount</Typography>
-                                    <Input
-                                        id="BidAmount"
-                                        endAdornment={<InputAdornment position="end">€</InputAdornment>}
-                                        onChange={(e) => setBidHight(e.currentTarget.value)}
-                                        value={bidHight}
-                                        style={{width: "100%"}}
-                                    />
-                                    <Typography justifySelf={"flex-end"} sx={{ mt: 3 }}>Expected Deliver Time</Typography>
-                                    <DateTimePicker
-                                        disablePast
-                                        name={"BidDate"}
-                                        value={bidDate}
-                                        onChange={value => !isNaN(value) && setBidDate(value)}
-                                        slots={{ "actionBar": ((props) => <CustomDateTimePickerActionBar {...props} />) }}
-                                        slotProps={{ "textField": { variant: "standard" } }} />
-                                       
-                            
+        <GuardCustomerType requiredType={"SHOPPER"}>
+            <div>
+                <BaseModal
+                    open={showBidOnOrderModal}
+                    onClose={handleCloseBidOnOrderModal}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <>
+                        <Box sx={style}>
+                            <Typography variant="h4" sx={{mb: 2}}>
+                                Bid on this Order
+                            </Typography>
+                            <Stack direction={"column"} width={"100%"} gap={"16px"}>
+
+                                <CurrencyInput label={"Bid Amount"} amount={bidAmount} setAmount={setBidAmount}
+                                               currency={bidCurrency} setCurrency={setBidCurrency}/>
+
+                                <DateTimePicker
+                                    label={"Expected Deliver Time"}
+                                    disablePast
+                                    name={"BidDate"}
+                                    value={bidDate}
+                                    onChange={value => !isNaN(value) && setBidDate(value)}
+                                    slots={{"actionBar": ((props) => <CustomDateTimePickerActionBar {...props} />)}}
+                                    slotProps={{"textField": {variant: "standard"}}}/>
+
+                                <TextField
+                                    value={bidNotes} onChange={e => setBidNotes(e.target.value)}
+                                    multiline label={"Additional Notes"}
+                                />
+
 
                                 <Stack
-                                    direction={{ xs: 'column', sm: 'row' }}
-                                    spacing={{ xs: 1, sm: 1, md: 1 }}
-                                    sx={{ mt: 4, justifyContent: 'space-between' }}
+                                    direction={{xs: 'column', sm: 'row-reverse'}}
+                                    spacing={{xs: 1, sm: 1, md: 1}}
+                                    sx={{mt: 4}}
                                 >
-                                    <Button variant="contained" onClick={handleCloseBidOnOrderModal}>Back</Button>
-                                    <Button variant="contained" type="submit">Bid</Button>
+                                    <DarkButton onClick={handleSubmit}>Place bid</DarkButton>
+                                    <OutlinedButton onClick={handleCloseBidOnOrderModal}>Back</OutlinedButton>
                                 </Stack>
-                            </form>
+
+                            </Stack>
                         </Box>
-                    </Box>
-                </>
-            </BaseModal>
-        </div>
+                    </>
+                </BaseModal>
+            </div>
+        </GuardCustomerType>
     );
 };
 

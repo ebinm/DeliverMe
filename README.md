@@ -23,12 +23,13 @@ We use dotenv. Create the files `./frontend/.env` and  `./.env` and set the foll
 
 #### Frontend
 
-| Name              | Description                                                                                                                       |
-| ----------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| HTTPS             | `true` or `false` depending on if SSL is wanted                                                                               |
-| SSL_CRT_FILE      | `./.cert/deliver.me.crt` or the desired location of the SSL certificate. (Other values require the backend to be reconfigured.) |
-| SSL_KEY_FILE      | `./.cert/deliver.me.key` or the desired location of the SSL key.                                                                |
-| REACT_APP_BACKEND | The url of the backend. For example:`https://localhost:8443` or `http://localhost:8443` depending on if SSL is used or not    |
+| Name                | Description                                                                                                                     |
+|---------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| HTTPS               | `true` or `false` depending on if SSL is wanted                                                                                 |
+| SSL_CRT_FILE        | `./.cert/deliver.me.crt` or the desired location of the SSL certificate. (Other values require the backend to be reconfigured.) |
+| SSL_KEY_FILE        | `./.cert/deliver.me.key` or the desired location of the SSL key.                                                                |
+| REACT_APP_BACKEND   | The url of the backend. For example:`https://localhost:8443` or `http://localhost:8443` depending on if SSL is used or not      |
+| REACT_APP_WEBSOCKET | The url of the socket. For example:`wss://localhost:8443` or `ws://localhost:8443` depending on if SSL is used or not           |
 
 #### Backend
 

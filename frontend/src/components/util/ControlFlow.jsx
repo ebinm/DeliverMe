@@ -39,6 +39,10 @@ function For({children, each, fallback}) {
         return fallback
     }
 
+    if(!each){
+        return <></>
+    }
+
     return <>
         {
             each.map(children)

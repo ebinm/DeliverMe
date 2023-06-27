@@ -3,9 +3,8 @@ import {MenuItem, Select, TextField} from "@mui/material";
 import Stack from "@mui/material/Stack";
 
 
-export function CurrencyInput({amount, setAmount}) {
+export function CurrencyInput({amount, setAmount, currency, setCurrency, sx, label}) {
     const [inputting, setInputting] = useState(false)
-    const [currency, setCurrency] = useState("EUR")
 
     const numberFormatter = useMemo(() => new Intl.NumberFormat(undefined, {
         style: "currency",
@@ -22,10 +21,10 @@ export function CurrencyInput({amount, setAmount}) {
     const [displayedAmount, setDisplayedAmount] = useState(numberFormatter.format(0))
 
 
-    return <Stack direction={"row"}>
+    return <Stack direction={"row"} sx={sx}>
         <TextField
             required={true}
-            label={"Total amount spent"}
+            label={label}
             id={"total-amount-spent-input"}
             value={displayedAmount}
             inputProps={{

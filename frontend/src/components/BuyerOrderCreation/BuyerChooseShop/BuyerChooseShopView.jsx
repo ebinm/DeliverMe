@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Box, CircularProgress, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import {Box, CircularProgress, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
-import { GoogleMap, Marker, useJsApiLoader, } from '@react-google-maps/api';
+import {GoogleMap, Marker, useJsApiLoader,} from '@react-google-maps/api';
 import DefineCustomShopModal from './DefineCustomShopModal';
-import { Show } from "../../util/ControlFlow";
+import {Show} from "../../util/ControlFlow";
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
-import { ShopListItem } from './ShopListItem';
-import {DarkButton, darkButtonSx, OutlinedButton, outlinedButtonSx} from "../../util/Buttons";
+import {ShopListItem} from './ShopListItem';
+import {DarkButton, OutlinedButton} from "../../util/Buttons";
 
 
-const BuyerChooseShopView = ({ onSubmitShop }) => {
+const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) => {
 
-    const [selectedShop, setSelectedShop] = useState(null);
     const [map, setMap] = useState(null);
     const [mapCenter, setMapCenter] = useState(null);
     const [searchValue, setSearchValue] = useState('Munich');

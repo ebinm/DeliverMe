@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { CircularProgress, Grid, List } from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import {CircularProgress, Grid, List} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import OrderDetailsModal from './OrderDetailsModal';
 import BidOnOrderModal from './BidOnOrderModal';
-import { Show } from '../util/ControlFlow';
-import { GoogleMap, Marker, useJsApiLoader, DirectionsRenderer } from '@react-google-maps/api';
-import { OrderFilter } from './OrderFilter';
-import { OrderListItem } from './OrderListItem';
+import {Show} from '../util/ControlFlow';
+import {DirectionsRenderer, GoogleMap, Marker, useJsApiLoader} from '@react-google-maps/api';
+import {OrderFilter} from './OrderFilter';
+import {OrderListItem} from './OrderListItem';
 
 
 const ShopperChooseOrderView = () => {
@@ -60,10 +60,11 @@ const ShopperChooseOrderView = () => {
 
 
     useEffect(() => {
+        // TODO ask Simon how the location for the destination is found
         setDirections(null); //TODO ask lukas why this is working
         setMapKey(prevKey => prevKey + 1);
 
-        if (selectedOrder && selectedOrder.groceryShop && selectedOrder.destination) {
+        if (selectedOrder && selectedOrder.groceryShop && selectedOrder.destination?.geometry ) {
             const DirectionsService = new window.google.maps.DirectionsService();
             DirectionsService.route(
                 {
@@ -77,6 +78,7 @@ const ShopperChooseOrderView = () => {
                     }
                 }
             );
+            console.warn("n")
         }
     }, [selectedOrder]);
 
@@ -104,12 +106,12 @@ const ShopperChooseOrderView = () => {
                 showOrderDetailsModal={showOrderDetailsModal}
                 handleCloseOrderDetailsModal={handleCloseOrderDetailsModal}
                 handleOpenBidModal={handleOpenBidOnOrderModal}
-                Order={selectedOrder}
+                order={selectedOrder}
             />
             <BidOnOrderModal
                 showBidOnOrderModal={showBidOnOrderModal}
                 handleCloseBidOnOrderModal={handleCloseBidOnOrderModal}
-                Order={selectedOrder}
+                order={selectedOrder}
             />
 
             <Grid container sx={{ mb: 2 }}>
@@ -124,7 +126,7 @@ const ShopperChooseOrderView = () => {
 
                     <List >
                         {filteredOrders.map((order) => (
-                            <OrderListItem order={order} 
+                            <OrderListItem key={order._id} order={order}
                             handleOpenOrderDetailsModal={handleOpenOrderDetailsModal} 
                             selectedOrder={selectedOrder} 
                             setSelectedOrder={setSelectedOrder} />

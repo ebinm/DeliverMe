@@ -58,26 +58,28 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
             </Box>
         </Box>
 
-        <Box display={"grid"} gridTemplateColumns={"min-content auto"} gap={"8px"} mt={"16px"}>
-            <ShoppingCartOutlinedIcon/>
-            <Typography variant={"body1"}>{order?.groceryShop?.name}, {order?.groceryShop?.street}</Typography>
-            <LocationOnOutlinedIcon/>
-            <Typography variant={"body1"}>{order?.groceryShop?.city}, {order?.groceryShop?.country}</Typography>
-        </Box>
+        <Show when={order?.groceryShop}>
+            <Box display={"grid"} gridTemplateColumns={"min-content auto"} gap={"8px"} mt={"16px"}>
+                <ShoppingCartOutlinedIcon/>
+                <Typography variant={"body1"}>{order?.groceryShop?.name}</Typography>
+                <LocationOnOutlinedIcon/>
+                <Typography variant={"body1"}>{order?.groceryShop?.city}, {order?.groceryShop?.street}</Typography>
+            </Box>
+        </Show>
 
         <DateDisplay from={order?.earliestDeliveryTime} to={order?.latestDeliveryTime}/>
         <Show when={showDeliveryAddress && order?.destination}>{destination =>
             <Stack direction={"row"}>
                 <Typography variant={"body1"}>Delivery Address:&nbsp;</Typography>
                 <Typography variant={"body1"}
-                            color={"text.light"}>{destination.street}, {destination.postalCode} {destination.city}</Typography>
+                            color={"text.light"}>{destination.street}, {destination.city}</Typography>
             </Stack>
         }
         </Show>
 
         <Divider sx={{"margin": "8px 0"}}/>
 
-        <OrderItemsOverview items={order?.items} defaultExpanded={true} />
+        <OrderItemsOverview items={order?.items} defaultExpanded={true}/>
 
         <Divider sx={{"margin": "8px 0"}}/>
 
@@ -90,15 +92,16 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
 
 function getStatusColor(status) {
     switch (status) {
-        case "To be paid":
-            return "#DAA89B"
-        case "Completed":
-            return "#CBE896"
-        case "Being delivered":
+        case "Open":
             return "#D8E7FF"
-        case "In Progress":
+        case "In Delivery":
+            return "#D8E7FF"
+        case "In Payment":
             return "orange"
-        default:
-            return "#D8E7FF"
+        case "Finished":
+            return "#CBE896"
+
     }
+
+    return "#DAA89B"
 }
