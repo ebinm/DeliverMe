@@ -1,44 +1,39 @@
-import express, { Request, Response } from 'express';
-import Stripe from 'stripe';
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-    apiVersion: '2022-11-15', 
-});
-
+const express = require("express");
 const app = express();
+require("dotenv").config();
+const stripe = require("stripe")(process.env.STRIPE_SECRET_TEST);
+const bodyParser = require("body-parser");
+const cors = require("cors");
 
-app.use(express.json());
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
 
-app.post('/api/verify-card', async (req: Request, res: Response) => {
-  try {
-    const { cardNumber, expirationMonth, expirationYear, cvc } = req.body;
+app.use(cors());
 
-    const paymentMethod = await stripe.paymentMethods.create({
-      type: 'card',
-      card: {
-        number: cardNumber,
-        exp_month: expirationMonth,
-        exp_year: expirationYear,
-        cvc: cvc,
-      },
-    });
-
-    const verificationResult = await stripe.paymentIntents.create({
-        payment_method: paymentMethod.id,
-        amount: 100,
-        currency: 'usd',
-        confirm: true,
-      });
-
-    res.json({ verified: verificationResult.status === 'succeeded' });
-  } catch (error) {
-    console.error('Error verifying card:', error);
-    res.status(500).json({ error: 'Card verification failed' });
-  }
+app.post("/checkout", cors(), async (req, res) => {
+    let{amount, id} = req.body;
+    try {
+        const payment = await stripe.paymentIntents.create({
+            amount,
+            currency: "USD",
+            description: "Total amount of the bill",
+            payment_method: id,
+            confirm: true
+        })
+        console.log("Payment", payment);
+        res.json({
+            message: "Payment succeded",
+            success: true
+        })
+    } catch(error){
+        console.log("Error", error);
+        res.json({
+            message: "Payment failed",
+            success: false
+        })
+    }
 });
 
-// Start the server
-const port = 3000; 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+app.listen(process.env.PORT || 3000, () => {
+    console.log("Server is listening on port 3000")
+})
