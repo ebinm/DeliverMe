@@ -3,32 +3,10 @@ import {Box} from '@mui/material';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import {BaseModal} from "../util/BaseModal"
-import {useTheme} from "@mui/material/styles"
 import {SingleOrderViewShopper} from '../MyOrders/SingleOrderViewShopper';
 
 
 const OrderDetailsModal = ({showOrderDetailsModal, handleCloseOrderDetailsModal, handleOpenBidModal, order}) => {
-
-    const theme = useTheme()
-
-    const style = {
-        width: "100vh",
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        bgcolor: theme.palette.primary.main,
-        boxShadow: 24,
-        p: 4,
-        borderRadius: '10px',
-        flexDirection: 'column',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        overflow: 'auto', // TODO: Take Lukas Modal!!!! (Also in all other occurrences of Modal)
-    };
-
-
     const handleShowBidModal = async () => {
         handleCloseOrderDetailsModal();
         handleOpenBidModal();

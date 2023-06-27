@@ -16,10 +16,12 @@ export async function getOrdersForBuyer(buyerId: string): Promise<Order[]> {
 }
 
 export async function getOrdersForShopper(shopperId: string) {
-    const orders = await OrderModel.find({ "$or": [
+    const orders = await OrderModel.find({
+        "$or": [
             {"status": OrderStatus.Open, "bids": {"$elemMatch": {"createdBy": shopperId}}},
             {"selectedBid.createdBy": shopperId}
-        ]})
+        ]
+    })
         .populate({path: "createdBy", select: "firstName lastName _id"})
         .populate({path: "bids.createdBy", select: "firstName lastName"})
         .populate({path: "selectedBid.createdBy", select: "firstName lastName"})
@@ -60,16 +62,26 @@ export async function uploadReceipt(customerId, orderId: string, receipt: Receip
     return order.save()
 }
 
-export async function getOpenOrders(): Promise<Order[]> {
+export async function getOpenOrders(shopperId: string): Promise<Order[]> {
 
-    return OrderModel.aggregate().lookup({
+    return OrderModel.aggregate().match({
+        "status": "Open"
+    }).lookup({
         from: "buyers", localField: "createdBy",
         foreignField: "_id", as: "createdBy"
     }).addFields({
         createdBy: {$arrayElemAt: ["$createdBy", 0]} // extracts user from list
     }).project({
         "createdBy.password": 0
-    }).match({"status": "Open"});
+    }).addFields({
+        "bids": {
+            "$filter": {
+                "input": "$bids",
+                "as": "bids",
+                "cond": {"createdBy": shopperId}
+            }
+        }
+    });
 
 }
 

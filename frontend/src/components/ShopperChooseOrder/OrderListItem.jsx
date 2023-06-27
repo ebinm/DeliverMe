@@ -9,6 +9,7 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
+import {Show} from "../util/ControlFlow";
 
 
 const OrderListItem = ({ order, handleOpenOrderDetailsModal, selectedOrder, setSelectedOrder }) => {
@@ -37,8 +38,10 @@ const OrderListItem = ({ order, handleOpenOrderDetailsModal, selectedOrder, setS
                     <Box>
                         <Typography sx={{mb:1}} variant={"h6"} fontWeight="bold">{order?.createdBy?.firstName} {order?.createdBy?.lastName}</Typography>
                         <Box display={"grid"} gridTemplateColumns={"min-content auto"} gap={"2px"} >
-                            <ShoppingCartOutlinedIcon />
-                            <Typography variant={"body1"}>Shop: {order?.groceryShop?.name}, {order?.groceryShop?.street}, {order?.groceryShop?.city}</Typography>
+                            <Show when={order?.groceryShop}>
+                                <ShoppingCartOutlinedIcon />
+                                <Typography variant={"body1"}>Shop: {order?.groceryShop?.name}, {order?.groceryShop?.street}, {order?.groceryShop?.city}</Typography>
+                            </Show>
                             <LocationOnOutlinedIcon />
                             <Typography variant={"body1"}>Destination: {order?.destination?.street}, {order?.destination?.city}</Typography>
                             <ListOutlinedIcon/>

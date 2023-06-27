@@ -11,7 +11,7 @@ import {FileUploader} from "react-drag-drop-files";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {RatingModal} from "../util/RatingModal";
 import {BaseModal} from "../util/BaseModal"
-import {Show} from "../util/ControlFlow"
+import {For, Show} from "../util/ControlFlow"
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import Webcam from "react-webcam";
 import CameraIcon from '@mui/icons-material/Camera';
@@ -34,11 +34,17 @@ export function SingleOrderViewShopper({order, setOrders}) {
             bidView={
                 <Accordion defaultExpanded={true}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                        <Typography color={"text.light"} variant={"h6"} component={"h3"}>My bid</Typography>
+                        <Typography color={"text.light"} variant={"h6"} component={"h3"}>My bid{order.selectedBid ? " (selected)" : ""}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        {order.selectedBid ? (<SingleBidView bid={order.selectedBid} highlightOnHover={false}/>) : (
-                            <Typography>No bid given yet</Typography>)}
+                        <Show when={order.selectedBid} fallback={
+                            <For each={order.bids}
+                                 fallback={<Typography color={"text.light"}>No bids placed</Typography>}>{bid =>
+                                <SingleBidView key={bid._id} bid={bid} highlightOnHover={false}/>
+                            }</For>
+                        }>{bid =>
+                            <SingleBidView bid={bid} highlightOnHover={false}/>
+                        }</Show>
                     </AccordionDetails>
                 </Accordion>
             }
@@ -100,10 +106,9 @@ function ReceiptUploadModal({orderId, open, onClose, onSuccess}) {
                               onSizeError={(err) => setUploadFeedback(err)}
                               handleChange={(file) => {
                                   const fileReader = new FileReader();
-                                  fileReader.onload = (res) => {
+                                  fileReader.onload = () => {
                                       setImg(fileReader.result)
                                       setWebcamOpen(false)
-                                      console.log(fileReader.result)
                                       setUploadFeedback("Successfully uploaded. (Upload again to replace)")
                                   }
                                   fileReader.readAsDataURL(file)

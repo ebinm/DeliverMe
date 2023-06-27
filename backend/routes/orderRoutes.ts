@@ -30,7 +30,7 @@ router.get("/", authenticated, async (req: AuthenticatedRequest, res, next) => {
 
 router.get("/open", authenticated, async (req: AuthenticatedRequest, res, next) => {
     try {
-        res.json(await getOpenOrders())
+        res.json(await getOpenOrders(req.customerId))
     } catch (e) {
         console.log(e)
         next(e.message)
