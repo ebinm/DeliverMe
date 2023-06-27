@@ -24,4 +24,12 @@ function tryLoadFromLocalStorage(key, setValue, fallback) {
     }
 }
 
-export {formatUnitNumerusClausus, tryLoadFromLocalStorage}
+const PUT_FETCH_OPTIONS = {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+        "Content-Type": "application/json"
+    }
+}
+
+export {PUT_FETCH_OPTIONS, formatUnitNumerusClausus, tryLoadFromLocalStorage}

@@ -17,6 +17,7 @@ import Webcam from "react-webcam";
 import CameraIcon from '@mui/icons-material/Camera';
 import NoPhotographyIcon from '@mui/icons-material/NoPhotography';
 import {CustomerContext} from "../../util/context/CustomerContext";
+import {PUT_FETCH_OPTIONS} from "../../util/util";
 
 export function SingleOrderViewShopper({order, setOrders}) {
 
@@ -161,11 +162,7 @@ function ReceiptUploadModal({orderId, open, onClose, onSuccess}) {
                 if (formRef.current?.reportValidity()) {
                     // TODO extract common fetch options
                     const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/${orderId}/receipt`, {
-                        method: "PUT",
-                        credentials: "include",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
+                        ...PUT_FETCH_OPTIONS,
                         body: JSON.stringify({
                             "image": img,
                             "costAmount": amount,

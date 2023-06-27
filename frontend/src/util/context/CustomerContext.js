@@ -1,5 +1,6 @@
 import {createContext, useState} from "react";
 import {useFetch} from "../hooks";
+import {PUT_FETCH_OPTIONS} from "../util";
 
 // @type Context<{login: () => Promise<{msg: string}> | undefined, signup: () => Promise<{msg: string} | undefined, customer: {firstName: string, lastName: string, email: string, type: "BUYER" | "SHOPPER"} | undefined }>}>
 const CustomerContext = createContext({
@@ -35,10 +36,7 @@ function CustomerProvider({children}) {
     // ...my god I miss TypeScript
     async function login(email, password, type) {
         const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/${type}/login`, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-            credentials: 'include',
+            ...PUT_FETCH_OPTIONS,
             method: "POST", body: JSON.stringify({
                 email, password
             })
@@ -54,10 +52,7 @@ function CustomerProvider({children}) {
 
     async function signup(email, password, firstName, lastName, type) {
         const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/${type}/signup`, {
-            headers: {
-                "Content-Type": "application/json",
-            },
-            credentials: 'include',
+            ...PUT_FETCH_OPTIONS,
             method: "POST", body: JSON.stringify({
                 email, password, firstName, lastName
             })

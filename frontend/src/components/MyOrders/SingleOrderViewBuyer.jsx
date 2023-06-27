@@ -8,6 +8,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {BaseModal} from "../util/BaseModal";
 import Stack from "@mui/material/Stack";
 import {DarkButton, OutlinedButton} from "../util/Buttons";
+import {PUT_FETCH_OPTIONS} from "../../util/util";
 
 export function SingleOrderViewBuyer({order, orderName, setOrders}) {
 
@@ -22,11 +23,7 @@ export function SingleOrderViewBuyer({order, orderName, setOrders}) {
             <Stack direction={"row-reverse"} gap={"8px"} sx={{"mt": "32px"}}>
                 <DarkButton onClick={async () => {
                     const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/${order._id}/selectBid`, {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        credentials: "include",
+                        ...PUT_FETCH_OPTIONS,
                         body: JSON.stringify({
                             bidId: selectedBid
                         })
