@@ -27,7 +27,7 @@ const reviewSchema = new Schema<Review>(
         customer: { type: Schema.Types.ObjectId, refPath: 'type', required: true },
         rating: { type: Number, required: true },
         creationTime: { type: Date, required: true },
-        note: { type: String, required: true },
+        note: { type: String, required: false },
         createdBy: { type: Schema.Types.ObjectId, ref: Buyer, required: true } ||
             { type: Schema.Types.ObjectId, ref: Shopper, required: true },
         order: { type: Schema.Types.ObjectId, ref: OrderModel, required: true }

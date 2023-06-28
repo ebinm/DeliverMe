@@ -28,8 +28,8 @@ const bidSchema = new Schema<Bid>(
         currency: { type: String, required: true },
         amount: { type: Number, required: true },
       },
-      timeBid: { type: Date, required: true },
-      note: { type: String, required: true },
+      timeBid: { type: Date, required: false },
+      note: { type: String, required: false },
       createdBy: { type: Schema.Types.ObjectId, ref: Shopper, required: true }
     }
   );

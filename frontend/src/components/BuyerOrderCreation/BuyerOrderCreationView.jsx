@@ -18,7 +18,7 @@ export function BuyerOrderCreationView() {
 
 
     return (
-        <GuardCustomerType requiredType={"BUYER"} navigateOnInvalidType={"/shopper/browseorders"}>
+        <GuardCustomerType requiredType={"BUYER"} navigateOnInvalidType={"/shopper/browseorders"}>{() =>
             <Routes>
                 <Route index={true} path={"/"}
                        element={<BuyerChooseShopView setSelectedShop={setSelectedShop} selectedShop={selectedShop}
@@ -46,6 +46,6 @@ export function BuyerOrderCreationView() {
                            clearShop()
                        }}/>}/>
             </Routes>
-        </GuardCustomerType>
+        }</GuardCustomerType>
     )
 }

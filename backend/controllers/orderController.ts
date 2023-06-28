@@ -12,6 +12,7 @@ export async function getAllOrders(): Promise<Order[]> {
 export async function getOrdersForBuyer(buyerId: string): Promise<Order[]> {
     return OrderModel.find({"createdBy": buyerId})
         .populate({path: "bids.createdBy", select: "firstName lastName"})
+        .populate({path: "selectedBid.createdBy", select: "firstName lastName"})
         .sort({creationDate: -1});
 }
 
