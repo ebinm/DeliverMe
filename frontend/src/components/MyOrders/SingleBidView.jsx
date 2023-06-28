@@ -3,6 +3,7 @@ import {Avatar, Box, Typography} from "@mui/material";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import AccessAlarmOutlinedIcon from "@mui/icons-material/AccessAlarmOutlined";
 import Rating from "@mui/material/Rating";
+import {Show} from "../util/ControlFlow";
 
 export function SingleBidView({bid, selected = false, setSelected = () => undefined, highlightOnHover = true}) {
 
@@ -39,9 +40,11 @@ export function SingleBidView({bid, selected = false, setSelected = () => undefi
                 <LightbulbOutlinedIcon/>
                 <Typography mr={"64px"}>Bid offered:</Typography>
                 <Typography>{currencyFormatter.format(bid.moneyBidWithFee.amount)}</Typography>
+                <Show when={bid.timeBid}>
                 <AccessAlarmOutlinedIcon/>
-                <Typography>DeliveryTime:</Typography>
-                <Typography>{new Date(bid.timeBid).toLocaleDateString()},&nbsp;{new Date(bid.timeBid).toLocaleTimeString(undefined, {timeStyle: "short"})}</Typography>
+                    <Typography>Delivery Time:</Typography>
+                    <Typography>{new Date(bid.timeBid).toLocaleDateString()},&nbsp;{new Date(bid.timeBid).toLocaleTimeString(undefined, {timeStyle: "short"})}</Typography>
+                </Show>
             </Box>
 
             <Typography sx={{"mt": "16px"}}>{bid.note || ""}</Typography>

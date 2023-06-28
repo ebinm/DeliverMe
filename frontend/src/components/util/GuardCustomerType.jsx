@@ -4,6 +4,14 @@ import {CircularProgress} from "@mui/material";
 import {createSearchParams, Navigate, useLocation} from "react-router-dom";
 
 
+/**
+ * Makes sure that the current customer has the right type.
+
+ *
+ * @param children The actual component. Use a function if you do not want it to be rendered if the user is not logged in (recommended).
+ * @param requiredType The required type.
+ * @param navigateOnInvalidType A location to navigate to if the user is incorrect.
+ */
 export function GuardCustomerType({children, requiredType, navigateOnInvalidType = "/"}) {
     const {customer, ready} = useContext(CustomerContext)
     const location = useLocation()
@@ -25,5 +33,10 @@ export function GuardCustomerType({children, requiredType, navigateOnInvalidType
         return <Navigate to={navigateOnInvalidType}/>
     }
 
-    return <>{children}</>
+    if (typeof children === 'function') {
+        return <>{children()}</>
+    } else {
+        return <>{children}</>
+    }
+
 }
