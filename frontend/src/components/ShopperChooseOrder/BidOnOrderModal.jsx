@@ -68,7 +68,7 @@ const BidOnOrderModal = ({showBidOnOrderModal, handleCloseBidOnOrderModal, order
 
 
     return (
-        <GuardCustomerType requiredType={"SHOPPER"}>
+        <GuardCustomerType requiredType={"SHOPPER"}>{ () =>
             <div>
                 <BaseModal
                     open={showBidOnOrderModal}
@@ -115,7 +115,7 @@ const BidOnOrderModal = ({showBidOnOrderModal, handleCloseBidOnOrderModal, order
                     </>
                 </BaseModal>
             </div>
-        </GuardCustomerType>
+        }</GuardCustomerType>
     );
 };
 

@@ -11,7 +11,7 @@ export function BuyerMyOrders() {
     const [orders, setOrders, loading] = useFetch(`${process.env.REACT_APP_BACKEND}/api/orders`, {credentials: 'include'})
 
 
-    return <GuardCustomerType requiredType={"BUYER"} navigateOnInvalidType={"/shopper/my-orders"}>
+    return <GuardCustomerType requiredType={"BUYER"} navigateOnInvalidType={"/shopper/my-orders"}>{ () =>
         <Stack direction={"column"} sx={{"paddingBottom": "64px"}}>
             <Typography variant={"h4"} component={"h1"}>My Orders</Typography>
 
@@ -33,5 +33,5 @@ export function BuyerMyOrders() {
                 <AddIcon/>
             </Fab>
         </Stack>
-    </GuardCustomerType>
+    }</GuardCustomerType>
 }

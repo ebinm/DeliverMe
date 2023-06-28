@@ -8,6 +8,7 @@ import {Show} from '../util/ControlFlow';
 import {DirectionsRenderer, GoogleMap, Marker, useJsApiLoader} from '@react-google-maps/api';
 import {OrderFilter} from './OrderFilter';
 import {OrderListItem} from './OrderListItem';
+import {GuardCustomerType} from "../util/GuardCustomerType";
 
 
 const ShopperChooseOrderView = () => {
@@ -22,14 +23,14 @@ const ShopperChooseOrderView = () => {
 
     // We use useState as a way of handling a constant here to stop useJsApiLoader from triggering more than once.
     const [googleLibraries] = useState(["places"]);
-    const { isLoaded } = useJsApiLoader({
+    const {isLoaded} = useJsApiLoader({
         googleMapsApiKey: "AIzaSyCAiDt2WyuMhekA25EMEQgx_wVO_WQW8Ok",
         libraries: googleLibraries
     });
 
     useEffect(() => {
         if (map) {
-            const defaultCenter = { lat: 48.137154, lng: 11.576124 }
+            const defaultCenter = {lat: 48.137154, lng: 11.576124}
             map.setCenter(defaultCenter);
         }
     }, [map]);
@@ -64,7 +65,7 @@ const ShopperChooseOrderView = () => {
         setDirections(null); //TODO ask lukas why this is working
         setMapKey(prevKey => prevKey + 1);
 
-        if (selectedOrder && selectedOrder.groceryShop && selectedOrder.destination?.geometry ) {
+        if (selectedOrder && selectedOrder.groceryShop && selectedOrder.destination?.geometry) {
             const DirectionsService = new window.google.maps.DirectionsService();
             DirectionsService.route(
                 {
@@ -101,78 +102,80 @@ const ShopperChooseOrderView = () => {
     };
 
     return (
-        <>
-            <OrderDetailsModal
-                showOrderDetailsModal={showOrderDetailsModal}
-                handleCloseOrderDetailsModal={handleCloseOrderDetailsModal}
-                handleOpenBidModal={handleOpenBidOnOrderModal}
-                order={selectedOrder}
-            />
-            <BidOnOrderModal
-                showBidOnOrderModal={showBidOnOrderModal}
-                handleCloseBidOnOrderModal={handleCloseBidOnOrderModal}
-                order={selectedOrder}
-            />
+        <GuardCustomerType requiredType={"SHOPPER"}>{() =>
+            <>
+                <OrderDetailsModal
+                    showOrderDetailsModal={showOrderDetailsModal}
+                    handleCloseOrderDetailsModal={handleCloseOrderDetailsModal}
+                    handleOpenBidModal={handleOpenBidOnOrderModal}
+                    order={selectedOrder}
+                />
+                <BidOnOrderModal
+                    showBidOnOrderModal={showBidOnOrderModal}
+                    handleCloseBidOnOrderModal={handleCloseBidOnOrderModal}
+                    order={selectedOrder}
+                />
 
-            <Grid container sx={{ mb: 2 }}>
-                <Typography variant="h4" component="h1" sx={{ paddingLeft: '16px' }}>Open Orders</Typography>
-            </Grid>
-            <Grid container spacing={5} sx={{ mb: 2 }}>
-                <Grid item xs={6} md={4} sx={{ maxHeight: '70vh', overflow: 'auto' }}>
-
-                    <OrderFilter orders={orders} setFilteredOrders={setFilteredOrders} />
-
-                    <Divider />
-
-                    <List >
-                        {filteredOrders.map((order) => (
-                            <OrderListItem key={order._id} order={order}
-                            handleOpenOrderDetailsModal={handleOpenOrderDetailsModal} 
-                            selectedOrder={selectedOrder} 
-                            setSelectedOrder={setSelectedOrder} />
-                        ))}
-                    </List>
+                <Grid container sx={{mb: 2}}>
+                    <Typography variant="h4" component="h1" sx={{paddingLeft: '16px'}}>Open Orders</Typography>
                 </Grid>
-                <Grid item xs={6} md={8}>
-                    <Show when={isLoaded} fallback={<CircularProgress />}>
-                        <GoogleMap
-                            key={mapKey}
-                            mapContainerStyle={{
-                                width: '100%',
-                                height: '70vh'
-                            }}
-                            zoom={14}
-                            onLoad={map => setMap(map)}
-                        >
-                            {directions && ( //TODO: show travel time, choose between car and bike 
-                                <>
-                                    <DirectionsRenderer
-                                        options={{
-                                            directions: directions,
-                                            suppressMarkers: true,
-                                            preserveViewport: false,
-                                        }}
-                                    />
+                <Grid container spacing={5} sx={{mb: 2}}>
+                    <Grid item xs={6} md={4} sx={{maxHeight: '70vh', overflow: 'auto'}}>
 
-                                    <Marker
-                                        key={selectedOrder.groceryShop.place_id}
-                                        position={selectedOrder.groceryShop.geometry.location}
-                                        label="Shop"
-                                    />
+                        <OrderFilter orders={orders} setFilteredOrders={setFilteredOrders}/>
 
-                                    <Marker
-                                        key={selectedOrder.destination.place_id}
-                                        position={selectedOrder.destination.geometry.location}
-                                        label="Destination"
-                                    />
-                                </>
-                            )}
-                        </GoogleMap>
-                    </Show>
+                        <Divider/>
+
+                        <List>
+                            {filteredOrders.map((order) => (
+                                <OrderListItem key={order._id} order={order}
+                                               handleOpenOrderDetailsModal={handleOpenOrderDetailsModal}
+                                               selectedOrder={selectedOrder}
+                                               setSelectedOrder={setSelectedOrder}/>
+                            ))}
+                        </List>
+                    </Grid>
+                    <Grid item xs={6} md={8}>
+                        <Show when={isLoaded} fallback={<CircularProgress/>}>
+                            <GoogleMap
+                                key={mapKey}
+                                mapContainerStyle={{
+                                    width: '100%',
+                                    height: '70vh'
+                                }}
+                                zoom={14}
+                                onLoad={map => setMap(map)}
+                            >
+                                {directions && ( //TODO: show travel time, choose between car and bike
+                                    <>
+                                        <DirectionsRenderer
+                                            options={{
+                                                directions: directions,
+                                                suppressMarkers: true,
+                                                preserveViewport: false,
+                                            }}
+                                        />
+
+                                        <Marker
+                                            key={selectedOrder.groceryShop.place_id}
+                                            position={selectedOrder.groceryShop.geometry.location}
+                                            label="Shop"
+                                        />
+
+                                        <Marker
+                                            key={selectedOrder.destination.place_id}
+                                            position={selectedOrder.destination.geometry.location}
+                                            label="Destination"
+                                        />
+                                    </>
+                                )}
+                            </GoogleMap>
+                        </Show>
+                    </Grid>
                 </Grid>
-            </Grid>
-        </>
-    );
+            </>
+        }</GuardCustomerType>
+    )
 };
 
-export { ShopperChooseOrderView };
+export {ShopperChooseOrderView};
