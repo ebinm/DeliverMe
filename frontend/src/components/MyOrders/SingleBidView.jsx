@@ -1,4 +1,4 @@
-import {useMemo} from "react";
+import React, {useMemo} from "react";
 import {Avatar, Box, Typography} from "@mui/material";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import AccessAlarmOutlinedIcon from "@mui/icons-material/AccessAlarmOutlined";
@@ -11,7 +11,7 @@ export function SingleBidView({bid, selected = false, setSelected = () => undefi
         currency: bid.moneyBidWithFee.currency
     }), [bid.moneyBidWithFee.currency])
 
-    const stars = Math.min(5, Math.floor(bid.createdBy.ratingStarAverage))
+    const stars = Math.min(5, Math.floor(bid.createdBy.avgRating))
 
     return <Box onClick={() => setSelected(bid._id)}
                 margin={"8px 0"} flexGrow={1}
@@ -26,14 +26,15 @@ export function SingleBidView({bid, selected = false, setSelected = () => undefi
                         "backgroundColor": bid._id === selected ? "selected.main" : "selected.light"
                     } : undefined
                 }}>
-        <Avatar/>
+        <Avatar imgProps={{sx: {padding: '0px'}}} alt={bid.createdBy.firstName + " " + bid.createdBy.lastName}
+                src={`data:image/jpeg;base64,${bid.createdBy.profilePicture}`}/>
         <Box display={"flex"} flexDirection={"column"}>
             <Box display={"grid"} gridTemplateColumns={"min-content auto auto"} gap={"8px"}>
                 <Typography variant={"h6"}
                             component={"h4"}
                             style={{"gridColumn": "span 2"}}>{bid.createdBy.firstName} {bid.createdBy.lastName}</Typography>
 
-                <Rating readOnly defaultValue={stars || null}/>
+                <Rating readOnly defaultValue={stars || null} precision={0.5} />
 
                 <LightbulbOutlinedIcon/>
                 <Typography mr={"64px"}>Bid offered:</Typography>
