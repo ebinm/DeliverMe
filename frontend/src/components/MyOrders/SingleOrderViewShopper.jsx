@@ -17,7 +17,6 @@ import Webcam from "react-webcam";
 import CameraIcon from '@mui/icons-material/Camera';
 import NoPhotographyIcon from '@mui/icons-material/NoPhotography';
 import {CustomerContext} from "../../util/context/CustomerContext";
-import {PUT_FETCH_OPTIONS} from "../../util/util";
 import {detectCost} from "../../util/ocr";
 
 export function SingleOrderViewShopper({order, setOrders}) {
@@ -139,10 +138,10 @@ function ReceiptUploadModal({orderId, open, onClose, onSuccess}) {
                         <Box alignSelf={"center"}><Typography component={"strong"} sx={{
                             "display": "inline-block",
                             "animation": "dots 1s steps(4) infinite",
-                            "clip-path": "inset(0 0.8em 0 0)",
+                            "clipPath": "inset(0 0.8em 0 0)",
                             "@keyframes dots": {
                                 "to": {
-                                    "clip-path": "inset(0 -0.2em 0 0)"
+                                    "clipPath": "inset(0 -0.2em 0 0)"
                                 }
                             }
                         }}>Trying to detect
@@ -215,15 +214,19 @@ function ReceiptUploadModal({orderId, open, onClose, onSuccess}) {
             <DarkButton onClick={async () => {
                 if (formRef.current?.reportValidity()) {
                     setUploadLoadingUploadLoading(true)
+
+                    // For some reason setting the content type header here produces problems with CORS.
+                    // Similar problem:
+                    // https://stackoverflow.com/questions/67594242/chrome-shows-a-cors-error-when-api-request-payload-is-too-big
                     const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/${orderId}/receipt`, {
-                        ...PUT_FETCH_OPTIONS,
+                        method: "PUT",
+                        credentials: "include",
                         body: JSON.stringify({
                             "image": img,
                             "costAmount": amount,
                             "costCurrency": currency
                         })
                     })
-
 
                     if (res.ok) {
                         onSuccess()
