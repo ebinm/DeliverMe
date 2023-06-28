@@ -41,7 +41,7 @@ async function signup(req: Request, res: Response, customerType: CustomerType) {
         return
     }
 
-    const salt = await bcrypt.genSalt(16)
+    const salt = await bcrypt.genSalt(10)
     const passwordHash = await bcrypt.hash(password, salt)
 
     const newUser = new document({
