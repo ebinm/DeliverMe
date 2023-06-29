@@ -1,39 +1,41 @@
-const express = require("express");
-const app = express();
-require("dotenv").config();
-const stripe = require("stripe")(process.env.STRIPE_SECRET_TEST);
-const bodyParser = require("body-parser");
-const cors = require("cors");
+import express, { Application, Request, Response } from "express";
+import stripe from "stripe";
+import bodyParser from "body-parser";
+import cors from "cors";
 
-app.use(bodyParser.urlencoded({extended:true}));
-app.use(bodyParser.json());
 
-app.use(cors());
-
-app.post("/checkout", cors(), async (req, res) => {
-    let{amount, id} = req.body;
-    try {
-        const payment = await stripe.paymentIntents.create({
-            amount,
-            currency: "USD",
-            description: "Total amount of the bill",
-            payment_method: id,
-            confirm: true
-        })
-        console.log("Payment", payment);
-        res.json({
-            message: "Payment succeded",
-            success: true
-        })
-    } catch(error){
-        console.log("Error", error);
-        res.json({
-            message: "Payment failed",
-            success: false
-        })
-    }
+const router = express.Router();
+const stripeInstance = new stripe(process.env.STRIPE_SECRET_TEST, {
+  apiVersion: "2022-11-15", // Specify the desired API version
 });
 
-app.listen(process.env.PORT || 3000, () => {
-    console.log("Server is listening on port 3000")
-})
+router.use(bodyParser.urlencoded({ extended: true }));
+router.use(bodyParser.json());
+
+router.use(cors());
+
+router.post("/checkout", cors(), async (req: Request, res: Response) => {
+  let { amount, id } = req.body;
+  try {
+    const payment = await stripeInstance.paymentIntents.create({
+      amount,
+      currency: "USD",
+      description: "Paying the bill",
+      payment_method: id,
+      confirm: true,
+    });
+    console.log("The bill", payment);
+    res.json({
+      message: "Payment successful",
+      success: true,
+    });
+  } catch (error) {
+    console.log("Error", error);
+    res.json({
+      message: "Payment failed",
+      success: false,
+    });
+  }
+});
+
+export default router;

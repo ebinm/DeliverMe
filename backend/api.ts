@@ -6,6 +6,7 @@ import buyerRoutes from "./routes/buyerRoutes";
 import userRoutes from "./routes/userRoutes";
 import orderRoutes from "./routes/orderRoutes";
 import bidRoutes from "./routes/bidRoutes";
+import checkoutRoutes from "./routes/checkoutRoutes";
 
 const api = express();
 api.use(express.json());
@@ -41,6 +42,8 @@ api.use("/api/me", userRoutes);
 api.use("/api/orders", orderRoutes);
 
 api.use("/api/bids", bidRoutes);
+
+api.use("/api/checkout", checkoutRoutes);
 
 // Error handling
 api.use((err, req, res, next) => {
