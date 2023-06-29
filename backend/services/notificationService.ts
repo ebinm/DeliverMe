@@ -2,11 +2,14 @@ import io from "socket.io";
 import {DefaultEventsMap} from "socket.io/dist/typed-events";
 import {authenticatedSocket} from "../middleware/auth";
 import {customerModelByType, CustomerType} from "../models/customer";
-import {UserNotification} from "../models/notification";
+import {NotificationType, UserNotification} from "../models/notification";
+import {Order, OrderModel} from "../models/order";
+import {Message} from "../models/message";
 
 interface NotificationService {
     notifyBuyerById: (id: string, notification: UserNotification) => Promise<void>
     notifyShopperById: (id: string, notification: UserNotification) => Promise<void>
+    sendChatMessage: (order: Order, chatMessage: Message) => Promise<Message>
 }
 
 export function createNotificationService(server: io.Server): NotificationService {
@@ -60,8 +63,8 @@ export function createNotificationService(server: io.Server): NotificationServic
             // We send the persisted notification mostly because this allows us to send the id
             // which can be used as a key in the frontend
             sockets.forEach((it) => it.emit("notification", JSON.stringify(newNotification)))
-        } catch(e) {
-            console.warn(e)
+        } catch (e) {
+            console.error(e)
             // TODO
         }
     }
@@ -72,6 +75,54 @@ export function createNotificationService(server: io.Server): NotificationServic
         },
         notifyShopperById: async (id, notification) => {
             await emitNotification("SHOPPER", id, notification)
+        },
+        sendChatMessage: async (order, message) => {
+            if (!order?.createdBy || !order?.selectedBid?.createdBy) {
+                throw Error("Both a buyer and a shopper must be assigned to an order before messages can be sent.")
+            }
+
+            try {
+                const updatedOrder = await OrderModel.findByIdAndUpdate(order._id, {"$push": {messages: message}}, {new: true})
+                const newMessage = updatedOrder.messages[updatedOrder.messages.length - 1]
+
+
+                // We notify both parties
+                const socketsShopper = openConnections.get("SHOPPER")?.get(order.selectedBid.createdBy.toString())
+                socketsShopper?.forEach(it => {
+                    it.emit("chat", JSON.stringify(newMessage))
+                })
+
+                const socketsBuyer = openConnections.get("BUYER")?.get(order.createdBy.toString())
+                socketsBuyer?.forEach(it => {
+                    it.emit("chat", JSON.stringify(newMessage))
+                })
+
+
+                let receiver;
+                let receiverType;
+
+                if (newMessage.sender === "SHOPPER") {
+                    receiver = order.createdBy.toString()
+                    receiverType = "BUYER"
+                } else {
+                    receiver = order.selectedBid.createdBy.toString()
+                    receiverType = "SHOPPER"
+                }
+
+                // TODO not sure if always sending a notification is a great idea. Maybe delete old chat notifications
+                // for same order when doing this.
+                await emitNotification(receiverType, receiver, {
+                    msg: "You have received a new chat message.",
+                    type: NotificationType.ChatMessage,
+                    date: new Date(),
+                    orderId: order._id
+                })
+
+                return newMessage
+            } catch (e) {
+                console.error(e)
+                //TODO
+            }
         }
     }
 }

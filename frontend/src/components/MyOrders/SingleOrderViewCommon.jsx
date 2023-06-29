@@ -9,6 +9,7 @@ import {OrderItemsOverview} from "./OrderItemsOverview";
 import Stack from "@mui/material/Stack";
 import {useEffect, useRef} from "react";
 import {useParams} from "react-router-dom";
+import {ChatText} from "../chat/ChatText";
 
 
 export function SingleOrderViewCommon({order, contact, buttons, bidView, orderName, showDeliveryAddress = false}) {
@@ -81,6 +82,10 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
 
         <OrderItemsOverview items={order?.items} defaultExpanded={true}/>
 
+        <Divider sx={{"margin": "8px 0"}}/>
+
+        {/*TODO remove, only testing*/}
+        <ChatText order={order}/>
         <Divider sx={{"margin": "8px 0"}}/>
 
 

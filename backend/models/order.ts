@@ -3,6 +3,7 @@ import {Buyer} from './customer';
 import { Item, itemSchema } from './item';
 import { Bid, bidSchema } from './bid';
 import {Receipt} from "./receipt";
+import {Message, messageSchema} from "./message";
 
 type Location = {
     // _id: Schema.Types.ObjectId; // automatically created by MongoDB
@@ -34,11 +35,12 @@ export interface Order extends Document {
     totalCostOfItems: number;
     totalCostOfOrder: number;
     groceryShop: Location;
-    createdBy:  typeof Buyer; 
+    createdBy:  typeof Buyer;
     destination: Location;
     items: Item[];
     selectedBid: Bid | null; // Allow null if no bid is selected
     bids: Bid[];
+    messages: Message[]
 }
 
 const orderSchema = new Schema<Order>(
@@ -57,7 +59,8 @@ const orderSchema = new Schema<Order>(
             required: false,
             default: null,
           },
-        bids: { type: [bidSchema],  default: null, required: false },
+        bids: { type: [bidSchema],  default: [], required: false },
+        messages: { type: [messageSchema],  default: [], required: false },
     },
 );
 
