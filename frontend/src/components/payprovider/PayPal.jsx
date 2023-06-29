@@ -21,7 +21,7 @@ export default function PayPal () {
         {
           amount: {
             currency_code: 'USD',
-            value: '70',// value: amount
+            value: 70,// value: amount
           },
         },
       ],

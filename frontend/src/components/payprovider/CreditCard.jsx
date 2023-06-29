@@ -27,18 +27,18 @@ export default function CreditCard() {
   const [success, setSuccess] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
-
+   
   const handlePayment = async (e) => {
     e.preventDefault();
     const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: 'card',
+      type: "card",
       card: elements.getElement(CardElement),
     });
 
     if (!error) {
       try {
         const { id } = paymentMethod;
-        const response = await axios.post('https://localhost:3000/checkout', {
+        const response = await axios.post(process.env.REACT_APP_BACKEND, {
           amount: 70,
           id,
         });

@@ -61,7 +61,7 @@ export default function CheckoutPage () {
                 </Grid>
                 <Grid style={rowStyle}>
                   <Typography variant="body1">Grocery Bill</Typography>
-                  <Typography variant="body1">50 euro</Typography>
+                  <Typography variant= "body1">50 euro</Typography>
                 </Grid>
                 <Grid style={rowStyle}>
                   <Typography variant="body1">Total</Typography>
