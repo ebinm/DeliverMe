@@ -5,7 +5,8 @@ import {io} from "socket.io-client";
 
 const NotificationContext = createContext({
     notifications: [],
-    markAsRead: () => Promise.resolve()
+    markAsRead: () => Promise.resolve(),
+    receivedMessages: [],
 })
 
 
@@ -16,15 +17,25 @@ function NotificationProvider({children}) {
     const {customer} = useContext(CustomerContext)
 
 
-    useEffect(() => {
-        // TODO make url dynamic
+    // We store all messages that we have received since this context was created
+    // We know that this context is always older than any collection of orders fetched.
+    // We thus always have all messages for orders but might have duplicate messages:
+    // Context Created -> Message Received -> Order fetched
+    // When displaying we this have to first correlate by orderId and then filter messages that we already have
+    const [receivedMessages, setReceivedMessages] = useState([])
 
+
+    useEffect(() => {
         const ws = io(process.env.REACT_APP_WEBSOCKET, {
             withCredentials: true
         })
+
         ws.on("notification", (event) => {
-            // TODO actually filter the type of event that was received so we can support
             setNotifications(prev => [JSON.parse(event), ...prev])
+        })
+
+        ws.on("chat", (event) => {
+            setReceivedMessages(prev => [...prev, JSON.parse(event)])
         })
 
         return () => {
@@ -35,6 +46,7 @@ function NotificationProvider({children}) {
 
 
     return <NotificationContext.Provider value={{
+        receivedMessages: receivedMessages,
         notifications: notifications,
         markAsRead: async (notificationId) => {
             // id === undefined -> mark all as read
