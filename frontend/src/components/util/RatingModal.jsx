@@ -5,18 +5,25 @@ import {DarkButton, OutlinedButton} from "./Buttons";
 import {BaseModal} from "./BaseModal";
 import {PUT_FETCH_OPTIONS} from "../../util/util";
 import TextField from "@mui/material/TextField";
+import Avatar from "@mui/material/Avatar";
 
 
-export function RatingModal({open, onClose, order}) {
+export function RatingModal({open, onClose, order, buyer}) {
 
     const [rating, setRating] = useState(5.0)
     const [note, setNote] = useState("")
 
 
     return <BaseModal open={open} onClose={onClose}>
-        <Stack direction={"column"} gap={"32px"} sx={{"alignItems": "center", "justifyContent": "center"}}>
-            <Typography variant={"h5"} component={"h2"}>Please leave a rating for {order.createdBy.firstName} {order.createdBy.lastName}</Typography>
-
+        <Stack direction={"column"} gap={"20px"} sx={{"alignItems": "center", "justifyContent": "center"}}>
+            <Typography variant={"h6"} component={"h2"}>Please leave a rating for</Typography>
+            <Avatar  alt={buyer ? order?.createdBy?.firstName + " " + order?.createdBy?.lastName :
+                order?.selectedBid.createdBy?.firstName + " " + order?.selectedBid.createdBy?.lastName}
+                     src={buyer ? `data:image/jpeg;base64,${order?.createdBy?.profilePicture}` :
+                         `data:image/jpeg;base64,${order?.selectedBid.createdBy?.profilePicture}`}
+                     sx={{ width: "100px", height: "100px" }}/>
+            <Typography variant={"h5"} component={"h2"}>{buyer ?  order.createdBy.firstName :
+                order.selectedBid.createdBy.firstName} {buyer ? order.createdBy.lastName : order.selectedBid.createdBy.lastName}</Typography>
             <Rating
                 size={"large"}
                 name="rating-input"

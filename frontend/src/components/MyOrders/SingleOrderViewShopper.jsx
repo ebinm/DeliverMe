@@ -67,7 +67,7 @@ export function SingleOrderViewShopper({order, setOrders}) {
             setUploadOpen(false)
             setRatingOpen(true)
         }}/>
-        <RatingModal open={ratingOpen} onClose={() => setRatingOpen(false)} order={order}/>
+        <RatingModal open={ratingOpen} onClose={() => setRatingOpen(false)} order={order} buyer={true}/>
     </>
 }
 

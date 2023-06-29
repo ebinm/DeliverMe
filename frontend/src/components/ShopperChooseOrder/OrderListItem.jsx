@@ -10,9 +10,12 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 import {Show} from "../util/ControlFlow";
+import Rating from "@mui/material/Rating";
 
 
 const OrderListItem = ({ order, handleOpenOrderDetailsModal, selectedOrder, setSelectedOrder }) => {
+
+    const stars = Math.min(5, Math.floor(order.createdBy.avgRating))
 
     return (
         <ListItem key={order._id}>
@@ -36,7 +39,10 @@ const OrderListItem = ({ order, handleOpenOrderDetailsModal, selectedOrder, setS
                         </ListItemAvatar>
                     </Box>
                     <Box>
+                        <Box display={"grid"} gridTemplateColumns={"max-content max-content"} gap={"10px"}>
                         <Typography sx={{mb:1}} variant={"h6"} fontWeight="bold">{order?.createdBy?.firstName} {order?.createdBy?.lastName}</Typography>
+                        <Rating readOnly defaultValue={stars || null} precision={0.5} />
+                        </Box>
                         <Box display={"grid"} gridTemplateColumns={"min-content auto"} gap={"2px"} >
                             <Show when={order?.groceryShop}>
                                 <ShoppingCartOutlinedIcon />
