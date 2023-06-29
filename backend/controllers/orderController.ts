@@ -23,7 +23,7 @@ export async function getOrdersForShopper(shopperId: string) {
             {"selectedBid.createdBy": shopperId}
         ]
     })
-        .populate({path: "createdBy", select: "firstName lastName _id"})
+        .populate({path: "createdBy", select: "firstName lastName _id profilePicture"})
         .populate({path: "bids.createdBy", select: "firstName lastName avgRating profilePicture"})
         .populate({path: "selectedBid.createdBy", select: "firstName lastName avgRating profilePicture"})
         .sort({creationDate: -1});
