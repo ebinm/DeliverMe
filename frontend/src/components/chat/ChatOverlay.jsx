@@ -8,7 +8,7 @@ import {CustomerContext} from "../../util/context/CustomerContext";
 import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
-import {For} from "../util/ControlFlow";
+import {For, Show} from "../util/ControlFlow";
 import Button from "@mui/material/Button";
 import SendIcon from '@mui/icons-material/Send';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -40,7 +40,7 @@ export function ChatOverlay({order, open, onClose}) {
         >
             {/* This should probably be a hook and not a context */}
             <ChatMessageProvider order={order}>
-                <ChatMessageContext.Consumer>{({messages, sendMessage, setText, text}) =>
+                <ChatMessageContext.Consumer>{({messages, sendMessage, setText, text, error}) =>
 
                     <>
                         <Box sx={{"flex": "1"}} onClick={onClose}/>
@@ -81,6 +81,11 @@ export function ChatOverlay({order, open, onClose}) {
                             </Stack>
 
 
+                            <Show when={error}>{() =>
+                                <Typography marginTop={"16px"} alignSelf={"center"} fontWeight={"bolder"}
+                                            color={"red"}>{error}</Typography>
+                            }</Show>
+
                             <Stack direction={"row"}>
                                 <TextField value={text} onChange={e => setText(e.target.value)} multiline
                                            sx={{"flexGrow": 1}}
@@ -105,10 +110,7 @@ export function ChatOverlay({order, open, onClose}) {
                                     }}/>
                                 </Button>
                             </Stack>
-
                         </Stack>
-
-
                     </>
 
                 }</ChatMessageContext.Consumer>

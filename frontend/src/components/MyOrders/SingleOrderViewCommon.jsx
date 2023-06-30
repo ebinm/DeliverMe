@@ -83,9 +83,11 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
                     </Link>
                 }</Show>
 
-                <Button onClick={() => navigate(`./${order._id}/chat`)}>
-                    <ChatIcon sx={iconSx}/>
-                </Button>
+                <Show when={order?.selectedBid?.createdBy}>{() =>
+                    <Button onClick={() => navigate(`./${order._id}/chat`)}>
+                        <ChatIcon sx={iconSx}/>
+                    </Button>
+                }</Show>
 
             </Box>
         </Box>
@@ -119,9 +121,11 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
 
         {buttons}
 
-        <ChatOverlay order={order} open={chatOpen} onClose={() => {
-            navigate(`/${customer.type.toLowerCase()}/my-orders/`)
-        }}/>
+        <Show when={order?.selectedBid?.createdBy}>{() =>
+            <ChatOverlay order={order} open={chatOpen} onClose={() => {
+                navigate(`/${customer.type.toLowerCase()}/my-orders/`)
+            }}/>
+        }</Show>
     </Box>
 }
 
