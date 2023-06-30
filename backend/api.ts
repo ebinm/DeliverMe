@@ -8,7 +8,8 @@ import orderRoutes from "./routes/orderRoutes";
 import bidRoutes from "./routes/bidRoutes";
 
 const api = express();
-api.use(express.json());
+// TODO this is a very large limit to allow for images to be uploaded. Still,
+api.use(express.json({limit: "99999kb"}));
 api.use(cookieParser());
 
 // TODO I think this is only required in dev mode

@@ -54,7 +54,7 @@ export function BuyerOrderSummary({
     const formRef = useRef()
 
     if (!ready) {
-        return <CircularProgress/>
+        return <CircularProgress  sx={{color: "primary.dark"}}/>
     }
 
     if (!customer) {
@@ -163,7 +163,7 @@ export function BuyerOrderSummary({
                     }
                 }
                 }>
-                    <Show when={!loading} fallback={<CircularProgress size={"1.5rem"}/>}>
+                    <Show when={!loading} fallback={<CircularProgress size={"1.5rem"}  sx={{color: "primary.dark"}}/>}>
                         {/*TODO error handling*/}
                         <Show when={error === undefined} fallback={<strong>{error || "Error"}</strong>}>
                             Confirm

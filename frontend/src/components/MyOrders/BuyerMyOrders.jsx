@@ -11,17 +11,17 @@ export function BuyerMyOrders() {
     const [orders, setOrders, loading] = useFetch(`${process.env.REACT_APP_BACKEND}/api/orders`, {credentials: 'include'})
 
 
-    return <GuardCustomerType requiredType={"BUYER"} navigateOnInvalidType={"/shopper/my-orders"}>{ () =>
+    return <GuardCustomerType requiredType={"BUYER"} navigateOnInvalidType={"/shopper/my-orders"}>{() =>
         <Stack direction={"column"} sx={{"paddingBottom": "64px"}}>
             <Typography variant={"h4"} component={"h1"}>My Orders</Typography>
 
-            <Show when={loading}>
-                <CircularProgress/>
+            <Show when={!loading} fallback={<CircularProgress sx={{color: "primary.dark"}}/>}>
+                <For fallback={<Typography>You have not created any orders yet.</Typography>}
+                     each={orders}>{(order, index) =>
+                    <SingleOrderViewBuyer setOrders={setOrders} key={order._id} order={order}
+                                          orderName={`Order ${index}`}/>
+                }</For>
             </Show>
-            <For fallback={<Typography>You have not created any orders yet.</Typography>}
-                 each={orders}>{(order, index) =>
-                <SingleOrderViewBuyer setOrders={setOrders} key={order._id} order={order} orderName={`Order ${index}`}/>
-            }</For>
 
             <Fab sx={{
                 "color": "white",
