@@ -38,7 +38,7 @@ export function ChatMessageProvider({order, children}) {
             ...filteredReceived
         ]
 
-    }, [receivedMessages, order.messages])
+    }, [receivedMessages, order.messages, order._id])
 
 
     async function sendMessage() {

@@ -29,9 +29,6 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
 
     const {customer} = useContext(CustomerContext)
 
-    // const [chatOpen, setChatOpen] = useState(false)
-
-
     const ref = useRef()
     const {pathname} = useLocation()
     const navigate = useNavigate()
@@ -39,7 +36,7 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
 
     const chatOpen = useMemo(() => {
         return params.id === order._id && (pathname.endsWith("/chat") || pathname.endsWith("/chat/"))
-    }, [pathname, params.id])
+    }, [pathname, params.id, order._id])
 
 
     useEffect(() => {
@@ -139,7 +136,6 @@ function getStatusColor(status) {
             return "orange"
         case "Finished":
             return "#CBE896"
-
     }
 
     return "#DAA89B"
