@@ -7,7 +7,8 @@ const ChatMessageContext = createContext({
     messages: [],
     sendMessage: async () => undefined,
     text: "",
-    setText: () => undefined
+    setText: () => undefined,
+    error: undefined
 })
 
 
@@ -16,6 +17,7 @@ export function ChatMessageProvider({order, children}) {
     const {receivedMessages} = useContext(NotificationContext)
 
     const [text, setText] = useState("")
+    const [error, setError] = useState(undefined)
 
     const messages = useMemo(() => {
         // A better data structure for the received messages might be clever but honestly, the message
@@ -44,6 +46,7 @@ export function ChatMessageProvider({order, children}) {
             return
         }
 
+        setError(undefined)
         setText("")
         const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/${order._id}/chat`, {
             ...PUT_FETCH_OPTIONS,
@@ -56,8 +59,7 @@ export function ChatMessageProvider({order, children}) {
         if (res.ok) {
             // The socket will emit a new received message so we do not have to do our own update.
         } else {
-            console.error("Could not send message")
-            // TODO panic
+            setError("Could not send message.")
         }
     }
 
@@ -65,7 +67,8 @@ export function ChatMessageProvider({order, children}) {
         messages,
         sendMessage,
         text,
-        setText
+        setText,
+        error
     }}>
         {children}
     </ChatMessageContext.Provider>
