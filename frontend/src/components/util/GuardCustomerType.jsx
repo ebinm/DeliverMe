@@ -17,7 +17,7 @@ export function GuardCustomerType({children, requiredType, navigateOnInvalidType
     const location = useLocation()
 
     if (!ready) {
-        return <CircularProgress/>
+        return <CircularProgress sx={{color: "primary.dark"}}/>
     }
 
     if (!customer) {

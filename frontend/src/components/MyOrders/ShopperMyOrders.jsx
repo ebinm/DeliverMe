@@ -14,15 +14,13 @@ export function ShopperMyOrders() {
         <>
             <Typography variant={"h4"} component={"h1"}>My Orders</Typography>
 
-            <Show when={loading}>
-                <CircularProgress/>
+            <Show when={!loading} fallback={<CircularProgress sx={{color: "primary.dark"}}/>}>
+                <For fallback={<Typography>You have not placed bids on any orders yet.</Typography>}
+                     each={orders}>{(order, index) =>
+                    <SingleOrderViewShopper key={order._id} order={order} orderName={`Order ${index}`}
+                                            setOrders={setOrders}/>
+                }</For>
             </Show>
-
-            <For fallback={<Typography>You have placed bids on any orders yet.</Typography>}
-                 each={orders}>{(order, index) =>
-                <SingleOrderViewShopper key={order._id} order={order} orderName={`Order ${index}`}
-                                        setOrders={setOrders}/>
-            }</For>
         </>
     }</GuardCustomerType>
 

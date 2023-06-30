@@ -190,7 +190,7 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
                 </Grid>
             </Grid>
             <Grid container spacing={5} sx={{ mb: 2 }}>
-                <Show when={isLoaded} fallback={<CircularProgress />}>
+                <Show when={isLoaded} fallback={<CircularProgress  sx={{color: "primary.dark"}} />}>
                     <Grid item xs={6} md={4} sx={{ maxHeight: '70vh', overflow: 'auto' }}>
                         <List>
 
