@@ -15,6 +15,7 @@ export async function getOrdersForBuyer(buyerId: string): Promise<Order[]> {
     return OrderModel.find({"createdBy": buyerId})
         .populate({path: "bids.createdBy", select: "firstName lastName avgRating profilePicture"})
         .populate({path: "selectedBid.createdBy", select: "firstName lastName avgRating profilePicture"})
+        .select("-groceryBill")
         .sort({creationDate: -1});
 }
 
@@ -28,6 +29,7 @@ export async function getOrdersForShopper(shopperId: string) {
         .populate({path: "createdBy", select: "firstName lastName _id profilePicture"})
         .populate({path: "bids.createdBy", select: "firstName lastName avgRating profilePicture"})
         .populate({path: "selectedBid.createdBy", select: "firstName lastName avgRating profilePicture"})
+        .select("-groceryBill")
         .sort({creationDate: -1});
 
 

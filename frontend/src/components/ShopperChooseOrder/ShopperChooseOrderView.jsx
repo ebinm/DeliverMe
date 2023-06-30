@@ -136,7 +136,7 @@ const ShopperChooseOrderView = () => {
                         </List>
                     </Grid>
                     <Grid item xs={6} md={8}>
-                        <Show when={isLoaded} fallback={<CircularProgress/>}>
+                        <Show when={isLoaded} fallback={<CircularProgress  sx={{color: "primary.dark"}}/>}>
                             <GoogleMap
                                 key={mapKey}
                                 mapContainerStyle={{

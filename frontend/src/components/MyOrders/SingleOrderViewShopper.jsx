@@ -1,6 +1,6 @@
 import {SingleOrderViewCommon} from "./SingleOrderViewCommon";
 import {SingleBidView} from "./SingleBidView";
-import {Accordion, AccordionDetails, AccordionSummary, Typography} from "@mui/material";
+import {Accordion, AccordionDetails, AccordionSummary, CircularProgress, Typography} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {DarkButton, OutlinedButton} from "../util/Buttons";
 import Stack from "@mui/material/Stack";
@@ -18,6 +18,7 @@ import CameraIcon from '@mui/icons-material/Camera';
 import NoPhotographyIcon from '@mui/icons-material/NoPhotography';
 import {CustomerContext} from "../../util/context/CustomerContext";
 import {detectCost} from "../../util/ocr";
+import {PUT_FETCH_OPTIONS} from "../../util/util";
 
 export function SingleOrderViewShopper({order, setOrders}) {
 
@@ -126,7 +127,7 @@ function ReceiptUploadModal({orderId, open, onClose, onSuccess}) {
     const [uploadFeedback, setUploadFeedback] = useState("Upload or drop your receipt here.")
 
     return <BaseModal open={open} onClose={onClose} sx={{"maxHeight": "80vh", "overflowY": "auto"}}>
-        <Show when={!uploadLoading}>{() =>
+        <Show when={!uploadLoading} fallback={<CircularProgress sx={{"color": "primary.dark", "alignSelf": "center"}}/>}>{() =>
             <form ref={formRef}>
                 <Stack direction={"column"} gap={"16px"} alignItems={"center"} padding={"8px 0"}>
                     <CurrencyInput label={"Total amount spent"} amount={amount} setAmount={setAmount}
@@ -219,8 +220,7 @@ function ReceiptUploadModal({orderId, open, onClose, onSuccess}) {
                     // Similar problem:
                     // https://stackoverflow.com/questions/67594242/chrome-shows-a-cors-error-when-api-request-payload-is-too-big
                     const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/${orderId}/receipt`, {
-                        method: "PUT",
-                        credentials: "include",
+                        ...PUT_FETCH_OPTIONS,
                         body: JSON.stringify({
                             "image": img,
                             "costAmount": amount,
