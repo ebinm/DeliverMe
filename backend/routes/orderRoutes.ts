@@ -8,7 +8,7 @@ import {
     getOrdersForBuyer,
     getOrdersForShopper,
     order,
-    removeOrder, uploadReceipt
+    removeOrder, sendMessage, uploadReceipt
 } from "../controllers/orderController";
 import {bidOnOrder, selectBid} from "../controllers/bidController";
 import {rateBuyer, rateShopper} from "../controllers/reviewController";
@@ -38,10 +38,10 @@ router.get("/open", authenticated, async (req: AuthenticatedRequest, res, next) 
     }
 })
 
-router.put("/:id/receipt", authenticated, async (req: AuthenticatedRequest, res, next)=> {
+router.put("/:id/receipt", authenticated, async (req: AuthenticatedRequest, res, next) => {
     try {
         res.json(await uploadReceipt(req.customerId, req.params.id, req.body))
-    }catch (e){
+    } catch (e) {
         console.warn(e)
         next(e.message)
     }
@@ -133,6 +133,17 @@ router.put("/:id/changeStatus", authenticated, async (req: AuthenticatedRequest,
         next(e.message)
     }
 })
+
+router.post("/:id/chat", authenticated, async (req: AuthenticatedRequest, res, next) => {
+    try {
+        const {content} = req.body
+        res.status(200).json(await sendMessage(req.customerId, req.customerType, req.params.id, content))
+    } catch (e) {
+        console.log(e)
+        next(e.message)
+    }
+})
+
 
 router.put("/:id/rate", authenticated, async (req: AuthenticatedRequest, res, next) => {
     try {

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 
 enum NotificationType {
-    MessageReceived = "ChatMessageReceived",
+    ChatMessageReceived = "ChatMessageReceived",
     BidPlacedOnOrder = "BidPlacedOnOrder",
     PaymentRequired = "PaymentRequired",
     BidAccepted = "BidAccepted",

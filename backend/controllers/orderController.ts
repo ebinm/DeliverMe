@@ -2,6 +2,8 @@ import {Order, OrderModel, OrderStatus} from '../models/order';
 import {Receipt} from "../models/receipt";
 import {notificationService} from "../index";
 import {NotificationType} from "../models/notification";
+import {Message} from "../models/message";
+import {CustomerType} from "../models/customer";
 
 export async function getAllOrders(): Promise<Order[]> {
 
@@ -35,8 +37,33 @@ export async function getOrdersForShopper(shopperId: string) {
         order.bids = order.bids.filter(bid => bid.createdBy._id = shopperId)
     })
 
-
     return orders
+}
+
+
+export async function sendMessage(customerId: string, senderType: CustomerType, orderId: string, messageContent: string) {
+    if (typeof messageContent !== "string") {
+        throw Error("Message content must be a string")
+    }
+
+    const order = await OrderModel.findById(orderId)
+
+    if(customerId === undefined || (customerId !== order.createdBy.toString() && customerId !== order.selectedBid.createdBy.toString())){
+        throw Error(`The user with id ${customerId} is not authorized to send messages for the order with id ${orderId}.`)
+    }
+
+    const message: Message = {
+        orderId: orderId,
+        content: messageContent,
+        sender: senderType,
+        created: new Date()
+    }
+
+    if (!order) {
+        throw Error(`Could not find order with id ${orderId}`)
+    }
+
+    return await notificationService.sendChatMessage(order, message)
 }
 
 export async function uploadReceipt(customerId, orderId: string, receipt: Receipt) {

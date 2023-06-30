@@ -31,10 +31,11 @@ function App() {
                                 <Route path={"/buyer/signup"} element={<Signup type={"buyer"}/>}/>
                                 <Route path={"/login"} element={<Login/>}/>
 
-                                <Route path={"/shopper/my-orders/:id?"} element={<ShopperMyOrders/>}/>
+                                <Route path={"/shopper/my-orders/:id?/chat?"} element={<ShopperMyOrders/>}/>
                                 <Route path={"/shopper/browseorders"} element={<ShopperChooseOrderView/>}/>
 
-                                <Route path={"/buyer/my-orders/:id?"} element={<BuyerMyOrders/>}/>
+                                <Route path={"/buyer/my-orders/:id?/chat?"} element={<BuyerMyOrders/>}/>
+
                                 <Route path={"/buyer/order/create/*"} element={<BuyerOrderCreationView/>}/>
                                 <Route path={"/checkout"} element={<CheckoutForm/>}/>
 

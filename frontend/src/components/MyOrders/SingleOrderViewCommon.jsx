@@ -7,8 +7,12 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import {DateDisplay} from "./DateDisplay";
 import {OrderItemsOverview} from "./OrderItemsOverview";
 import Stack from "@mui/material/Stack";
-import {useEffect, useRef} from "react";
-import {useParams} from "react-router-dom";
+import {useContext, useEffect, useMemo, useRef} from "react";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {ChatOverlay} from "../chat/ChatOverlay";
+import Button from "@mui/material/Button";
+import ChatIcon from '@mui/icons-material/Chat';
+import {CustomerContext} from "../../util/context/CustomerContext";
 
 
 export function SingleOrderViewCommon({order, contact, buttons, bidView, orderName, showDeliveryAddress = false}) {
@@ -23,14 +27,37 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
         "ml": "8px"
     }
 
+    const {customer} = useContext(CustomerContext)
+
+    // const [chatOpen, setChatOpen] = useState(false)
+
+
     const ref = useRef()
+    const {pathname} = useLocation()
+    const navigate = useNavigate()
     const params = useParams()
+
+    const chatOpen = useMemo(() => {
+        return params.id === order._id && (pathname.endsWith("/chat") || pathname.endsWith("/chat/"))
+    }, [pathname, params.id])
+
+
     useEffect(() => {
         // onMount
         if (params.id === order._id) {
             ref.current.scrollIntoView({behavior: "smooth"})
         }
+
+        if (pathname.endsWith("/chat") || pathname.endsWith("/chat/")) {
+            if (params.id === order._id) {
+                // setChatOpen(true)
+            } else if (params.id === undefined) {
+                navigate(`/${customer.type.toLowerCase()}/my-orders/`)
+            }
+        }
+
     }, [])
+
 
     return <Box ref={ref} boxShadow={1} borderRadius={"8px"} padding={"16px"} mt={"16px"} display={"flex"}
                 flexDirection={"column"} backgroundColor={"white"}>
@@ -55,6 +82,13 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
                         <EmailIcon sx={iconSx}/>
                     </Link>
                 }</Show>
+
+                <Show when={order?.selectedBid?.createdBy}>{() =>
+                    <Button onClick={() => navigate(`./${order._id}/chat`)}>
+                        <ChatIcon sx={iconSx}/>
+                    </Button>
+                }</Show>
+
             </Box>
         </Box>
 
@@ -83,10 +117,15 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
 
         <Divider sx={{"margin": "8px 0"}}/>
 
-
         {bidView}
 
         {buttons}
+
+        <Show when={order?.selectedBid?.createdBy}>{() =>
+            <ChatOverlay order={order} open={chatOpen} onClose={() => {
+                navigate(`/${customer.type.toLowerCase()}/my-orders/`)
+            }}/>
+        }</Show>
     </Box>
 }
 
