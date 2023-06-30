@@ -113,7 +113,7 @@ export function createNotificationService(server: io.Server): NotificationServic
                 // for same order when doing this.
                 await emitNotification(receiverType, receiver, {
                     msg: "You have received a new chat message.",
-                    type: NotificationType.ChatMessage,
+                    type: NotificationType.ChatMessageReceived,
                     date: new Date(),
                     orderId: order._id
                 })

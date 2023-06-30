@@ -32,5 +32,25 @@ header img {
   z-index: 100000 !important;
 }
 
+::-webkit-scrollbar {
+  width: 0.6em;
+  margin-right: 0.2em;
+}
+
+
+::-webkit-scrollbar-track {
+  border-radius: 0.5em;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(107, 107, 107, 0.3);
+  border-radius: 0.5em;
+  transition: 0.4s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 107, 107, 0.5);
+  transition: 0.4s;
+}
 
 

@@ -24,10 +24,10 @@ import {NotificationContext} from "../util/context/NotificationContext";
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import ClearIcon from '@mui/icons-material/Clear';
-import EmailIcon from '@mui/icons-material/Email';
 import PaymentIcon from '@mui/icons-material/Payment';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import MessageIcon from '@mui/icons-material/Message';
 
 export default function Header() {
     const {customer} = useContext(CustomerContext)
@@ -326,8 +326,7 @@ function NotificationsRaw({open, close}, ref) {
 function notificationTypeToLink(type, orderId, customerType) {
     switch (type) {
         case "ChatMessageReceived":
-            // TODO actual path
-            return `/${customerType.toLowerCase()}/${orderId || ""}/chat`
+            return `/${customerType.toLowerCase()}/my-orders/${orderId}/chat`
         case "BidPlacedOnOrder":
         case "BidAccepted":
             return `/${customerType.toLowerCase()}/my-orders/${orderId || ""}`
@@ -341,14 +340,14 @@ function notificationTypeToLink(type, orderId, customerType) {
 
 function notificationTypeToIcon(type) {
     switch (type) {
-        case "ChatMessageReceived":
-            return <EmailIcon/>
         case "BidPlacedOnOrder":
             return <LocalOfferIcon/>
         case "PaymentRequired":
             return <PaymentIcon/>
         case "BidAccepted":
             return <GradeIcon/>
+        case "ChatMessageReceived":
+            return <MessageIcon/>
         default:
             return <></>
     }
