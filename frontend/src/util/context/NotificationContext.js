@@ -39,6 +39,7 @@ function NotificationProvider({children}) {
         })
 
         return () => {
+            console.log("Disconnecting on client")
             setNotifications([])
             ws.close()
         }

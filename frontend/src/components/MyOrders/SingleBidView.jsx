@@ -1,11 +1,14 @@
-import React, {useMemo} from "react";
+import React, {useContext, useMemo} from "react";
 import {Avatar, Box, Typography} from "@mui/material";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import AccessAlarmOutlinedIcon from "@mui/icons-material/AccessAlarmOutlined";
 import Rating from "@mui/material/Rating";
 import {Show} from "../util/ControlFlow";
+import {CustomerContext} from "../../util/context/CustomerContext";
 
 export function SingleBidView({bid, selected = false, setSelected = () => undefined, highlightOnHover = true}) {
+
+    const {customer} = useContext(CustomerContext)
 
     const currencyFormatter = useMemo(() => Intl.NumberFormat(undefined, {
         style: "currency",
@@ -39,7 +42,7 @@ export function SingleBidView({bid, selected = false, setSelected = () => undefi
 
                 <LightbulbOutlinedIcon/>
                 <Typography mr={"64px"}>Bid offered:</Typography>
-                <Typography>{currencyFormatter.format(bid.moneyBidWithFee.amount)}</Typography>
+                <Typography>{currencyFormatter.format(customer.type === "BUYER" ? bid.moneyBidWithFee.amount : bid.moneyBid.amount)}</Typography>
                 <Show when={bid.timeBid}>
                 <AccessAlarmOutlinedIcon/>
                     <Typography>Delivery Time:</Typography>

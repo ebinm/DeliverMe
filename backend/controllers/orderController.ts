@@ -49,10 +49,7 @@ export async function sendMessage(customerId: string, senderType: CustomerType, 
     }
 
     const order = await OrderModel.findById(orderId)
-
-    if(customerId === undefined || (customerId !== order.createdBy.toString() && customerId !== order.selectedBid.createdBy.toString())){
-        throw Error(`The user with id ${customerId} is not authorized to send messages for the order with id ${orderId}.`)
-    }
+        .select("-groceryBill")
 
     const message: Message = {
         orderId: orderId,
