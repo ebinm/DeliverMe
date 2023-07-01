@@ -18,7 +18,7 @@ async function signup(req: Request, res: Response, customerType: CustomerType) {
 
     // Note: the password used here is the actual password. The password stored in the Buyer/Shopper Document
     // is obviously hashed
-    const {firstName, lastName, email: emailRaw, password}: Partial<Customer> = req.body;
+    const {firstName, lastName, email: emailRaw, password, profilePicture}: Partial<Customer> = req.body;
     const email = emailRaw.toLowerCase()
 
     if(!validate(email)){
@@ -27,12 +27,16 @@ async function signup(req: Request, res: Response, customerType: CustomerType) {
     }
 
     const document = customerType === "BUYER" ? Buyer : Shopper;
-    let profilePicture: String;
+    let newProfilePicture;
 
-    if (document == Buyer) {
-        profilePicture = buyerPicture
+    if (!profilePicture) {
+        if (document == Buyer) {
+            newProfilePicture = buyerPicture
+        } else {
+            newProfilePicture = shopperPicture
+        }
     } else {
-        profilePicture = shopperPicture
+        newProfilePicture = profilePicture;
     }
     const existingUser = await document.findOne({email})
 
@@ -45,7 +49,7 @@ async function signup(req: Request, res: Response, customerType: CustomerType) {
     const passwordHash = await bcrypt.hash(password, salt)
 
     const newUser = new document({
-        email, password: passwordHash, firstName, lastName, profilePicture
+        email, password: passwordHash, firstName, lastName, profilePicture: newProfilePicture
     })
 
     await newUser.save()

@@ -35,7 +35,7 @@ const OrderListItem = ({ order, handleOpenOrderDetailsModal, selectedOrder, setS
                     <Box display='flex' alignItems='center'>
                         <ListItemAvatar>
                             <Avatar  alt={order?.createdBy?.firstName + " " + order?.createdBy?.lastName}
-                                src={`data:image/jpeg;base64,${order?.createdBy?.profilePicture}`} />
+                                src={order?.createdBy?.profilePicture} />
                         </ListItemAvatar>
                     </Box>
                     <Box>

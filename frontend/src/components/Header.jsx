@@ -123,7 +123,7 @@ function LoggedInMenu({customer}) {
             >
                 <Avatar imgProps={{sx: {padding: '0px'}}} alt={customer.firstName + " " + customer.lastName}
                         ref={anchorEl}
-                        src={`data:image/jpeg;base64,${customer.profilePicture}`}/>
+                        src={customer.profilePicture}/>
             </Badge>
 
             <Divider orientation={"vertical"}

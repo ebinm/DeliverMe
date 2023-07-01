@@ -19,8 +19,8 @@ export function RatingModal({open, onClose, order, buyer}) {
             <Typography variant={"h6"} component={"h2"}>Please leave a rating for</Typography>
             <Avatar  alt={buyer ? order?.createdBy?.firstName + " " + order?.createdBy?.lastName :
                 order?.selectedBid.createdBy?.firstName + " " + order?.selectedBid.createdBy?.lastName}
-                     src={buyer ? `data:image/jpeg;base64,${order?.createdBy?.profilePicture}` :
-                         `data:image/jpeg;base64,${order?.selectedBid.createdBy?.profilePicture}`}
+                     src={buyer ? order?.createdBy?.profilePicture :
+                         order?.selectedBid.createdBy?.profilePicture}
                      sx={{ width: "100px", height: "100px" }}/>
             <Typography variant={"h5"} component={"h2"}>{buyer ?  order.createdBy.firstName :
                 order.selectedBid.createdBy.firstName} {buyer ? order.createdBy.lastName : order.selectedBid.createdBy.lastName}</Typography>
