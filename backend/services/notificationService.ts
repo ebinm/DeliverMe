@@ -43,9 +43,13 @@ export function createNotificationService(server: io.Server): NotificationServic
 
 
         socket.on('disconnect', () => {
-            openConnections.get(customerType)?.get(customerId).unshift(socket)
-            if (openConnections.get(customerType)?.get(customerId).length === 0) {
+            const newConnections = openConnections.get(customerType)?.get(customerId)
+                .filter(it => it !== socket)
+
+            if (newConnections.length === 0) {
                 openConnections.get(customerType).delete(customerId)
+            } else {
+                openConnections.get(customerType)?.set(customerId, newConnections)
             }
         });
     });
@@ -83,13 +87,13 @@ export function createNotificationService(server: io.Server): NotificationServic
 
             try {
                 const updatedOrder = await OrderModel.findByIdAndUpdate(order._id, {"$push": {messages: message}}, {new: true})
+                    .select("-groceryBill -groceryShop")
                 const newMessage = updatedOrder.messages[updatedOrder.messages.length - 1]
-
 
                 // We notify both parties
                 const socketsShopper = openConnections.get("SHOPPER")?.get(order.selectedBid.createdBy.toString())
                 socketsShopper?.forEach(it => {
-                    it.emit("chat", JSON.stringify(newMessage))
+                     it.emit("chat", JSON.stringify(newMessage))
                 })
 
                 const socketsBuyer = openConnections.get("BUYER")?.get(order.createdBy.toString())
@@ -109,15 +113,15 @@ export function createNotificationService(server: io.Server): NotificationServic
                     receiverType = "SHOPPER"
                 }
 
+
                 // TODO not sure if always sending a notification is a great idea. Maybe delete old chat notifications
                 // for same order when doing this.
-                await emitNotification(receiverType, receiver, {
+                emitNotification(receiverType, receiver, {
                     msg: "You have received a new chat message.",
                     type: NotificationType.ChatMessageReceived,
                     date: new Date(),
                     orderId: order._id
                 })
-
                 return newMessage
             } catch (e) {
                 console.error(e)

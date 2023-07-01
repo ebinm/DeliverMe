@@ -136,8 +136,10 @@ router.put("/:id/changeStatus", authenticated, async (req: AuthenticatedRequest,
 
 router.post("/:id/chat", authenticated, async (req: AuthenticatedRequest, res, next) => {
     try {
+        console.time("Initial Call")
         const {content} = req.body
         res.status(200).json(await sendMessage(req.customerId, req.customerType, req.params.id, content))
+        console.time("Response")
     } catch (e) {
         console.log(e)
         next(e.message)
