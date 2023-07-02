@@ -50,11 +50,11 @@ function CustomerProvider({children}) {
         await fetchUser(setCustomer)
     }
 
-    async function signup(email, password, firstName, lastName, type) {
+    async function signup(email, password, firstName, lastName, profilePicture, type) {
         const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/${type}/signup`, {
             ...PUT_FETCH_OPTIONS,
             method: "POST", body: JSON.stringify({
-                email, password, firstName, lastName
+                email, password, firstName, lastName, profilePicture
             })
         })
 

@@ -31,7 +31,7 @@ export function SingleBidView({bid, selected = false, setSelected = () => undefi
                     } : undefined
                 }}>
         <Avatar imgProps={{sx: {padding: '0px'}}} alt={bid.createdBy.firstName + " " + bid.createdBy.lastName}
-                src={`data:image/jpeg;base64,${bid.createdBy.profilePicture}`}/>
+                src={bid.createdBy.profilePicture}/>
         <Box display={"flex"} flexDirection={"column"}>
             <Box display={"grid"} gridTemplateColumns={"min-content auto auto"} gap={"8px"}>
                 <Typography variant={"h6"}
