@@ -3,7 +3,6 @@ import {Request, Response} from "express";
 
 import jsonwebtoken from 'jsonwebtoken'
 import bcrypt from "bcrypt";
-import {buyerPicture, shopperPicture} from "../datamock/defaultPictures";
 import {validate} from "email-validator"
 
 
@@ -30,11 +29,7 @@ async function signup(req: Request, res: Response, customerType: CustomerType) {
     let newProfilePicture;
 
     if (!profilePicture) {
-        if (document == Buyer) {
-            newProfilePicture = buyerPicture
-        } else {
-            newProfilePicture = shopperPicture
-        }
+        newProfilePicture = null;
     } else {
         newProfilePicture = profilePicture;
     }

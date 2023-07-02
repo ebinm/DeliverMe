@@ -84,7 +84,7 @@ export function Signup({type}) {
         />
 
         <FileUploader maxSize={32} id={"receipt"}
-                      required={!profilePicture} multiple={false} name="file" types={["JPG", "PNG"]}
+                      required={false} multiple={false} name="file" types={["JPG", "PNG"]}
                       onTypeError={(err) => setUploadFeedback(err)}
                       onSizeError={(err) => setUploadFeedback(err)}
                       handleChange={(file) => {
