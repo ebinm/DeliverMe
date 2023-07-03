@@ -2,11 +2,13 @@ import {Button} from "@mui/material";
 
 
 function DarkButton(props) {
-    return <Button {...props} sx={{...darkButtonSx, ...props.sx}}/>
+    const {sx, ...other} = props
+    return <Button {...other} sx={{...darkButtonSx, ...sx}}/>
 }
 
 function OutlinedButton(props) {
-    return <Button variant={"outlined"} {...props} sx={{...outlinedButtonSx, ...props.sx}}/>
+    const {sx, ...other} = props
+    return <Button variant={"outlined"} {...other} sx={{...outlinedButtonSx, ...sx}}/>
 }
 
 
