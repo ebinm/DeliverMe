@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Box, CircularProgress, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText} from '@mui/material';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
@@ -185,7 +184,7 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
                             onKeyDown={handleInputKeyDown}
                             sx={{ width: '100%' }}
                         />
-                        <Button variant="contained" sx={{ bgcolor: "primary.dark" }} onClick={handlePlaceSelect}>Search</Button>
+                        <DarkButton onClick={handlePlaceSelect}>Search</DarkButton>
                     </Stack>
                 </Grid>
             </Grid>
@@ -257,7 +256,7 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
                     sx={{ mb: 2 }}
                 >
                     <OutlinedButton  onClick={() => onSubmitShop(null)}>Skip</OutlinedButton>
-                    <DarkButton variant="contained" onClick={() => onSubmitShop(selectedShop)}>Select Shop</DarkButton>
+                    <DarkButton onClick={() => onSubmitShop(selectedShop)}>Select Shop</DarkButton>
                 </Stack>
             </Box>
         </Box>
