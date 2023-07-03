@@ -1,41 +1,35 @@
-import express, { Application, Request, Response } from "express";
-import stripe from "stripe";
-import bodyParser from "body-parser";
-import cors from "cors";
+import "dotenv/config";
+import express, { Request, Response } from "express";
+import * as paypal from "../controllers/payment/paypal";
+const { PORT = 8888 } = process.env;
 
+const route = express();
 
-const router = express.Router();
-const stripeInstance = new stripe(process.env.STRIPE_SECRET_TEST, {
-  apiVersion: "2022-11-15", // Specify the desired API version
-});
+route.use(express.static("public"));
 
-router.use(bodyParser.urlencoded({ extended: true }));
-router.use(bodyParser.json());
+// parse post params sent in body in json format
+route.use(express.json());
 
-router.use(cors());
-
-router.post("/checkout", cors(), async (req: Request, res: Response) => {
-  let { amount, id } = req.body;
+route.post("/create-paypal-order", async (req: Request, res: Response) => {
   try {
-    const payment = await stripeInstance.paymentIntents.create({
-      amount,
-      currency: "USD",
-      description: "Paying the bill",
-      payment_method: id,
-      confirm: true,
-    });
-    console.log("The bill", payment);
-    res.json({
-      message: "Payment successful",
-      success: true,
-    });
-  } catch (error) {
-    console.log("Error", error);
-    res.json({
-      message: "Payment failed",
-      success: false,
-    });
+    const order = await paypal.createOrder();
+    res.json(order);
+  } catch (err) {
+    res.status(500).send(err.message);
   }
 });
 
-export default router;
+route.post("/capture-paypal-order", async (req: Request, res: Response) => {
+  const { orderID } = req.body;
+  try {
+    const captureData = await paypal.capturePayment(orderID);
+    res.json(captureData);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+route.listen(PORT, () => {
+  console.log(`Server listening at http://localhost:${PORT}/`);
+});
+export default route;
