@@ -1,5 +1,7 @@
+import React, { useState } from 'react';
 import {Box, Divider, Link, Typography} from "@mui/material";
 import {Show} from "../util/ControlFlow";
+import { DarkButton } from '../util/Buttons';
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
@@ -13,6 +15,7 @@ import {ChatOverlay} from "../chat/ChatOverlay";
 import Button from "@mui/material/Button";
 import ChatIcon from '@mui/icons-material/Chat';
 import {CustomerContext} from "../../util/context/CustomerContext";
+import CheckoutPage from "../payprovider/CheckoutPage";
 
 
 export function SingleOrderViewCommon({order, contact, buttons, bidView, orderName, showDeliveryAddress = false}) {
@@ -34,6 +37,8 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
     const navigate = useNavigate()
     const params = useParams()
 
+    const [showCheckout, setShowCheckout] = useState(false);
+
     const chatOpen = useMemo(() => {
         return params.id === order._id && (pathname.endsWith("/chat") || pathname.endsWith("/chat/"))
     }, [pathname, params.id, order._id])
@@ -41,7 +46,7 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
 
     useEffect(() => {
         // onMount
-        if (params.id === order._id) {
+        if (params.id === order._id && !showCheckout) {
             ref.current.scrollIntoView({behavior: "smooth"})
         }
 
@@ -53,7 +58,9 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
             }
         }
 
-    }, [])
+        
+
+    }, [showCheckout])
 
 
     return <Box ref={ref} boxShadow={1} borderRadius={"8px"} padding={"16px"} mt={"16px"} display={"flex"}
@@ -66,7 +73,8 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
                     <Typography component={"span"} variant={"h6"}>{order.status}</Typography>
                 </Box>
             </Box>
-
+            <Stack direction="row" alignItems="center">
+            <DarkButton onClick={() => setShowCheckout(true)}>Checkout</DarkButton>
             <Box display={"flex"} flexDirection={"row"}>
                 <Show when={contact?.phoneNumber}>{phoneNumber =>
                     <Link href={`tel:${phoneNumber}`}>
@@ -87,6 +95,14 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
                 }</Show>
 
             </Box>
+            </Stack>
+
+            {showCheckout && (
+                <CheckoutPage
+                    order={order} 
+                />
+             )}
+
         </Box>
 
         <Show when={order?.groceryShop}>
