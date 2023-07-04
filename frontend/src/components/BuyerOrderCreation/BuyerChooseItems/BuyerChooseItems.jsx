@@ -133,7 +133,7 @@ export function BuyerChooseItems({
         <Paper sx={paperSx}>
 
             <Stack direction={"column"} gap={"32px"}>
-                <DarkButton startIcon={<AddCircleIcon/>} variant={"text"} onClick={addNewItem}>Add
+                <DarkButton sx={{"alignSelf": "flex-end"}} startIcon={<AddCircleIcon/>} variant={"text"} onClick={addNewItem}>Add
                     Item</DarkButton>
                 <form ref={formRef}>
                     <Table>

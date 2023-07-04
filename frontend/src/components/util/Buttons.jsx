@@ -2,11 +2,13 @@ import {Button} from "@mui/material";
 
 
 function DarkButton(props) {
-    return <Button {...props} sx={{...darkButtonSx, ...props.sx}}/>
+    const {sx, ...other} = props
+    return <Button variant={"text"} {...other} sx={{...darkButtonSx, ...sx}}/>
 }
 
 function OutlinedButton(props) {
-    return <Button variant={"outlined"} {...props} sx={{...outlinedButtonSx, ...props.sx}}/>
+    const {sx, ...other} = props
+    return <Button variant={"outlined"} {...other} sx={{...outlinedButtonSx, ...sx}}/>
 }
 
 
@@ -16,7 +18,6 @@ const darkButtonSx = {
     "backgroundColor": "primary.dark",
     "color": "primary.light",
     "&:hover": {
-        "outlineColor": "primary.dark",
         "outlineWidth": "2px",
         "outlineStyle": "solid",
         "color": "primary.dark",
