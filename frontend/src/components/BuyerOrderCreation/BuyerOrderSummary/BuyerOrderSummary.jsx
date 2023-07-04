@@ -166,9 +166,12 @@ export function BuyerOrderSummary({
             <OutlinedButton onClick={onGoBack}>Go Back</OutlinedButton>
         </Stack>
 
-        <BaseModal open={confirmModalOpen} onClose={() => setConfirmModalOpen(false)}>
-            <Typography sx={{ "padding": "16px" }}>Are you sure you want to place the order?</Typography>
-            <Stack direction={"row-reverse"} justifyContent={"space-between"} gap={"16px"} padding={"16px"}>
+        <BaseModal open={confirmModalOpen} onClose={() => setConfirmModalOpen(false)} title={"Warning"}>
+           
+            <Typography align="center" sx={{ "padding": "16px" }}>Are you sure you want to place the order?</Typography>
+
+            <Stack direction={"row-reverse"} justifyContent={"space-between"} gap={"16px"} >
+
                 <DarkButton sx={{ "flexGrow": "1" }} onClick={async () => {
 
                     setLoading(true)
@@ -177,7 +180,7 @@ export function BuyerOrderSummary({
                     console.log(destination)
                     if (destination === null){
                         setLoading(false)
-                        enqueueSnackbar('Your Cloud Not Find Your Delivery Address!', 'error');
+                        enqueueSnackbar('Cloud not find your Delivery Address!', 'error');
                         setConfirmModalOpen(false);
                         return;
                     }

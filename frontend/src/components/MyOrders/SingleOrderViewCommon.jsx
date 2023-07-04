@@ -56,7 +56,7 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
     }, [])
 
 
-    return <Box ref={ref} boxShadow={1} borderRadius={"8px"} padding={"16px"} mt={"16px"} display={"flex"}
+    return <Box ref={ref} boxShadow={3} borderRadius={"8px"} padding={"16px"} mt={"16px"} display={"flex"}
                 flexDirection={"column"} backgroundColor={"white"}>
         <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"} alignItems={"center"}>
 
