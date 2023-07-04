@@ -9,6 +9,20 @@ import { RatingModal } from "../util/RatingModal";
 import { For, Show } from "../util/ControlFlow"
 import { CustomerContext } from "../../util/context/CustomerContext";
 import ReceiptUploadModal from "./ReceiptUploadModal";
+import Box from "@mui/material/Box";
+import React, {useCallback, useContext, useEffect, useRef, useState} from "react";
+import {CurrencyInput} from "../util/CurrencyInput";
+import {RatingModal} from "../util/RatingModal";
+import {BaseModal} from "../util/BaseModal"
+import {For, Show} from "../util/ControlFlow"
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import Webcam from "react-webcam";
+import CameraIcon from '@mui/icons-material/Camera';
+import NoPhotographyIcon from '@mui/icons-material/NoPhotography';
+import {CustomerContext} from "../../util/context/CustomerContext";
+import {detectCost} from "../../util/ocr";
+import {PUT_FETCH_OPTIONS} from "../../util/util";
+import {CustomFileInput} from "../util/CustomFileUpload";
 
 export function SingleOrderViewShopper({ order, setOrders }) {
 
@@ -59,7 +73,7 @@ export function SingleOrderViewShopper({ order, setOrders }) {
             setUploadOpen(false)
             setRatingOpen(true)
         }} />
-        
+
         <RatingModal open={ratingOpen} onClose={() => setRatingOpen(false)} order={order} buyer={true} />
     </>
 }

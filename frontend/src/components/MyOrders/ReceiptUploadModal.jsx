@@ -1,22 +1,19 @@
-
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { Box, Stack } from "@mui/material";
-import { BaseModal } from "../util/BaseModal"
-import { detectCost } from "../../util/ocr";
-import { PUT_FETCH_OPTIONS } from "../../util/util";
-import { Typography } from "@mui/material";
-import { Show } from "../util/ControlFlow";
-import { DarkButton, OutlinedButton } from "../util/Buttons";
-import { CurrencyInput } from "../util/CurrencyInput";
-import { FileUploader } from "react-drag-drop-files";
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import React, {useCallback, useEffect, useRef, useState} from "react";
+import {Box, Stack, Typography} from "@mui/material";
+import {BaseModal} from "../util/BaseModal"
+import {detectCost} from "../../util/ocr";
+import {PUT_FETCH_OPTIONS} from "../../util/util";
+import {Show} from "../util/ControlFlow";
+import {DarkButton, OutlinedButton} from "../util/Buttons";
+import {CurrencyInput} from "../util/CurrencyInput";
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import Webcam from "react-webcam";
 import CameraIcon from '@mui/icons-material/Camera';
 import NoPhotographyIcon from '@mui/icons-material/NoPhotography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Divider from '@mui/material/Divider';
-import { useSnackbar } from "notistack";
+import {useSnackbar} from "notistack";
+import {CustomFileInput} from "../util/CustomFileUpload";
 
 
 const ReceiptUploadModal = ({ orderId, open, onClose, onSuccess }) => {
@@ -71,9 +68,6 @@ const ReceiptUploadModal = ({ orderId, open, onClose, onSuccess }) => {
         })
     }, [img])
 
-    const formRef = useRef();
-
-    const [uploadFeedback, setUploadFeedback] = useState("Upload or drop your receipt here.");
 
     return (
         <BaseModal open={open} onClose={onClose} title={"Upload your Receipt"}>
@@ -108,37 +102,7 @@ const ReceiptUploadModal = ({ orderId, open, onClose, onSuccess }) => {
                             </Show>
 
 
-
-                            <FileUploader maxSize={32} id={"receipt"}
-                                required={!img} multiple={false} name="file" types={["JPG", "PNG"]}
-                                onTypeError={(err) => setUploadFeedback(err)}
-                                onSizeError={(err) => setUploadFeedback(err)}
-                                handleChange={(file) => {
-                                    const fileReader = new FileReader();
-                                    fileReader.onload = () => {
-                                        setImg(fileReader.result)
-                                        setWebcamOpen(false)
-                                        setUploadFeedback("Successfully uploaded. (Upload again to replace)")
-                                    }
-                                    fileReader.readAsDataURL(file)
-                                }}
-                            >
-                                <Stack direction={"column"}
-                                    justifyContent={"center"}
-                                    alignItems={"center"} sx={{
-                                        "borderWidth": "3px",
-                                        "borderStyle": "dashed",
-                                        "borderRadius": "16px",
-                                        "padding": "16px",
-                                        "borderColor": "primary.dark",
-                                        "minWidth": "100%",
-                                        mb: 2
-                                    }}>
-                                    <CloudUploadIcon sx={{ "color": "primary.dark", "fontSize": "2rem" }} />
-                                    <Typography sx={{ "color": "primary.dark" }}> {uploadFeedback}</Typography>
-                                    <Box component={"img"} src={img} sx={{ "maxHeight": "20vh", "maxWidth": "20vh" }} />
-                                </Stack>
-                            </FileUploader>
+                            <CustomFileInput img={img} setImg={setImg}/>
 
                             <DarkButton sx={{ mb: 2, "width": "100%" }} onClick={() => setWebcamOpen(true)}
                                 startIcon={<CameraAltIcon sx={{ "fontSize": "2rem" }} />}>
