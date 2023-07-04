@@ -18,6 +18,18 @@ type Location = {
     city: string | null,
 }
 
+const locationSchema = {
+    geometry: {
+        location: {
+            lat: { type: Number, required: true },
+            lng: { type: Number, required: true },
+        },
+    },
+    name: { type: String, required: true },
+    street: { type: String, required: true },
+    city: { type: String, required: false },
+};
+
 export enum OrderStatus {
     Open = "Open",
     InDelivery = "In Delivery",
@@ -49,9 +61,9 @@ const orderSchema = new Schema<Order>(
         creationDate: { type: Date, required: true },
         latestDeliveryDate: { type: Date, required: false },
         earliestDeliveryDate: { type: Date, required: false },
-        groceryShop: { type: Schema.Types.Mixed, required: false },
+        groceryShop: { type: locationSchema, required: false },
         createdBy: { type: Schema.Types.ObjectId,ref: Buyer, required: true },
-        destination: { type: Schema.Types.Mixed, required: true },
+        destination: { type: locationSchema, required: true },
         items: { type: [itemSchema], required: true },
         groceryBill: {type: Schema.Types.Mixed, required: false},
         selectedBid: {

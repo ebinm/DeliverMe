@@ -1,14 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {CircularProgress, Grid, List} from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { CircularProgress, Grid, List, Box, Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import OrderDetailsModal from './OrderDetailsModal';
 import BidOnOrderModal from './BidOnOrderModal';
-import {Show} from '../util/ControlFlow';
-import {DirectionsRenderer, GoogleMap, Marker, useJsApiLoader} from '@react-google-maps/api';
-import {OrderFilter} from './OrderFilter';
-import {OrderListItem} from './OrderListItem';
-import {GuardCustomerType} from "../util/GuardCustomerType";
+import { Show } from '../util/ControlFlow';
+import { DirectionsRenderer, GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { OrderFilter } from './OrderFilter';
+import { OrderListItem } from './OrderListItem';
+import { GuardCustomerType } from "../util/GuardCustomerType";
+import { DarkButton } from "../util/Buttons";
+import { useSnackbar } from 'notistack';
 
 
 const ShopperChooseOrderView = () => {
@@ -21,16 +23,18 @@ const ShopperChooseOrderView = () => {
     const [directions, setDirections] = useState(null);
     const [mapKey, setMapKey] = useState(0);
 
+    const { enqueueSnackbar } = useSnackbar();
+
     // We use useState as a way of handling a constant here to stop useJsApiLoader from triggering more than once.
     const [googleLibraries] = useState(["places"]);
-    const {isLoaded} = useJsApiLoader({
+    const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: "AIzaSyCAiDt2WyuMhekA25EMEQgx_wVO_WQW8Ok",
         libraries: googleLibraries
     });
 
     useEffect(() => {
         if (map) {
-            const defaultCenter = {lat: 48.137154, lng: 11.576124}
+            const defaultCenter = { lat: 48.137154, lng: 11.576124 }
             map.setCenter(defaultCenter);
         }
     }, [map]);
@@ -101,6 +105,14 @@ const ShopperChooseOrderView = () => {
         setShowOrderDetailsModal(true);
     };
 
+    const handleSelectOrder = () => {
+        if (selectedOrder === null) {
+            enqueueSnackbar('Select a Order first!', { variant: 'error' });
+        } else {
+            handleOpenOrderDetailsModal();
+        }
+    }
+
     return (
         <GuardCustomerType requiredType={"SHOPPER"}>{() =>
             <>
@@ -114,34 +126,34 @@ const ShopperChooseOrderView = () => {
                     showBidOnOrderModal={showBidOnOrderModal}
                     handleCloseBidOnOrderModal={handleCloseBidOnOrderModal}
                     order={selectedOrder}
+                    handleCloseOrderDetailsModal={handleCloseOrderDetailsModal}
                 />
-
-                <Grid container sx={{mb: 2}}>
-                    <Typography variant="h4" component="h1" sx={{paddingLeft: '16px'}}>Open Orders</Typography>
+                <Grid container sx={{ mb: 2 }}>
+                    <Typography variant="h4" sx={{ paddingLeft: '16px' }}>Open Orders</Typography>
                 </Grid>
-                <Grid container spacing={5} sx={{mb: 2}}>
-                    <Grid item xs={6} md={4} sx={{maxHeight: '70vh', overflow: 'auto'}}>
+                <Grid container spacing={8}>
+                    <Grid item md={4} >
 
-                        <OrderFilter orders={orders} setFilteredOrders={setFilteredOrders}/>
+                        <OrderFilter orders={orders} setFilteredOrders={setFilteredOrders} />
 
-                        <Divider/>
+                        <Divider />
 
-                        <List>
+                        <List sx={{ maxHeight: '60vh', overflow: 'auto' }}>
                             {filteredOrders.map((order) => (
                                 <OrderListItem key={order._id} order={order}
-                                               handleOpenOrderDetailsModal={handleOpenOrderDetailsModal}
-                                               selectedOrder={selectedOrder}
-                                               setSelectedOrder={setSelectedOrder}/>
+                                    handleOpenOrderDetailsModal={handleOpenOrderDetailsModal}
+                                    selectedOrder={selectedOrder}
+                                    setSelectedOrder={setSelectedOrder} />
                             ))}
                         </List>
                     </Grid>
-                    <Grid item xs={6} md={8}>
-                        <Show when={isLoaded} fallback={<CircularProgress  sx={{color: "primary.dark"}}/>}>
+                    <Grid item md={8} sx={{ mb: 2 }}>
+                        <Show when={isLoaded} fallback={<CircularProgress sx={{ color: "primary.dark" }} />}>
                             <GoogleMap
                                 key={mapKey}
                                 mapContainerStyle={{
                                     width: '100%',
-                                    height: '70vh'
+                                    height: '65vh'
                                 }}
                                 zoom={14}
                                 onLoad={map => setMap(map)}
@@ -156,26 +168,36 @@ const ShopperChooseOrderView = () => {
                                             }}
                                         />
 
-                                        <Marker
+                                        {selectedOrder.groceryShop && (<Marker
                                             key={selectedOrder.groceryShop.place_id}
                                             position={selectedOrder.groceryShop.geometry.location}
                                             label="Shop"
-                                        />
+                                        />)}
 
-                                        <Marker
+                                        {selectedOrder.destination.geometry && (<Marker
                                             key={selectedOrder.destination.place_id}
                                             position={selectedOrder.destination.geometry.location}
                                             label="Destination"
-                                        />
+                                        />)}
+
+
                                     </>
                                 )}
                             </GoogleMap>
                         </Show>
                     </Grid>
                 </Grid>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'row-reverse',
+                    }}
+                >
+                    <DarkButton onClick={() => handleSelectOrder()}>Select Order</DarkButton>
+                </Box>
             </>
         }</GuardCustomerType>
     )
 };
 
-export {ShopperChooseOrderView};
+export { ShopperChooseOrderView };

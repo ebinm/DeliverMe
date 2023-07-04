@@ -21,7 +21,7 @@ export function SingleBidView({bid, selected = false, setSelected = () => undefi
                 margin={"8px 0"} flexGrow={1}
                 display={"flex"} flexDirection={"row"}
                 alignItems={"center"} gap={"16px"}
-                boxShadow={1} padding={"16px"}
+                boxShadow={2} padding={"16px"}
                 borderRadius={"8px"}
                 backgroundColor={bid._id === selected ? "selected.main" : undefined}
                 sx={{
