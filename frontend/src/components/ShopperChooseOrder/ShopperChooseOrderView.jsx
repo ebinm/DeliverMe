@@ -107,7 +107,7 @@ const ShopperChooseOrderView = () => {
 
     const handleSelectOrder = () => {
         if (selectedOrder === null){
-            enqueueSnackbar('Select a Order first!', 'error');
+            enqueueSnackbar('Select a Order first!', { variant: 'error' });
         } else {
             handleOpenOrderDetailsModal();
         }

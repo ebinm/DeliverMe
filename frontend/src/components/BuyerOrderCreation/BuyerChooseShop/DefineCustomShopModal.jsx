@@ -25,7 +25,7 @@ const DefineCustomShopModal = ({
 
         if (name === '') {
             console.log("No place selected");
-            enqueueSnackbar('Please add a Name for your Shop!', 'error');
+            enqueueSnackbar('Please add a Name for your Shop!', { variant: 'error' });
             return;
         }
 
@@ -36,7 +36,7 @@ const DefineCustomShopModal = ({
 
                 const [street, postalCodeCity, country] = place.formatted_address.split(', ');
                 if (postalCodeCity == null) {
-                    enqueueSnackbar('Your Address has no street!', 'error');
+                    enqueueSnackbar('Your Address has no street!', { variant: 'error' });
                     return;
                 }
                 const [address, city] = postalCodeCity.split(' ');
@@ -50,7 +50,7 @@ const DefineCustomShopModal = ({
                 handleCloseModal();
             } else {
                 console.log("No place selected");
-                enqueueSnackbar('Select an Address from the List!', 'error');
+                enqueueSnackbar('Select an Address from the List!', { variant: 'error' });
             }
         }
     };

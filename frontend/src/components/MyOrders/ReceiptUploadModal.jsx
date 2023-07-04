@@ -184,7 +184,7 @@ const ReceiptUploadModal = ({ orderId, open, onClose, onSuccess }) => {
                     <Box alignSelf={"center"}><strong>{error}</strong></Box>
                 </Show>
 
-                <Stack direction={"row"} sx={{ justifyContent: 'space-between' }}>
+                <Stack direction={"row"} sx={{ justifyContent: 'space-between', mt:2}}>
                     <OutlinedButton onClick={onClose}>Cancel</OutlinedButton>
 
                     <DarkButton onClick={async () => {
@@ -210,7 +210,7 @@ const ReceiptUploadModal = ({ orderId, open, onClose, onSuccess }) => {
                             }
                             setUploadLoadingUploadLoading(false)
                         } else {
-                            enqueueSnackbar('Please enter the Receipt Amount & Upload the Bill', 'error');
+                            enqueueSnackbar('Please enter the Receipt Amount & Upload the Bill', { variant: 'error' });
 
                         }
                     }}>Upload</DarkButton>
