@@ -4,7 +4,6 @@ import { Divider } from "@mui/material";
 import { Show } from "../util/ControlFlow";
 
 export function BaseModal(props) {
-    console.log("BaseModal props: ", props);
 
     const { open, onClose, title, children, sx, ...other } = props
 
