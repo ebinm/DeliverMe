@@ -24,14 +24,17 @@ const OrderFilter = ({ orders, setFilteredOrders }) => {
             );
         } 
 
-        // TODO add rating
-        // Sort by number of items
         filtered.sort((a, b) => {
             if (ascendingItems) {
-                return a.items.length - b.items.length;
-            } else {
-                // descending order
                 return b.items.length - a.items.length;
+            } else {
+                if (a.createdBy.avgRating == null) {
+                    a.createdBy.avgRating = 0;
+                }
+                if (b.createdBy.avgRating == null) {
+                    b.createdBy.avgRating = 0;
+                }
+                return b.createdBy.avgRating - a.createdBy.avgRating;
             }
         });
 
@@ -57,12 +60,12 @@ const OrderFilter = ({ orders, setFilteredOrders }) => {
                 value={cityName}
             />
 
-            <Button sx={{ color: "gray" }} startIcon={(ascendingItems) ? (<FilterListOffIcon />) : (<FilterListIcon />)} onClick={() => { setAscendingItems(!ascendingItems); setAscendingStars(!ascendingStars) }}>
+            <Button sx={{ color: "gray" }} startIcon={(ascendingItems) ? (<FilterListIcon />) : (<FilterListOffIcon />)} onClick={() => { setAscendingItems(!ascendingItems); setAscendingStars(!ascendingStars) }}>
                 Number Items
             </Button>
 
-            <Button sx={{ color: "gray" }} startIcon={(ascendingStars) ? (<FilterListOffIcon />) : (<FilterListIcon />)} onClick={() => { setAscendingStars(!ascendingStars); setAscendingItems(!ascendingItems) }}>
-                todo
+            <Button sx={{ color: "gray" }} startIcon={(ascendingStars) ? (<FilterListIcon />) : (<FilterListOffIcon />)} onClick={() => { setAscendingStars(!ascendingStars); setAscendingItems(!ascendingItems) }}>
+                User Rating 
             </Button>
 
         </Stack>

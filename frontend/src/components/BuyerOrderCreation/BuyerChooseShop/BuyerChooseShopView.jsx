@@ -1,16 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import {Box, CircularProgress, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText} from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Box, CircularProgress, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
-import {GoogleMap, Marker, useJsApiLoader,} from '@react-google-maps/api';
+import { GoogleMap, Marker, useJsApiLoader, } from '@react-google-maps/api';
 import DefineCustomShopModal from './DefineCustomShopModal';
-import {Show} from "../../util/ControlFlow";
+import { Show } from "../../util/ControlFlow";
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
-import {ShopListItem} from './ShopListItem';
-import {DarkButton, OutlinedButton} from "../../util/Buttons";
+import { ShopListItem } from './ShopListItem';
+import { DarkButton, OutlinedButton } from "../../util/Buttons";
 
 
 const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) => {
@@ -50,39 +49,38 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
             const placesService = new window.google.maps.places.PlacesService(map);
             const request = {
                 location: mapCenter,
-                radius: 100, // Info: for low API usage radius is reduced (4000)
+                radius: 100,
                 type: 'grocery_or_supermarket'
             };
 
             placesService.nearbySearch(request, (results, status) => {
-                // !!!!! for low API usage !!!!!
-
-                // if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-                //     // Fetch operating hours for each shop
-                //     const shopPromises = results.map((place) => {
-                //         return new Promise((resolve) => {
-                //             const detailsRequest = {
-                //                 placeId: place.place_id,
-                //                 fields: ['opening_hours']
-                //             };
-                //             placesService.getDetails(detailsRequest, (placeResult, placeStatus) => {
-                //                 if (placeStatus === window.google.maps.places.PlacesServiceStatus.OK) {
-                //                     // Add operating hours to the place object
-                //                     place.opening_hours = placeResult.opening_hours;
-                //                 }
-                //                 resolve(place);
-                //             });
-                //         });
-                //     });
-
-                //     // Wait for all promises to resolve and set the updated shops state
-                //     Promise.all(shopPromises).then((updatedShops) => {
-                //         setShops(updatedShops);
-                //         console.log("Shop infos: ", updatedShops);
-                //     });
-                // }
                 setShops(results);
-                console.log("Fetched shops: ", results);
+                console.log("Successfully Fetched Shops: ", results);
+
+                if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+                    // Fetch operating hours for each shop
+                    const shopPromises = results.map((place) => {
+                        return new Promise((resolve) => {
+                            const detailsRequest = {
+                                placeId: place.place_id,
+                                fields: ['opening_hours']
+                            };
+                            placesService.getDetails(detailsRequest, (placeResult, placeStatus) => {
+                                if (placeStatus === window.google.maps.places.PlacesServiceStatus.OK) {
+                                    // Add operating hours to the place object
+                                    place.opening_hours = placeResult.opening_hours;
+                                }
+                                resolve(place);
+                            });
+                        });
+                    });
+
+                    // Wait for all promises to resolve and set the updated shops state
+                    Promise.all(shopPromises).then((updatedShops) => {
+                        setShops(updatedShops);
+                        console.log("Successfully Fetched opening hours: ", updatedShops);
+                    });
+                }
             });
         }
     }, [map, mapCenter]);
@@ -125,6 +123,7 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
     };
 
     const handleListEntryClick = (shop) => {
+
         const [street, city] = shop.vicinity.split(', ');
         shop.city = city;
         shop.street = street;
@@ -146,11 +145,6 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
         console.log("handleCustomShopSelect: ", place);
         map.setCenter(place.geometry.location);
         setMapCenter(place.geometry.location);
-
-        const [street, postalCodeCity, country] = place.formattedAddress.split(', ');
-        const [address, city] = postalCodeCity.split(' ');
-        place.city = city;
-        place.street = street;
 
         setCustomShop(place);
         setSelectedShop(place);
@@ -179,19 +173,21 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
                     >
                         <TextField
                             id="location"
-                            label="Seach Location"
+                            label="Search Location"
                             defaultValue={searchValue}
                             onChange={handleInputChange}
                             onKeyDown={handleInputKeyDown}
                             sx={{ width: '100%' }}
                         />
-                        <Button variant="contained" sx={{ bgcolor: "primary.dark" }} onClick={handlePlaceSelect}>Search</Button>
+                        <DarkButton  sx={{"alignSelf": "stretch", "minWidth": ""}} onClick={handlePlaceSelect}>Search</DarkButton>
                     </Stack>
                 </Grid>
             </Grid>
             <Grid container spacing={5} sx={{ mb: 2 }}>
-                <Show when={isLoaded} fallback={<CircularProgress  sx={{color: "primary.dark"}} />}>
-                    <Grid item xs={6} md={4} sx={{ maxHeight: '70vh', overflow: 'auto' }}>
+                <Show when={isLoaded} fallback={<CircularProgress sx={{ color: "primary.dark" }} />}>
+                    
+                    <Grid item xs={6} md={4}>
+                        <Box sx={{ maxHeight: "65vh", overflow: 'auto' }}>
                         <List>
 
                             <Divider sx={{ mb: 2 }} />
@@ -203,7 +199,12 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
                                     <ListItemIcon sx={{ justifyContent: 'left' }}>
                                         {<TravelExploreIcon />}
                                     </ListItemIcon>
-                                    <ListItemText primary="Define Custom Shop" />
+                                    <ListItemText
+                                        disableTypography
+                                        primary={<Typography style={{ color: '#FFFFFF', fontFamily: 'Roboto', textTransform: 'uppercase'}}>
+                                        Define Custom Shop
+                                      </Typography>}
+                                    />
                                 </ListItemButton>
                             </ListItem>
 
@@ -221,15 +222,16 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
 
                             {shops
                                 .map(shop => (
-                                    <ShopListItem key={shop.place_id} shop={shop} selectedShop={selectedShop} handleListEntryClick={handleListEntryClick} />
+                                    <ShopListItem key={shop.place_id} shop={shop} selectedShop={selectedShop} currentDay={currentDay} handleListEntryClick={handleListEntryClick} />
                                 ))}
                         </List>
+                        </Box>
                     </Grid>
                     <Grid item xs={6} md={8}>
                         <GoogleMap
                             mapContainerStyle={{
                                 width: '100%',
-                                height: '70vh'
+                                height: '65vh'
                             }}
                             zoom={14}
                             onLoad={map => setMap(map)}
@@ -256,8 +258,8 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
                     spacing={{ xs: 1, sm: 1, md: 1 }}
                     sx={{ mb: 2 }}
                 >
-                    <OutlinedButton  onClick={() => onSubmitShop(null)}>Skip</OutlinedButton>
-                    <DarkButton variant="contained" onClick={() => onSubmitShop(selectedShop)}>Select Shop</DarkButton>
+                    <OutlinedButton onClick={() => onSubmitShop(null)}>Skip</OutlinedButton>
+                    <DarkButton onClick={() => onSubmitShop(selectedShop)}>Select Shop</DarkButton>
                 </Stack>
             </Box>
         </Box>

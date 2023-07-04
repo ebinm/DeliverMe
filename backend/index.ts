@@ -29,12 +29,21 @@ try {
 
 const socketIOSerer = new io.Server(server,
     {
+        // TODO remove this
         cors: {
-            //TODO similarly to cors in main server: do not hardcode
-            origin: "https://localhost:3000",
-            methods: ["GET", "POST"],
-            credentials: true
-        },
+            credentials: true,
+            origin: (origin, callback) => {
+        
+                // TODO remove this
+                callback(null, true)
+        
+                // if (corsWhitelist.indexOf(origin) !== -1) {
+                //     callback(null, true)
+                // } else {
+                //     callback(new Error("Not allowed by CORS"))
+                // }
+            },
+        }
     });
 const notificationService = createNotificationService(socketIOSerer)
 

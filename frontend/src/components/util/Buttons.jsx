@@ -12,7 +12,7 @@ function OutlinedButton(props) {
 
 const darkButtonSx = {
     "alignSelf": "flex-end",
-    "width": "160px",
+    "minWidth": "160px",
     "backgroundColor": "primary.dark",
     "color": "primary.light",
     "&:hover": {

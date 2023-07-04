@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {CircularProgress, Grid, List} from '@mui/material';
+import {CircularProgress, Grid, List, Box, Stack} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import OrderDetailsModal from './OrderDetailsModal';
@@ -9,6 +9,8 @@ import {DirectionsRenderer, GoogleMap, Marker, useJsApiLoader} from '@react-goog
 import {OrderFilter} from './OrderFilter';
 import {OrderListItem} from './OrderListItem';
 import {GuardCustomerType} from "../util/GuardCustomerType";
+import { DarkButton } from "../util/Buttons";
+import { useSnackbar } from 'notistack';
 
 
 const ShopperChooseOrderView = () => {
@@ -20,6 +22,8 @@ const ShopperChooseOrderView = () => {
     const [filteredOrders, setFilteredOrders] = useState([]);
     const [directions, setDirections] = useState(null);
     const [mapKey, setMapKey] = useState(0);
+
+    const {enqueueSnackbar} = useSnackbar();
 
     // We use useState as a way of handling a constant here to stop useJsApiLoader from triggering more than once.
     const [googleLibraries] = useState(["places"]);
@@ -101,6 +105,14 @@ const ShopperChooseOrderView = () => {
         setShowOrderDetailsModal(true);
     };
 
+    const handleSelectOrder = () => {
+        if (selectedOrder === null){
+            enqueueSnackbar('Select a Order first!', 'error');
+        } else {
+            handleOpenOrderDetailsModal();
+        }
+    }
+
     return (
         <GuardCustomerType requiredType={"SHOPPER"}>{() =>
             <>
@@ -114,19 +126,19 @@ const ShopperChooseOrderView = () => {
                     showBidOnOrderModal={showBidOnOrderModal}
                     handleCloseBidOnOrderModal={handleCloseBidOnOrderModal}
                     order={selectedOrder}
+                    handleCloseOrderDetailsModal={handleCloseOrderDetailsModal}
                 />
-
                 <Grid container sx={{mb: 2}}>
-                    <Typography variant="h4" component="h1" sx={{paddingLeft: '16px'}}>Open Orders</Typography>
+                    <Typography variant="h4" sx={{paddingLeft: '16px'}}>Open Orders</Typography>
                 </Grid>
-                <Grid container spacing={5} sx={{mb: 2}}>
-                    <Grid item xs={6} md={4} sx={{maxHeight: '70vh', overflow: 'auto'}}>
+                <Grid container spacing={8}>
+                    <Grid item md={4} >
 
                         <OrderFilter orders={orders} setFilteredOrders={setFilteredOrders}/>
 
                         <Divider/>
 
-                        <List>
+                        <List sx={{maxHeight: '60vh', overflow: 'auto'}}>
                             {filteredOrders.map((order) => (
                                 <OrderListItem key={order._id} order={order}
                                                handleOpenOrderDetailsModal={handleOpenOrderDetailsModal}
@@ -135,13 +147,13 @@ const ShopperChooseOrderView = () => {
                             ))}
                         </List>
                     </Grid>
-                    <Grid item xs={6} md={8}>
+                    <Grid item md={8} sx={{ mb: 2 }}>
                         <Show when={isLoaded} fallback={<CircularProgress  sx={{color: "primary.dark"}}/>}>
                             <GoogleMap
                                 key={mapKey}
                                 mapContainerStyle={{
                                     width: '100%',
-                                    height: '70vh'
+                                    height: '65vh'
                                 }}
                                 zoom={14}
                                 onLoad={map => setMap(map)}
@@ -173,6 +185,14 @@ const ShopperChooseOrderView = () => {
                         </Show>
                     </Grid>
                 </Grid>
+                <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'row-reverse',
+                }}
+            >
+                    <DarkButton onClick={() => handleSelectOrder()}>Select Order</DarkButton>
+            </Box>
             </>
         }</GuardCustomerType>
     )
