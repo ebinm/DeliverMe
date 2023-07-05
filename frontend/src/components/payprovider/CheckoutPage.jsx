@@ -25,7 +25,7 @@ const rowStyle = {
   marginBottom: '10px',
 };
 
-export default function CheckoutPage () {
+export default function CheckoutPage ({order, setOrder}) {
   const [open, setOpen] = useState(true);
 
    
@@ -34,14 +34,15 @@ export default function CheckoutPage () {
   };
 
   const handleCancel = () => {
-    // Handle cancel order
+    // Handle cancel order 
     console.log('Order canceled');
     handleClose(); // Close the popup window
   };
 
-  const handleConfirm = () => {
-    // Handle confirm order
+  const handleConfirm = () => {   
+    const updatedOrder = { ...order, status: "Finished" };
     console.log('Order confirmed');
+    setOrder(updatedOrder);
   };
 
   return (
@@ -75,7 +76,7 @@ export default function CheckoutPage () {
               <div style={lineStyle} />
               
               <Stack direction={"row-reverse"} gap={"16px"}>
-              <DarkButton  variant={"text"} onClick={handleConfirm}>Done</DarkButton>
+              <DarkButton order={order}  variant={"text"} onClick={handleConfirm}>Done</DarkButton>
               <OutlinedButton onClick={handleCancel}>Cancel</OutlinedButton>
               </Stack>
   

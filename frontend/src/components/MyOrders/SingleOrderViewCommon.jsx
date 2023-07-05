@@ -37,30 +37,26 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
     const navigate = useNavigate()
     const params = useParams()
 
-    const [showCheckout, setShowCheckout] = useState(false);
-
     const chatOpen = useMemo(() => {
         return params.id === order._id && (pathname.endsWith("/chat") || pathname.endsWith("/chat/"))
     }, [pathname, params.id, order._id])
 
 
     useEffect(() => {
-        // onMount
-        if (params.id === order._id && !showCheckout) {
-            ref.current.scrollIntoView({behavior: "smooth"})
-        }
+  // onMount
+  if (params.id === order._id) {
+    ref.current.scrollIntoView({ behavior: 'smooth' });
+  }
 
-        if (pathname.endsWith("/chat") || pathname.endsWith("/chat/")) {
-            if (params.id === order._id) {
-                // setChatOpen(true)
-            } else if (params.id === undefined) {
-                navigate(`/${customer.type.toLowerCase()}/my-orders/`)
-            }
-        }
+  if (pathname.endsWith('/chat') || pathname.endsWith('/chat/')) {
+    if (params.id === order._id) {
+      // setChatOpen(true)
+    } else if (params.id === undefined) {
+      navigate(`/${customer.type.toLowerCase()}/my-orders/`);
+    }
+  }
+}, []);
 
-        
-
-    }, [showCheckout])
 
 
     return <Box ref={ref} boxShadow={1} borderRadius={"8px"} padding={"16px"} mt={"16px"} display={"flex"}
@@ -74,7 +70,9 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
                 </Box>
             </Box>
             <Stack direction="row" alignItems="center">
-            <DarkButton onClick={() => setShowCheckout(true)}>Checkout</DarkButton>
+            <Show when={order.status === 'In Payment'} >
+                <DarkButton onClick={() => navigate(`/checkout`)}>Checkout</DarkButton>
+            </Show>
             <Box display={"flex"} flexDirection={"row"}>
                 <Show when={contact?.phoneNumber}>{phoneNumber =>
                     <Link href={`tel:${phoneNumber}`}>
@@ -96,12 +94,6 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
 
             </Box>
             </Stack>
-
-            {showCheckout && (
-                <CheckoutPage
-                    order={order} 
-                />
-             )}
 
         </Box>
 

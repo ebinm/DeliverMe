@@ -5,6 +5,7 @@ export default function PayPal () {
   
   const clientId = process.env.REACT_APP_CLIENT_ID;
   const [amount, setAmount] = useState('70.00');
+  
 // Order is created on the server and the order id is returned
   function createPayPalOrder () {
     return fetch("/api/create-paypal-order", {
