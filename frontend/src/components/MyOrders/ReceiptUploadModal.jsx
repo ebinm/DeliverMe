@@ -102,6 +102,7 @@ const ReceiptUploadModal = ({ orderId, open, onClose, onSuccess }) => {
                             </Show>
 
 
+
                             <CustomFileInput img={img} setImg={setImg}/>
 
                             <DarkButton sx={{ mb: 2, "width": "100%" }} onClick={() => setWebcamOpen(true)}
