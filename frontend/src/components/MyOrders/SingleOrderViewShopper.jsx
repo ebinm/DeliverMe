@@ -1,23 +1,14 @@
 import {SingleOrderViewCommon} from "./SingleOrderViewCommon";
 import {SingleBidView} from "./SingleBidView";
-import {Accordion, AccordionDetails, AccordionSummary, CircularProgress, Typography} from "@mui/material";
+import {Accordion, AccordionDetails, AccordionSummary, Typography} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import {DarkButton, OutlinedButton} from "../util/Buttons";
+import {DarkButton} from "../util/Buttons";
 import Stack from "@mui/material/Stack";
-import React, {useCallback, useContext, useEffect, useRef, useState} from "react";
+import React, {useContext, useState} from "react";
 import {RatingModal} from "../util/RatingModal";
 import {For, Show} from "../util/ControlFlow"
 import {CustomerContext} from "../../util/context/CustomerContext";
 import ReceiptUploadModal from "./ReceiptUploadModal";
-import Box from "@mui/material/Box";
-import {CurrencyInput} from "../util/CurrencyInput";
-import {BaseModal} from "../util/BaseModal"
-import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import Webcam from "react-webcam";
-import CameraIcon from '@mui/icons-material/Camera';
-import NoPhotographyIcon from '@mui/icons-material/NoPhotography';
-import {detectCost} from "../../util/ocr";
-import {PUT_FETCH_OPTIONS} from "../../util/util";
 
 export function SingleOrderViewShopper({ order, setOrders }) {
 

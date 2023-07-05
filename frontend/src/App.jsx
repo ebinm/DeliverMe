@@ -1,23 +1,23 @@
 import React from "react";
 import Header from "./components/Header";
-import { BuyerMyOrders } from "./components/MyOrders/BuyerMyOrders";
-import { ShopperMyOrders } from "./components/MyOrders/ShopperMyOrders";
+import {BuyerMyOrders} from "./components/MyOrders/BuyerMyOrders";
+import {ShopperMyOrders} from "./components/MyOrders/ShopperMyOrders";
 import CheckoutForm from "./components/payprovider/CheckoutPage";
-import { Route, Routes } from "react-router-dom";
-import { TestExample } from "./components/TestExample";
-import { ShopperChooseOrderView } from "./components/ShopperChooseOrder/ShopperChooseOrderView";
-import { Signup } from "./components/authentication/Signup";
-import { CustomerProvider } from "./util/context/CustomerContext";
-import { Login } from "./components/authentication/Login";
-import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { NotificationProvider } from "./util/context/NotificationContext";
-import { SnackbarProvider } from 'notistack';
-import { BuyerOrderCreationView } from "./components/BuyerOrderCreation/BuyerOrderCreationView";
+import {Route, Routes} from "react-router-dom";
+import {TestExample} from "./components/TestExample";
+import {ShopperChooseOrderView} from "./components/ShopperChooseOrder/ShopperChooseOrderView";
+import {Signup} from "./components/authentication/Signup";
+import {CustomerProvider} from "./util/context/CustomerContext";
+import {Login} from "./components/authentication/Login";
+import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
+import {LocalizationProvider} from "@mui/x-date-pickers";
+import {NotificationProvider} from "./util/context/NotificationContext";
+import {SnackbarProvider} from 'notistack';
+import {BuyerOrderCreationView} from "./components/BuyerOrderCreation/BuyerOrderCreationView";
 import LandingPage from "./components/landingPage/LandingPage";
 import './App.css';
-import { alpha, styled } from '@mui/material/styles';
-
+import {PersonalProfile} from "./components/PersonalProfile/PersonalProfile";
+import {styled} from '@mui/material/styles';
 
 
 const StyledSnackbarProvider = styled(SnackbarProvider)`
@@ -54,8 +54,9 @@ function App() {
 
                                 <Route path={"/buyer/my-orders/:id?/chat?"} element={<BuyerMyOrders />} />
 
-                                <Route path={"/buyer/order/create/*"} element={<BuyerOrderCreationView />} />
-                                <Route path={"/checkout"} element={<CheckoutForm />} />
+                                <Route path={"/buyer/order/create/*"} element={<BuyerOrderCreationView/>}/>
+                                <Route path={"/checkout"} element={<CheckoutForm/>}/>
+                                <Route path={"/me"} element={<PersonalProfile/>}/>
 
                                 <Route path={"test"} element={<TestExample />} />
                             </Routes>

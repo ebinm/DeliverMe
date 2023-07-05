@@ -8,6 +8,7 @@ const CustomerContext = createContext({
     signup: undefined,
     customer: undefined,
     logout: undefined,
+    invalidate: undefined,
     ready: false
 })
 
@@ -25,8 +26,11 @@ function fetchUser(setCustomer) {
 
 function CustomerProvider({children}) {
 
+    // I am sorry for this. Endpoint is technically static but we change it to trigger a refetch
+    const [endpoint, setEndpoint] = useState(`${process.env.REACT_APP_BACKEND}/api/me`)
+
     const [finishedOnce, setFinishedOnce] = useState(false)
-    const [customer, setCustomer, loading] = useFetch(`${process.env.REACT_APP_BACKEND}/api/me`, {
+    const [customer, setCustomer, loading] = useFetch(endpoint, {
         credentials: "include",
         withCredentials: true
     }, undefined, () => setFinishedOnce(true))
@@ -76,6 +80,12 @@ function CustomerProvider({children}) {
         signup,
         customer,
         logout,
+        invalidate: () => {
+            // Seems a bit weird but endpoint is captured so it should be fine
+            setEndpoint(undefined)
+            // I do not like this
+            setTimeout(() => setEndpoint(endpoint))
+        },
         ready: finishedOnce && !loading
     }}>
         {children}

@@ -28,6 +28,7 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import MessageIcon from '@mui/icons-material/Message';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 export default function Header() {
     const {customer} = useContext(CustomerContext)
@@ -230,6 +231,17 @@ function AvatarDialogRaw({open, close}, ref) {
                         </ListItemIcon>
                         <ListItemText>My orders</ListItemText>
                     </MenuItem>
+
+                    <MenuItem sx={menuItemSx} onClick={() => {
+                        navigate(`/me`)
+                        close()
+                    }}>
+                        <ListItemIcon>
+                            <AccountBoxIcon/>
+                        </ListItemIcon>
+                        <ListItemText>Personal Profile</ListItemText>
+                    </MenuItem>
+
 
                     <MenuItem sx={menuItemSx} onClick={() => {
                         // TODO location

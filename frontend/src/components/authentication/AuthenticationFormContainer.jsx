@@ -44,7 +44,7 @@ export function AuthenticationFormContainer({onSubmit, title, children, altText,
                         }
                     }}>
 
-                        <Show when={!loading} fallback={<CircularProgress size={"1.5rem"}  sx={{color: "primary.dark"}}/>}>
+                        <Show when={!loading} fallback={<CircularProgress size={"1.5rem"}/>}>
                             {actionText}
                         </Show>
                     </Button>

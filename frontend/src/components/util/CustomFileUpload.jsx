@@ -6,9 +6,9 @@ import {FileUploader} from "react-drag-drop-files";
 import React, {useState} from "react";
 
 
-export function CustomFileInput({img, setImg, id = "file-uploader"}) {
+export function CustomFileInput({img, setImg, id = "file-uploader", defaultLabel}) {
 
-    const [uploadFeedback, setUploadFeedback] = useState("Upload or drop your receipt here.")
+    const [uploadFeedback, setUploadFeedback] = useState(defaultLabel)
 
 
     return <FileUploader maxSize={32} id={id}

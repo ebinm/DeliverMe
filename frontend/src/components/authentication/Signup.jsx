@@ -78,7 +78,7 @@ export function Signup({type}) {
             value={password2}
         />
 
-        <CustomFileInput img={profilePicture} setImg={setProfilePicture}/>
+        <CustomFileInput defaultLabel={"Upload or drop your profile picture here."} img={profilePicture} setImg={setProfilePicture}/>
 
     </AuthenticationFormContainer>
 
