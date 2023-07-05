@@ -62,7 +62,7 @@ export function ChatOverlay({order, open, onClose}) {
                                        margin={"16px 0"}>
                                     <Avatar imgProps={{sx: {padding: '0px'}}} sx={{"width": "56", "height": "56"}}
                                             alt={otherPerson.firstName + " " + otherPerson.lastName}
-                                            src={`data:image/jpeg;base64,${otherPerson.profilePicture}`}/>
+                                            src={otherPerson.profilePicture}/>
                                     <Typography
                                         variant={"h5"}>{otherPerson.firstName} {otherPerson.lastName}</Typography>
                                 </Stack>

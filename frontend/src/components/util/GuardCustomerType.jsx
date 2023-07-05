@@ -9,7 +9,7 @@ import {createSearchParams, Navigate, useLocation} from "react-router-dom";
 
  *
  * @param children The actual component. Use a function if you do not want it to be rendered if the user is not logged in (recommended).
- * @param requiredType The required type.
+ * @param requiredType The required type. Important: If left as undefined, we do not care which type the customer has, just that they are logged in.
  * @param navigateOnInvalidType A location to navigate to if the user is incorrect.
  */
 export function GuardCustomerType({children, requiredType, navigateOnInvalidType = "/"}) {
@@ -29,7 +29,7 @@ export function GuardCustomerType({children, requiredType, navigateOnInvalidType
         }}/>
     }
 
-    if (customer.type !== requiredType) {
+    if (requiredType !== undefined && customer.type !== requiredType) {
         return <Navigate to={navigateOnInvalidType}/>
     }
 

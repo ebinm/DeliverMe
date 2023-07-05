@@ -1,7 +1,7 @@
 import express from "express";
 import {authenticated, AuthenticatedRequest} from "../middleware/auth";
-import {clearNotificationsForBuyerById, findBuyerById} from "../controllers/buyerController";
-import {clearNotificationsForShopperById, findShopperById} from "../controllers/shopperController";
+import {clearNotificationsForBuyerById, findBuyerById, updateBuyer} from "../controllers/buyerController";
+import {clearNotificationsForShopperById, findShopperById, updateShopper} from "../controllers/shopperController";
 import {findBidOrdersByShopper, findOrdersByBuyer, findOrdersByShopper} from "../controllers/orderController";
 
 
@@ -61,5 +61,25 @@ router.get("/bidOrders", authenticated, async (req: AuthenticatedRequest, res, n
     }
 })
 
+
+router.patch("/", authenticated, async (req: AuthenticatedRequest, res, next) => {
+    try {
+        const updatedFields = {
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            phoneNumber: req.body.phoneNumber,
+            profilePicture: req.body.profilePicture
+        }
+
+        if (req.customerType === "BUYER") {
+            res.json(await updateBuyer(req.customerId, updatedFields))
+        } else {
+            res.json(await updateShopper(req.customerId, updatedFields))
+        }
+    } catch (e) {
+        console.log(e)
+        next(e.message)
+    }
+})
 
 export default router;

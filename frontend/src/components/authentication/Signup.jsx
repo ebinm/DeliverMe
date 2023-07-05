@@ -1,11 +1,8 @@
 import React, {useContext, useState} from "react";
 import {CustomerContext} from "../../util/context/CustomerContext";
 import {AuthenticationFormContainer} from "./AuthenticationFormContainer";
-import {TextField, Typography} from "@mui/material";
-import Stack from "@mui/material/Stack";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import Box from "@mui/material/Box";
-import {FileUploader} from "react-drag-drop-files";
+import {TextField} from "@mui/material";
+import {CustomFileInput} from "../util/CustomFileUpload";
 
 
 /**
@@ -21,8 +18,6 @@ export function Signup({type}) {
     const [password2, setPassword2] = useState("")
     const [email, setEmail] = useState("")
     const [profilePicture, setProfilePicture] = useState("")
-
-    const [uploadFeedback, setUploadFeedback] = useState("Upload or drop your profile picture here.")
 
 
     const {signup} = useContext(CustomerContext)
@@ -83,35 +78,7 @@ export function Signup({type}) {
             value={password2}
         />
 
-        <FileUploader maxSize={32} id={"receipt"}
-                      required={false} multiple={false} name="file" types={["JPG", "PNG"]}
-                      onTypeError={(err) => setUploadFeedback(err)}
-                      onSizeError={(err) => setUploadFeedback(err)}
-                      handleChange={(file) => {
-                          const fileReader = new FileReader();
-                          fileReader.onload = () => {
-                              // const result = fileReader.result
-                              // const index = result.indexOf(",") + 1
-                              setProfilePicture(fileReader.result)
-                              setUploadFeedback("Successfully uploaded. (Upload again to replace)")
-                          }
-                          fileReader.readAsDataURL(file)
-                      }}
-        >
-            <Stack direction={"column"} gap={"16px"} justifyContent={"center"}
-                   alignItems={"center"} sx={{
-                "marginTop": "16px",
-                "borderWidth": "3px",
-                "borderStyle": "dashed",
-                "borderRadius": "16px",
-                "padding": "16px",
-                "borderColor": "primary.dark"
-            }}>
-                <CloudUploadIcon sx={{"color": "primary.dark", "fontSize": "2rem"}}/>
-                <Typography sx={{"color": "primary.dark"}}> {uploadFeedback}</Typography>
-                <Box component={"img"} src={profilePicture} sx={{"maxHeight": "10vh"}}/>
-            </Stack>
-        </FileUploader>
+        <CustomFileInput defaultLabel={"Upload or drop your profile picture here."} img={profilePicture} setImg={setProfilePicture}/>
 
     </AuthenticationFormContainer>
 
