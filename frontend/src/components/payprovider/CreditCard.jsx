@@ -33,13 +33,14 @@ export default function CreditCard() {
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: "card",
       card: elements.getElement(CardElement),
-    });
+    }); 
 
     if (!error) {
       try {
         const { id } = paymentMethod;
-        const response = await axios.post(process.env.REACT_APP_BACKEND, {
+        const response = await axios.post('${process.env.REACT_APP_BACKEND}/checkout', {
           amount: 70,
+          currency: 'eur',
           id,
         });
         if (response.data.success) {
@@ -57,7 +58,7 @@ export default function CreditCard() {
   return (
     <>
       {!success ? 
-        <form wid onSubmit={handlePayment}>
+        <form wid="true" onSubmit={handlePayment}>
           <fieldset className="FormGroup">
             <div className="FormRow">
               <CardElement options={CARD_OPTIONS} />

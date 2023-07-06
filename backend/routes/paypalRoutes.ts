@@ -30,7 +30,7 @@ router.post('/capture-paypal-order', async (req: Request, res: Response) => {
 
 async function generateAccessToken() {
   const clientId = process.env.CLIENT_ID;
-  const clientSecret = process.env.CLIENT_SECRET;
+  const clientSecret = process.env.APP_SECRET;
 
   const auth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
   const response = await fetch('https://api-m.sandbox.paypal.com/v1/oauth2/token', {

@@ -21,14 +21,13 @@ export default function PayPal() {
           },
           onApprove: async (data, actions) => {
             const order = await actions.order.capture();
-            console.log('Payment completed successfully:', order);
-           
+            console.log(order);
           },
           onError: (err) => {
             console.log(err);
           },
         })
-        .render(paypal.current);
+        //.render(paypal.current);
       }, []);
 
   return (

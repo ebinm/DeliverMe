@@ -44,10 +44,6 @@ export default function CheckoutPage() {
     handleClose();
   };
 
-  const handlePaymentApproved = () => {
-    handleClose(); // Close the popup window
-  };
-
   return (
     <>
       <BaseModal open={open} onClose={handleClose}>
@@ -74,7 +70,7 @@ export default function CheckoutPage() {
           </Grid>
           <div style={lineStyle} />
           <Grid>
-            <PaymentForm onPaymentApproved={handlePaymentApproved}/>
+            <PaymentForm />
           </Grid>
           <div style={lineStyle} />
 
