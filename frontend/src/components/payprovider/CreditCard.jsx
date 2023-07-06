@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import axios from 'axios';
+import { POST_FETCH_OPTIONS } from "../../util/util";
 
 const CARD_OPTIONS = {
   iconStyle: 'solid',
@@ -38,11 +38,15 @@ export default function CreditCard() {
     if (!error) {
       try {
         const { id } = paymentMethod;
-        const response = await axios.post('${process.env.REACT_APP_BACKEND}/checkout', {
-          amount: 70,
-          currency: 'eur',
-          id,
-        });
+        const response = await fetch(`${process.env.REACT_APP_BACKEND}/api/checkout/stripe-payment`, 
+        {
+          ...POST_FETCH_OPTIONS,
+          body: JSON.stringify({
+            amount: 70,
+            currency: 'eur',
+            id,
+          })
+      });
         if (response.data.success) {
           console.log('Successful Payment');
           setSuccess(true);

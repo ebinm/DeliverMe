@@ -7,7 +7,7 @@ import userRoutes from "./routes/userRoutes";
 import orderRoutes from "./routes/orderRoutes";
 import bidRoutes from "./routes/bidRoutes";
 import paypalRoutes from './routes/paypalRoutes';
-
+import checkoutRoutes from './routes/checkoutRoutes';
 
 const api = express();
 // TODO this is a very large limit to allow for images to be uploaded. Still,
@@ -46,6 +46,8 @@ api.use("/api/orders", orderRoutes);
 api.use("/api/bids", bidRoutes);
 
 api.use('/api/paypal', paypalRoutes);
+
+api.use('/api/checkout', checkoutRoutes);
 
 // Error handling
 api.use((err, req, res, next) => {

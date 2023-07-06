@@ -30,6 +30,12 @@ const locationSchema = {
     city: { type: String, required: false },
 };
 
+export type PaymentRequest = Request & {
+    id: string,
+    amount: number,
+
+}
+
 export enum OrderStatus {
     Open = "Open",
     InDelivery = "In Delivery",

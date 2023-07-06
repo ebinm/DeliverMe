@@ -39,7 +39,7 @@ export default function PayPal() {
             console.log(err);
           },
         })
-        .render(paypal.current);
+        //.render(paypal.current);
       }, []);
 
   return (

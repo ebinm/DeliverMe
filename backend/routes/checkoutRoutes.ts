@@ -38,7 +38,7 @@ route.post("/capture-paypal-order", async (req: Request, res: Response) => {
 });
 
 //stripe
-route.post("/checkout", cors(), async (req: Request, res: Response) => {
+route.post("/stripe-payment", cors(), async (req: Request, res: Response) => {
   let { amount, id } = req.body;
   try {
     const payment = await stripe.paymentIntents.create({
@@ -60,3 +60,5 @@ route.post("/checkout", cors(), async (req: Request, res: Response) => {
     });
   }
 });
+
+export default route;
