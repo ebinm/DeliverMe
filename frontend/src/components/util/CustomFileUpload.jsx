@@ -12,7 +12,7 @@ export function CustomFileInput({img, setImg, id = "file-uploader", defaultLabel
 
 
     return <FileUploader maxSize={32} id={id}
-                         required={false} multiple={false} name="file" types={["JPG", "PNG"]}
+                         required={false} multiple={false} name="file" types={["JPG", "PNG", "JPEG"]}
                          onTypeError={(err) => setUploadFeedback(err)}
                          onSizeError={(err) => setUploadFeedback(err)}
                          handleChange={(file) => {
