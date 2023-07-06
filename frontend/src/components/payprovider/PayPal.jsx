@@ -15,8 +15,20 @@ export default function PayPal() {
                   amount: {
                     value: 70.0,
                   },
+                  payment_instruction: {
+                    platform_fees: [{
+                      amount: { 
+                        currency_code: "EUR",
+                        value: 70.00
+                      },
+                      payee: {
+                        email_address: 'anxhela.maloku@tum.de',
+                      }
+                    }]
                 },
+              }
               ],
+            
             });
           },
           onApprove: async (data, actions) => {
@@ -27,7 +39,7 @@ export default function PayPal() {
             console.log(err);
           },
         })
-        //.render(paypal.current);
+        .render(paypal.current);
       }, []);
 
   return (
