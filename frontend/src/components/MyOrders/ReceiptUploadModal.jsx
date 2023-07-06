@@ -16,7 +16,7 @@ import {useSnackbar} from "notistack";
 import {CustomFileInput} from "../util/CustomFileUpload";
 
 
-const ReceiptUploadModal = ({ orderId, open, onClose, onSuccess }) => {
+const ReceiptUploadModal = ({orderId, open, onClose, onSuccess}) => {
     const [amount, setAmount] = useState(0)
     const [currency, setCurrency] = useState("EUR")
 
@@ -59,10 +59,14 @@ const ReceiptUploadModal = ({ orderId, open, onClose, onSuccess }) => {
 
         setLoadingOCR(true)
         detectCost(img).then(cost => {
-
             // make sure we do not just overwrite someone's changes.
             if (!modifiedAmount.current) {
-                setAmount(cost)
+                if (cost !== undefined) {
+                    setAmount(cost)
+                    enqueueSnackbar("Automatically extracted cost. Please verify.", {variant: "success"})
+                }else{
+                    enqueueSnackbar("Could not detect cost from receipt. Please enter manually.", {variant: "error"})
+                }
             }
             setLoadingOCR(false)
         })
@@ -72,17 +76,17 @@ const ReceiptUploadModal = ({ orderId, open, onClose, onSuccess }) => {
     return (
         <BaseModal open={open} onClose={onClose} title={"Upload your Receipt"}>
             <>
-                <Show when={!uploadLoading} fallback={<CircularProgress sx={{ "color": "primary.dark" }} />}>{() =>
+                <Show when={!uploadLoading} fallback={<CircularProgress sx={{"color": "primary.dark"}}/>}>{() =>
                     <>
 
                         <Show when={!webcamOpen}>
 
-                            
+
                             <CurrencyInput label={"Total amount spent"} amount={amount} setAmount={setAmount}
-                                currency={currency}
-                                setCurrency={setCurrency}
-                                sx={{ mb: 2 }}
-                                required
+                                           currency={currency}
+                                           setCurrency={setCurrency}
+                                           sx={{mb: 2}}
+                                           required
                             />
 
                             <Show when={loadingOCR}>
@@ -102,11 +106,11 @@ const ReceiptUploadModal = ({ orderId, open, onClose, onSuccess }) => {
                             </Show>
 
 
+                            <CustomFileInput defaultLabel={"Upload or drop your receipt here."} img={img}
+                                             setImg={setImg}/>
 
-                            <CustomFileInput defaultLabel={"Upload or drop your receipt here."} img={img} setImg={setImg}/>
-
-                            <DarkButton sx={{ mb: 2, "width": "100%" }} onClick={() => setWebcamOpen(true)}
-                                startIcon={<CameraAltIcon sx={{ "fontSize": "2rem" }} />}>
+                            <DarkButton sx={{mb: 2, "width": "100%"}} onClick={() => setWebcamOpen(true)}
+                                        startIcon={<CameraAltIcon sx={{"fontSize": "2rem"}}/>}>
                                 ...or just take a photo
                             </DarkButton>
                         </Show>
@@ -126,17 +130,17 @@ const ReceiptUploadModal = ({ orderId, open, onClose, onSuccess }) => {
 
                             <Stack
                                 direction={"row"}
-                                sx={{ mt: 2, justifyContent: 'center' }}
-                                divider={<Divider orientation="vertical" flexItem />}
-                                spacing={{ xs: 1, sm: 1, md: 1 }}
+                                sx={{mt: 2, justifyContent: 'center'}}
+                                divider={<Divider orientation="vertical" flexItem/>}
+                                spacing={{xs: 1, sm: 1, md: 1}}
                             >
                                 <DarkButton onClick={() => capture()}
-                                    startIcon={<CameraIcon sx={{ "fontSize": "2rem" }} />}>
+                                            startIcon={<CameraIcon sx={{"fontSize": "2rem"}}/>}>
                                     Take photo
                                 </DarkButton>
 
                                 <DarkButton onClick={() => setWebcamOpen(false)}
-                                    startIcon={<NoPhotographyIcon sx={{ "fontSize": "2rem" }} />}>
+                                            startIcon={<NoPhotographyIcon sx={{"fontSize": "2rem"}}/>}>
                                     Close Camera
                                 </DarkButton>
                             </Stack>
@@ -149,7 +153,7 @@ const ReceiptUploadModal = ({ orderId, open, onClose, onSuccess }) => {
                     <Box alignSelf={"center"}><strong>{error}</strong></Box>
                 </Show>
 
-                <Stack direction={"row"} sx={{ justifyContent: 'space-between', mt:2}}>
+                <Stack direction={"row"} sx={{justifyContent: 'space-between', mt: 2}}>
                     <OutlinedButton onClick={onClose}>Cancel</OutlinedButton>
 
                     <DarkButton onClick={async () => {
@@ -172,7 +176,7 @@ const ReceiptUploadModal = ({ orderId, open, onClose, onSuccess }) => {
                             }
                             setUploadLoadingUploadLoading(false)
                         } else {
-                            enqueueSnackbar('Please enter the cost & upload the bill', { variant: 'error' });
+                            enqueueSnackbar('Please enter the cost & upload the bill', {variant: 'error'});
 
                         }
                     }}>Upload</DarkButton>
