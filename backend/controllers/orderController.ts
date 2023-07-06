@@ -13,8 +13,8 @@ export async function getAllOrders(): Promise<Order[]> {
 
 export async function getOrdersForBuyer(buyerId: string): Promise<Order[]> {
     return OrderModel.find({"createdBy": buyerId})
-        .populate({path: "bids.createdBy", select: "firstName lastName avgRating profilePicture"})
-        .populate({path: "selectedBid.createdBy", select: "firstName lastName avgRating profilePicture"})
+        .populate({path: "bids.createdBy", select: "firstName lastName avgRating profilePicture email phoneNumber"})
+        .populate({path: "selectedBid.createdBy", select: "firstName lastName avgRating profilePicture email phoneNumber"})
         .select("-groceryBill")
         .sort({creationDate: -1});
 }
@@ -26,9 +26,9 @@ export async function getOrdersForShopper(shopperId: string) {
             {"selectedBid.createdBy": shopperId}
         ]
     })
-        .populate({path: "createdBy", select: "firstName lastName _id profilePicture"})
-        .populate({path: "bids.createdBy", select: "firstName lastName avgRating profilePicture"})
-        .populate({path: "selectedBid.createdBy", select: "firstName lastName avgRating profilePicture"})
+        .populate({path: "createdBy", select: "firstName lastName _id profilePicture phoneNumber email"})
+        .populate({path: "bids.createdBy", select: "firstName lastName avgRating profilePicture email phoneNumber"})
+        .populate({path: "selectedBid.createdBy", select: "firstName lastName avgRating profilePicture email phoneNumber"})
         .select("-groceryBill")
         .sort({creationDate: -1});
 

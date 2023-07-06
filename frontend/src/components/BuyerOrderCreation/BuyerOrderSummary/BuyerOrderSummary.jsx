@@ -21,15 +21,16 @@ import {DateDisplay} from "../../MyOrders/DateDisplay";
 import {BaseModal} from "../../util/BaseModal";
 import {useJsApiLoader} from '@react-google-maps/api';
 import {useSnackbar} from 'notistack';
+import {GuardCustomerType} from "../../util/GuardCustomerType";
 
 export function BuyerOrderSummary({
-    items,
-    to, from, notes,
-    shop,
-    onGoBack, onSubmit
-}) {
+                                      items,
+                                      to, from, notes,
+                                      shop,
+                                      onGoBack, onSubmit
+                                  }) {
 
-    const { customer, ready } = useContext(CustomerContext)
+    const {customer, ready} = useContext(CustomerContext)
     const location = useLocation()
 
     const [shippingAddressName, setShippingAddressName] = useCacheLocalStorageForCustomer("address-name-cache", "")
@@ -48,7 +49,7 @@ export function BuyerOrderSummary({
 
     // We use useState as a way of handling a constant here to stop useJsApiLoader from triggering more than once.
     const [googleLibraries] = useState(["places"]);
-    const { isLoaded } = useJsApiLoader({
+    const {isLoaded} = useJsApiLoader({
         googleMapsApiKey: "AIzaSyCAiDt2WyuMhekA25EMEQgx_wVO_WQW8Ok",
         libraries: googleLibraries
     });
@@ -60,7 +61,7 @@ export function BuyerOrderSummary({
             return new Promise((resolve, reject) => {
                 const geocoder = new window.google.maps.Geocoder();
 
-                geocoder.geocode({ address }, (results, status) => {
+                geocoder.geocode({address}, (results, status) => {
                     if (status === 'OK') {
                         if (results.length > 0) {
                             console.log('Found location for address: ', results[0]);
@@ -79,8 +80,6 @@ export function BuyerOrderSummary({
     };
 
 
-
-
     useEffect(() => {
         // Used to set the default value as soon as the customer is available. The default value prop cannot be used
         // with controlled input apparently
@@ -92,7 +91,7 @@ export function BuyerOrderSummary({
     const formRef = useRef()
 
     if (!ready) {
-        return <CircularProgress sx={{ color: "primary.dark" }} />
+        return <CircularProgress sx={{color: "primary.dark"}}/>
     }
 
     if (!customer) {
@@ -101,131 +100,135 @@ export function BuyerOrderSummary({
             search: createSearchParams({
                 "ref": location.pathname
             }).toString()
-        }} />
+        }}/>
     }
 
-    return <Paper sx={{ "borderRadius": "16px" }}>
-        <Typography component={"h2"} variant={"h5"}
-            sx={{ "alignSelf": "center", "padding": "16px" }}>Checkout</Typography>
+    return (
+        <GuardCustomerType requiredType={"BUYER"} navigateOnInvalidType={"/shopper/browseorders"}>{() =>
+            <Paper sx={{"borderRadius": "16px"}}>
+                <Typography component={"h2"} variant={"h5"}
+                            sx={{"alignSelf": "center", "padding": "16px"}}>Checkout</Typography>
 
-        <OrderItemsOverview items={items} defaultExpanded={false} title={"Items"} />
+                <OrderItemsOverview items={items} defaultExpanded={false} title={"Items"}/>
 
 
-        <Accordion expanded={shippingOpen} onChange={(ignored, b) => setShippingOpen(b)}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography color={"text.light"} variant={"h6"} component={"h3"}>Shipping</Typography>
-            </AccordionSummary>
+                <Accordion expanded={shippingOpen} onChange={(ignored, b) => setShippingOpen(b)}>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                        <Typography color={"text.light"} variant={"h6"} component={"h3"}>Shipping</Typography>
+                    </AccordionSummary>
 
-            <AccordionDetails>
-                <form ref={formRef} onSubmit={e => e.preventDefault()}>
-                    <FormGroup>
-                        <Stack direction={"column"} gap={"16px"}>
-                            <TextField label={"Full name"} required
-                                onChange={e => setShippingAddressName(e.target.value)}
-                                value={shippingAddressName} />
-                            <TextField label={"Street name and house number"} required
-                                onChange={e => setShippingAddressStreetAndNumber(e.target.value)}
-                                value={shippingAddressStreetAndNumber} />
+                    <AccordionDetails>
+                        <form ref={formRef} onSubmit={e => e.preventDefault()}>
+                            <FormGroup>
+                                <Stack direction={"column"} gap={"16px"}>
+                                    <TextField label={"Full name"} required
+                                               onChange={e => setShippingAddressName(e.target.value)}
+                                               value={shippingAddressName}/>
+                                    <TextField label={"Street name and house number"} required
+                                               onChange={e => setShippingAddressStreetAndNumber(e.target.value)}
+                                               value={shippingAddressStreetAndNumber}/>
 
-                            <TextField label={"Zip code"} required
-                                onChange={e => setShippingAddressZipCode(e.target.value)}
-                                value={shippingAddressZipCode} />
+                                    <TextField label={"Zip code"} required
+                                               onChange={e => setShippingAddressZipCode(e.target.value)}
+                                               value={shippingAddressZipCode}/>
 
-                            <TextField label={"City"} required
-                                onChange={e => setShippingAddressCity(e.target.value)}
-                                value={shippingAddressCity} />
-                        </Stack>
-                    </FormGroup>
-                </form>
+                                    <TextField label={"City"} required
+                                               onChange={e => setShippingAddressCity(e.target.value)}
+                                               value={shippingAddressCity}/>
+                                </Stack>
+                            </FormGroup>
+                        </form>
 
-                <Show when={to || from || notes}>
-                    <Stack padding={"32px 0"}>
-                        <Typography color={"text.light"} variant={"h6"} component={"h3"}>Extras</Typography>
-                        <DateDisplay from={from} to={to} />
-                        <Show when={notes}>
-                            <Typography>Additional Notes: {notes}</Typography>
+                        <Show when={to || from || notes}>
+                            <Stack padding={"32px 0"}>
+                                <Typography color={"text.light"} variant={"h6"} component={"h3"}>Extras</Typography>
+                                <DateDisplay from={from} to={to}/>
+                                <Show when={notes}>
+                                    <Typography>Additional Notes: {notes}</Typography>
+                                </Show>
+                            </Stack>
                         </Show>
-                    </Stack>
-                </Show>
-            </AccordionDetails>
-        </Accordion>
+                    </AccordionDetails>
+                </Accordion>
 
-        <Stack direction={"row-reverse"} gap={"16px"} padding={"16px"}>
-            <DarkButton onClick={() => {
-                if (formRef.current.reportValidity()) {
-                    setConfirmModalOpen(true)
-                } else {
-                    // ngl this is a bit sketchy, but we want to show the user their mistakes
-                    // in the shipping section which we can only do if it is open.
-                    setShippingOpen(true)
-                    setTimeout(() => {
-                        formRef.current.reportValidity()
-                    })
-                }
-            }}>Place order</DarkButton>
-            <OutlinedButton onClick={onGoBack}>Go Back</OutlinedButton>
-        </Stack>
-
-        <BaseModal open={confirmModalOpen} onClose={() => setConfirmModalOpen(false)} title={"Warning"}>
-           
-            <Typography align="center" sx={{ "padding": "16px" }}>Are you sure you want to place the order?</Typography>
-
-            <Stack direction={"row-reverse"} justifyContent={"space-between"} gap={"16px"} >
-
-                <DarkButton sx={{ "flexGrow": "1" }} onClick={async () => {
-
-                    setLoading(true)
-
-                    const destination = await getAddressLocation(shippingAddressStreetAndNumber + ", " + shippingAddressZipCode + ", " + shippingAddressCity);
-                    console.log(destination)
-                    if (destination === null){
-                        setLoading(false)
-                        enqueueSnackbar('Cloud not find your Delivery Address!', { variant: 'error' });
-                        setConfirmModalOpen(false);
-                        return;
-                    }
-
-                    destination.name = shippingAddressName;
-                    destination.street = shippingAddressStreetAndNumber;
-                    destination.city = shippingAddressCity;
-
-                    const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders`, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        credentials: 'include',
-                        body: JSON.stringify(
-                            {
-                                items, to, from, notes, groceryShop: shop, destination: destination
-                            }
-                        )
-                    })
-                    setLoading(false)
-
-                    if (!res.ok) {
-                        try {
-                            setError((await res)?.msg?.toString() || "Unknown Error.")
-                        } catch (e) {
-                            setError("Unknown Error.")
+                <Stack direction={"row-reverse"} gap={"16px"} padding={"16px"}>
+                    <DarkButton onClick={() => {
+                        if (formRef.current.reportValidity()) {
+                            setConfirmModalOpen(true)
+                        } else {
+                            // ngl this is a bit sketchy, but we want to show the user their mistakes
+                            // in the shipping section which we can only do if it is open.
+                            setShippingOpen(true)
+                            setTimeout(() => {
+                                formRef.current.reportValidity()
+                            })
                         }
-                    } else {
-                        onSubmit()
-                        navigate("/buyer/my-orders")
-                    }
-                }
-                }>
-                    <Show when={!loading} fallback={<CircularProgress size={"1.5rem"} />}>
-                        {/*TODO error handling*/}
-                        <Show when={error === undefined} fallback={<strong>{error || "Error"}</strong>}>
-                            Confirm
-                        </Show>
-                    </Show>
-                </DarkButton>
-                <OutlinedButton sx={{ "flexGrow": "1" }}
-                    onClick={() => setConfirmModalOpen(false)}>Cancel</OutlinedButton>
-            </Stack>
-        </BaseModal>
+                    }}>Place order</DarkButton>
+                    <OutlinedButton onClick={onGoBack}>Go Back</OutlinedButton>
+                </Stack>
 
-    </Paper>
+                <BaseModal open={confirmModalOpen} onClose={() => setConfirmModalOpen(false)} title={"Warning"}>
+
+                    <Typography align="center" sx={{"padding": "16px"}}>Are you sure you want to place the
+                        order?</Typography>
+
+                    <Stack direction={"row-reverse"} justifyContent={"space-between"} gap={"16px"}>
+
+                        <DarkButton sx={{"flexGrow": "1"}} onClick={async () => {
+
+                            setLoading(true)
+
+                            const destination = await getAddressLocation(shippingAddressStreetAndNumber + ", " + shippingAddressZipCode + ", " + shippingAddressCity);
+                            console.log(destination)
+                            if (destination === null) {
+                                setLoading(false)
+                                enqueueSnackbar('Cloud not find your Delivery Address!', {variant: 'error'});
+                                setConfirmModalOpen(false);
+                                return;
+                            }
+
+                            destination.name = shippingAddressName;
+                            destination.street = shippingAddressStreetAndNumber;
+                            destination.city = shippingAddressCity;
+
+                            const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders`, {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                credentials: 'include',
+                                body: JSON.stringify(
+                                    {
+                                        items, to, from, notes, groceryShop: shop, destination: destination
+                                    }
+                                )
+                            })
+                            setLoading(false)
+
+                            if (!res.ok) {
+                                try {
+                                    setError((await res)?.msg?.toString() || "Unknown Error.")
+                                } catch (e) {
+                                    setError("Unknown Error.")
+                                }
+                            } else {
+                                onSubmit()
+                                navigate("/buyer/my-orders")
+                            }
+                        }
+                        }>
+                            <Show when={!loading} fallback={<CircularProgress size={"1.5rem"}/>}>
+                                {/*TODO error handling*/}
+                                <Show when={error === undefined} fallback={<strong>{error || "Error"}</strong>}>
+                                    Confirm
+                                </Show>
+                            </Show>
+                        </DarkButton>
+                        <OutlinedButton sx={{"flexGrow": "1"}}
+                                        onClick={() => setConfirmModalOpen(false)}>Cancel</OutlinedButton>
+                    </Stack>
+                </BaseModal>
+            </Paper>
+        }</GuardCustomerType>
+    )
 }
