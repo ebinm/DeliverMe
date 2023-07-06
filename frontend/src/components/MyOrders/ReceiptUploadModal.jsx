@@ -1,25 +1,22 @@
-
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { Box, Stack } from "@mui/material";
-import { BaseModal } from "../util/BaseModal"
-import { detectCost } from "../../util/ocr";
-import { PUT_FETCH_OPTIONS } from "../../util/util";
-import { Typography } from "@mui/material";
-import { Show } from "../util/ControlFlow";
-import { DarkButton, OutlinedButton } from "../util/Buttons";
-import { CurrencyInput } from "../util/CurrencyInput";
-import { FileUploader } from "react-drag-drop-files";
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import React, {useCallback, useEffect, useRef, useState} from "react";
+import {Box, Stack, Typography} from "@mui/material";
+import {BaseModal} from "../util/BaseModal"
+import {detectCost} from "../../util/ocr";
+import {PUT_FETCH_OPTIONS} from "../../util/util";
+import {Show} from "../util/ControlFlow";
+import {DarkButton, OutlinedButton} from "../util/Buttons";
+import {CurrencyInput} from "../util/CurrencyInput";
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import Webcam from "react-webcam";
 import CameraIcon from '@mui/icons-material/Camera';
 import NoPhotographyIcon from '@mui/icons-material/NoPhotography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Divider from '@mui/material/Divider';
-import { useSnackbar } from "notistack";
+import {useSnackbar} from "notistack";
+import {CustomFileInput} from "../util/CustomFileUpload";
 
 
-const ReceiptUploadModal = ({ orderId, open, onClose, onSuccess }) => {
+const ReceiptUploadModal = ({orderId, open, onClose, onSuccess}) => {
     const [amount, setAmount] = useState(0)
     const [currency, setCurrency] = useState("EUR")
 
@@ -62,33 +59,34 @@ const ReceiptUploadModal = ({ orderId, open, onClose, onSuccess }) => {
 
         setLoadingOCR(true)
         detectCost(img).then(cost => {
-
             // make sure we do not just overwrite someone's changes.
             if (!modifiedAmount.current) {
-                setAmount(cost)
+                if (cost !== undefined) {
+                    setAmount(cost)
+                    enqueueSnackbar("Automatically extracted cost. Please verify.", {variant: "success"})
+                }else{
+                    enqueueSnackbar("Could not detect cost from receipt. Please enter manually.", {variant: "error"})
+                }
             }
             setLoadingOCR(false)
         })
     }, [img])
 
-    const formRef = useRef();
-
-    const [uploadFeedback, setUploadFeedback] = useState("Upload or drop your receipt here.");
 
     return (
         <BaseModal open={open} onClose={onClose} title={"Upload your Receipt"}>
             <>
-                <Show when={!uploadLoading} fallback={<CircularProgress sx={{ "color": "primary.dark" }} />}>{() =>
+                <Show when={!uploadLoading} fallback={<CircularProgress sx={{"color": "primary.dark"}}/>}>{() =>
                     <>
 
                         <Show when={!webcamOpen}>
 
-                            
+
                             <CurrencyInput label={"Total amount spent"} amount={amount} setAmount={setAmount}
-                                currency={currency}
-                                setCurrency={setCurrency}
-                                sx={{ mb: 2 }}
-                                required
+                                           currency={currency}
+                                           setCurrency={setCurrency}
+                                           sx={{mb: 2}}
+                                           required
                             />
 
                             <Show when={loadingOCR}>
@@ -108,40 +106,11 @@ const ReceiptUploadModal = ({ orderId, open, onClose, onSuccess }) => {
                             </Show>
 
 
+                            <CustomFileInput defaultLabel={"Upload or drop your receipt here."} img={img}
+                                             setImg={setImg}/>
 
-                            <FileUploader maxSize={32} id={"receipt"}
-                                required={!img} multiple={false} name="file" types={["JPG", "PNG"]}
-                                onTypeError={(err) => setUploadFeedback(err)}
-                                onSizeError={(err) => setUploadFeedback(err)}
-                                handleChange={(file) => {
-                                    const fileReader = new FileReader();
-                                    fileReader.onload = () => {
-                                        setImg(fileReader.result)
-                                        setWebcamOpen(false)
-                                        setUploadFeedback("Successfully uploaded. (Upload again to replace)")
-                                    }
-                                    fileReader.readAsDataURL(file)
-                                }}
-                            >
-                                <Stack direction={"column"}
-                                    justifyContent={"center"}
-                                    alignItems={"center"} sx={{
-                                        "borderWidth": "3px",
-                                        "borderStyle": "dashed",
-                                        "borderRadius": "16px",
-                                        "padding": "16px",
-                                        "borderColor": "primary.dark",
-                                        "minWidth": "100%",
-                                        mb: 2
-                                    }}>
-                                    <CloudUploadIcon sx={{ "color": "primary.dark", "fontSize": "2rem" }} />
-                                    <Typography sx={{ "color": "primary.dark" }}> {uploadFeedback}</Typography>
-                                    <Box component={"img"} src={img} sx={{ "maxHeight": "20vh", "maxWidth": "20vh" }} />
-                                </Stack>
-                            </FileUploader>
-
-                            <DarkButton sx={{ mb: 2, "width": "100%" }} onClick={() => setWebcamOpen(true)}
-                                startIcon={<CameraAltIcon sx={{ "fontSize": "2rem" }} />}>
+                            <DarkButton sx={{mb: 2, "width": "100%"}} onClick={() => setWebcamOpen(true)}
+                                        startIcon={<CameraAltIcon sx={{"fontSize": "2rem"}}/>}>
                                 ...or just take a photo
                             </DarkButton>
                         </Show>
@@ -161,17 +130,17 @@ const ReceiptUploadModal = ({ orderId, open, onClose, onSuccess }) => {
 
                             <Stack
                                 direction={"row"}
-                                sx={{ mt: 2, justifyContent: 'center' }}
-                                divider={<Divider orientation="vertical" flexItem />}
-                                spacing={{ xs: 1, sm: 1, md: 1 }}
+                                sx={{mt: 2, justifyContent: 'center'}}
+                                divider={<Divider orientation="vertical" flexItem/>}
+                                spacing={{xs: 1, sm: 1, md: 1}}
                             >
                                 <DarkButton onClick={() => capture()}
-                                    startIcon={<CameraIcon sx={{ "fontSize": "2rem" }} />}>
+                                            startIcon={<CameraIcon sx={{"fontSize": "2rem"}}/>}>
                                     Take photo
                                 </DarkButton>
 
                                 <DarkButton onClick={() => setWebcamOpen(false)}
-                                    startIcon={<NoPhotographyIcon sx={{ "fontSize": "2rem" }} />}>
+                                            startIcon={<NoPhotographyIcon sx={{"fontSize": "2rem"}}/>}>
                                     Close Camera
                                 </DarkButton>
                             </Stack>
@@ -184,16 +153,13 @@ const ReceiptUploadModal = ({ orderId, open, onClose, onSuccess }) => {
                     <Box alignSelf={"center"}><strong>{error}</strong></Box>
                 </Show>
 
-                <Stack direction={"row"} sx={{ justifyContent: 'space-between', mt:2}}>
+                <Stack direction={"row"} sx={{justifyContent: 'space-between', mt: 2}}>
                     <OutlinedButton onClick={onClose}>Cancel</OutlinedButton>
 
                     <DarkButton onClick={async () => {
-                        if (setAmount > 0 && img) {
+                        if (amount > 0 && img) {
                             setUploadLoadingUploadLoading(true)
 
-                            // For some reason setting the content type header here produces problems with CORS.
-                            // Similar problem:
-                            // https://stackoverflow.com/questions/67594242/chrome-shows-a-cors-error-when-api-request-payload-is-too-big
                             const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/${orderId}/receipt`, {
                                 ...PUT_FETCH_OPTIONS,
                                 body: JSON.stringify({
@@ -210,7 +176,7 @@ const ReceiptUploadModal = ({ orderId, open, onClose, onSuccess }) => {
                             }
                             setUploadLoadingUploadLoading(false)
                         } else {
-                            enqueueSnackbar('Please enter the Receipt Amount & Upload the Bill', { variant: 'error' });
+                            enqueueSnackbar('Please enter the cost & upload the bill', {variant: 'error'});
 
                         }
                     }}>Upload</DarkButton>

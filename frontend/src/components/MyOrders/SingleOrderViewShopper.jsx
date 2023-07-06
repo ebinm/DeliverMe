@@ -1,13 +1,13 @@
-import { SingleOrderViewCommon } from "./SingleOrderViewCommon";
-import { SingleBidView } from "./SingleBidView";
-import { Accordion, AccordionDetails, AccordionSummary, CircularProgress, Typography } from "@mui/material";
+import {SingleOrderViewCommon} from "./SingleOrderViewCommon";
+import {SingleBidView} from "./SingleBidView";
+import {Accordion, AccordionDetails, AccordionSummary, Typography} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { DarkButton, OutlinedButton } from "../util/Buttons";
+import {DarkButton} from "../util/Buttons";
 import Stack from "@mui/material/Stack";
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { RatingModal } from "../util/RatingModal";
-import { For, Show } from "../util/ControlFlow"
-import { CustomerContext } from "../../util/context/CustomerContext";
+import React, {useContext, useState} from "react";
+import {RatingModal} from "../util/RatingModal";
+import {For, Show} from "../util/ControlFlow"
+import {CustomerContext} from "../../util/context/CustomerContext";
 import ReceiptUploadModal from "./ReceiptUploadModal";
 
 export function SingleOrderViewShopper({ order, setOrders }) {
@@ -59,7 +59,7 @@ export function SingleOrderViewShopper({ order, setOrders }) {
             setUploadOpen(false)
             setRatingOpen(true)
         }} />
-        
+
         <RatingModal open={ratingOpen} onClose={() => setRatingOpen(false)} order={order} buyer={true} />
     </>
 }

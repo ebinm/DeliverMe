@@ -1,22 +1,22 @@
 import Typography from "@mui/material/Typography";
-import {Box, MenuItem, Paper, Popover, Select, Table, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
+import {Box, MenuItem, Paper, Select, Table, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Divider from "@mui/material/Divider";
 import {For, Show} from "../../util/ControlFlow";
 import SpeakerNotesOutlinedIcon from '@mui/icons-material/SpeakerNotesOutlined';
 import AccessAlarmsOutlinedIcon from '@mui/icons-material/AccessAlarmsOutlined';
 import {DateTimePicker} from "@mui/x-date-pickers";
-import {memo, useCallback, useRef, useState} from "react";
+import {memo, useCallback, useRef} from "react";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import {formatUnitNumerusClausus} from "../../../util/util";
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import Button from "@mui/material/Button";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import InfoIcon from '@mui/icons-material/Info';
 import {DarkButton, OutlinedButton} from "../../util/Buttons";
 import {CustomDateTimePickerActionBar} from "../../util/CustomDateTimePickerActionBar";
 import moment from "moment";
+import {InfoPopover} from "../../util/InfoPopover";
 
 
 export function BuyerChooseItems({
@@ -133,7 +133,8 @@ export function BuyerChooseItems({
         <Paper sx={paperSx}>
 
             <Stack direction={"column"} gap={"32px"}>
-                <DarkButton sx={{"alignSelf": "flex-end"}} startIcon={<AddCircleIcon/>} variant={"text"} onClick={addNewItem}>Add
+                <DarkButton sx={{"alignSelf": "flex-end"}} startIcon={<AddCircleIcon/>} variant={"text"}
+                            onClick={addNewItem}>Add
                     Item</DarkButton>
                 <form ref={formRef}>
                     <Table>
@@ -145,7 +146,9 @@ export function BuyerChooseItems({
                                 <TableCell itemType={"head"}>If unavailable</TableCell>
                                 <TableCell itemType={"head"}
                                            sx={{"display": "flex", "alignItems": "center", gap: "8px"}}>Additional
-                                    notes <InfoPopover/>
+                                    notes <InfoPopover><Typography>Here you can specify for example an upper bound on
+                                        the price or what to do when the item is
+                                        not available.</Typography></InfoPopover>
                                 </TableCell>
                                 <TableCell itemType={"head"}/>
                             </TableRow>
@@ -172,38 +175,6 @@ export function BuyerChooseItems({
     </>
 }
 
-
-function InfoPopover() {
-    const [anchorEl, setAnchorEl] = useState(null);
-
-    return <>
-        <InfoIcon sx={{"color": "primary.dark"}}
-                  onMouseEnter={e => setAnchorEl(e.currentTarget)}
-                  onMouseLeave={() => setAnchorEl(null)}/>
-        <Popover
-            sx={{
-                pointerEvents: 'none',
-            }}
-            open={!!anchorEl}
-            anchorEl={anchorEl}
-            anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-            }}
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            onClose={() => setAnchorEl(null)}
-            disableRestoreFocus
-        >
-            <Paper sx={{"padding": "16px", "maxWidth": "320px"}}>
-                <Typography>Here you can specify for example an upper bound on the price or what to do when the item is
-                    not available.</Typography>
-            </Paper>
-        </Popover>
-    </>
-}
 
 const SingleItemView = memo(({item, setSelf}) => {
 

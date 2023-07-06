@@ -8,18 +8,18 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import { OrderItemsOverview } from "../../MyOrders/OrderItemsOverview";
-import { createSearchParams, Navigate, useLocation, useNavigate } from "react-router-dom";
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { CustomerContext } from "../../../util/context/CustomerContext";
-import { useCacheLocalStorageForCustomer } from "../../../util/hooks";
+import {OrderItemsOverview} from "../../MyOrders/OrderItemsOverview";
+import {createSearchParams, Navigate, useLocation, useNavigate} from "react-router-dom";
+import React, {useContext, useEffect, useRef, useState} from "react";
+import {CustomerContext} from "../../../util/context/CustomerContext";
+import {useCacheLocalStorageForCustomer} from "../../../util/hooks";
 import Stack from "@mui/material/Stack";
-import { DarkButton, OutlinedButton } from "../../util/Buttons";
-import { Show } from "../../util/ControlFlow";
+import {DarkButton, OutlinedButton} from "../../util/Buttons";
+import {Show} from "../../util/ControlFlow";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { DateDisplay } from "../../MyOrders/DateDisplay";
-import { BaseModal } from "../../util/BaseModal";
-import { useJsApiLoader } from '@react-google-maps/api';
+import {DateDisplay} from "../../MyOrders/DateDisplay";
+import {BaseModal} from "../../util/BaseModal";
+import {useJsApiLoader} from '@react-google-maps/api';
 import {useSnackbar} from 'notistack';
 
 export function BuyerOrderSummary({
@@ -215,7 +215,7 @@ export function BuyerOrderSummary({
                     }
                 }
                 }>
-                    <Show when={!loading} fallback={<CircularProgress size={"1.5rem"} sx={{ color: "primary.dark" }} />}>
+                    <Show when={!loading} fallback={<CircularProgress size={"1.5rem"} />}>
                         {/*TODO error handling*/}
                         <Show when={error === undefined} fallback={<strong>{error || "Error"}</strong>}>
                             Confirm

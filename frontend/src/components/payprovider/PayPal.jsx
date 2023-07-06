@@ -21,7 +21,8 @@ export default function PayPal() {
           },
           onApprove: async (data, actions) => {
             const order = await actions.order.capture();
-            console.log(order);
+            console.log('Payment completed successfully:', order);
+           
           },
           onError: (err) => {
             console.log(err);
