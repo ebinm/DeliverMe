@@ -67,7 +67,7 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
                 </Box>
             </Box>
 
-            <Box display={"flex"} flexDirection={"row"}>
+            <Box display={"flex"} flexDirection={"row"} alignItems={"start"}>
                 <Show when={contact?.phoneNumber}>{phoneNumber =>
                     <Link href={`tel:${phoneNumber}`}>
                         <PhoneIcon sx={iconSx}/>
@@ -81,7 +81,10 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
                 }</Show>
 
                 <Show when={order?.selectedBid?.createdBy}>{() =>
-                    <Button onClick={() => navigate(`./${order._id}/chat`)}>
+                    <Button onClick={() => navigate(`./${order._id}/chat`)} sx={{
+                        "padding": "0",
+                        "minWidth": 0,
+                    }}>
                         <ChatIcon sx={iconSx}/>
                     </Button>
                 }</Show>
