@@ -4,7 +4,6 @@ import {BuyerMyOrders} from "./components/MyOrders/BuyerMyOrders";
 import {ShopperMyOrders} from "./components/MyOrders/ShopperMyOrders";
 import CheckoutForm from "./components/payprovider/CheckoutPage";
 import {Route, Routes} from "react-router-dom";
-import {TestExample} from "./components/TestExample";
 import {ShopperChooseOrderView} from "./components/ShopperChooseOrder/ShopperChooseOrderView";
 import {Signup} from "./components/authentication/Signup";
 import {CustomerProvider} from "./util/context/CustomerContext";
@@ -20,12 +19,7 @@ import {PersonalProfile} from "./components/PersonalProfile/PersonalProfile";
 import {styled} from '@mui/material/styles';
 
 
-const StyledSnackbarProvider = styled(SnackbarProvider)`
-  &.SnackbarItem-contentRoot {
-    background-color: orange;
-    font-family: 'Roboto' !important;
-  }
-`;
+const StyledSnackbarProvider = styled(SnackbarProvider)``;
 
 function App() {
 
@@ -35,8 +29,8 @@ function App() {
                 maxSnack={3}
 
                 sx={{
-                    fontSize: 20,
-                    fontFamily: 'Roboto'
+                    fontSize: 16,
+                    fontFamily: 'Roboto, sans-serif'
                 }}
             >
                 <NotificationProvider>
@@ -57,8 +51,6 @@ function App() {
                                 <Route path={"/buyer/order/create/*"} element={<BuyerOrderCreationView/>}/>
                                 <Route path={"/checkout"} element={<CheckoutForm/>}/>
                                 <Route path={"/me"} element={<PersonalProfile/>}/>
-
-                                <Route path={"test"} element={<TestExample />} />
                             </Routes>
                         </main>
                     </LocalizationProvider>
