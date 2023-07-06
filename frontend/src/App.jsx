@@ -24,39 +24,39 @@ const StyledSnackbarProvider = styled(SnackbarProvider)``;
 function App() {
 
     return (
-        <CustomerProvider>
-            <StyledSnackbarProvider
-                maxSnack={3}
+            <CustomerProvider>
+                <StyledSnackbarProvider
+                    maxSnack={3}
 
-                sx={{
-                    fontSize: 16,
-                    fontFamily: 'Roboto, sans-serif'
-                }}
-            >
-                <NotificationProvider>
-                    <LocalizationProvider dateAdapter={AdapterMoment}>
-                        <Header />
-                        <main>
-                            <Routes>
-                                <Route path={"/"} element={<LandingPage />} />
-                                <Route path={"/shopper/signup"} element={<Signup type={"shopper"} />} />
-                                <Route path={"/buyer/signup"} element={<Signup type={"buyer"} />} />
-                                <Route path={"/login"} element={<Login />} />
+                    sx={{
+                        fontSize: 16,
+                        fontFamily: 'Roboto, sans-serif'
+                    }}
+                >
+                    <NotificationProvider>
+                        <LocalizationProvider dateAdapter={AdapterMoment}>
+                            <Header/>
+                            <main>
+                                <Routes>
+                                    <Route path={"/"} element={<LandingPage/>}/>
+                                    <Route path={"/shopper/signup"} element={<Signup type={"shopper"}/>}/>
+                                    <Route path={"/buyer/signup"} element={<Signup type={"buyer"}/>}/>
+                                    <Route path={"/login"} element={<Login/>}/>
 
-                                <Route path={"/shopper/my-orders/:id?/chat?"} element={<ShopperMyOrders />} />
-                                <Route path={"/shopper/browseorders"} element={<ShopperChooseOrderView />} />
+                                    <Route path={"/shopper/my-orders/:id?/chat?"} element={<ShopperMyOrders/>}/>
+                                    <Route path={"/shopper/browseorders"} element={<ShopperChooseOrderView/>}/>
 
-                                <Route path={"/buyer/my-orders/:id?/chat?"} element={<BuyerMyOrders />} />
+                                    <Route path={"/buyer/my-orders/:id?/chat?"} element={<BuyerMyOrders/>}/>
 
-                                <Route path={"/buyer/order/create/*"} element={<BuyerOrderCreationView/>}/>
-                                <Route path={"/checkout"} element={<CheckoutForm/>}/>
-                                <Route path={"/me"} element={<PersonalProfile/>}/>
-                            </Routes>
-                        </main>
-                    </LocalizationProvider>
-                </NotificationProvider>
-            </StyledSnackbarProvider>
-        </CustomerProvider>
+                                    <Route path={"/buyer/order/create/*"} element={<BuyerOrderCreationView/>}/>
+                                    <Route path={"/checkout"} element={<CheckoutForm/>}/>
+                                    <Route path={"/me"} element={<PersonalProfile/>}/>
+                                </Routes>
+                            </main>
+                        </LocalizationProvider>
+                    </NotificationProvider>
+                </StyledSnackbarProvider>
+            </CustomerProvider>
     );
 }
 

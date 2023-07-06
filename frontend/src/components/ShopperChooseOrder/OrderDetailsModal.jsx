@@ -22,8 +22,9 @@ const OrderDetailsModal = ({ showOrderDetailsModal, handleCloseOrderDetailsModal
                     <SingleOrderViewShopper order={order} />
 
                     <Stack
+                        gap={"8px"}
                         direction={{ xs: 'column', sm: 'row' }}
-                        sx={{ mt: 2, justifyContent: 'space-between', width: "100%" }}
+                        sx={{ mt: 2, justifyContent: 'flex-end', width: "100%" }}
                     >
                         <OutlinedButton onClick={handleCloseOrderDetailsModal}>Back</OutlinedButton>
                         <DarkButton onClick={handleShowBidModal}>Create Bid</DarkButton>

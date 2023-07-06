@@ -1,7 +1,5 @@
-import { Modal, Paper } from "@mui/material";
-import { Typography } from "@mui/material";
-import { Divider } from "@mui/material";
-import { Show } from "../util/ControlFlow";
+import {Divider, Modal, Paper, Typography} from "@mui/material";
+import {Show} from "./ControlFlow";
 
 export function BaseModal(props) {
 

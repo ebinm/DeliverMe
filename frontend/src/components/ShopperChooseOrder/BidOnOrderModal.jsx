@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
-import { Box } from '@mui/material';
-import Typography from '@mui/material/Typography';
+import React, {useState} from 'react';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { BaseModal } from "../util/BaseModal"
-import { useSnackbar } from 'notistack';
-import { DateTimePicker } from "@mui/x-date-pickers";
-import { CustomDateTimePickerActionBar } from "../util/CustomDateTimePickerActionBar";
-import { CurrencyInput } from "../util/CurrencyInput";
-import { GuardCustomerType } from "../util/GuardCustomerType";
-import { DarkButton, OutlinedButton } from "../util/Buttons";
-import { PUT_FETCH_OPTIONS } from "../../util/util";
+import {BaseModal} from "../util/BaseModal"
+import {useSnackbar} from 'notistack';
+import {DateTimePicker} from "@mui/x-date-pickers";
+import {CustomDateTimePickerActionBar} from "../util/CustomDateTimePickerActionBar";
+import {CurrencyInput} from "../util/CurrencyInput";
+import {GuardCustomerType} from "../util/GuardCustomerType";
+import {DarkButton, OutlinedButton} from "../util/Buttons";
+import {PUT_FETCH_OPTIONS} from "../../util/util";
 
 
 const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, handleCloseOrderDetailsModal, order }) => {
@@ -41,7 +39,7 @@ const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, hand
         if (res.ok) {
             handleCloseBidOnOrderModal();
             handleCloseOrderDetailsModal();
-            enqueueSnackbar('Bid Successful created!', { variant: 'success' });
+            enqueueSnackbar('Bid successfully created!', { variant: 'success' });
         }
 
 
@@ -56,7 +54,7 @@ const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, hand
                 onClose={handleCloseBidOnOrderModal}
                 title={"Create your Bid"}
             >
-                <>
+                <Stack gap={"8px"}>
                     <CurrencyInput sx={{"width":"100%"}} align="center" label={"Bid Amount"} amount={bidAmount} setAmount={setBidAmount}
                         currency={bidCurrency} setCurrency={setBidCurrency} />
 
@@ -67,7 +65,7 @@ const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, hand
                         value={bidDate}
                         onChange={value => !isNaN(value) && setBidDate(value)}
                         slots={{ "actionBar": ((props) => <CustomDateTimePickerActionBar {...props} />) }}
-                        slotProps={{ "textField": { variant: "standard" } }} />
+                        slotProps={{ "textField": { variant: "outlined" } }} />
 
                     <TextField
                         value={bidNotes} onChange={e => setBidNotes(e.target.value)}
@@ -77,14 +75,15 @@ const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, hand
 
                     <Stack
                         direction={{ xs: 'column', sm: 'row' }}
-                        sx={{ mt: 4, justifyContent: 'space-between' }}
+                        sx={{ mt: 4, justifyContent: 'flex-end' }}
+                        gap={"8px"}
                     >
                         <OutlinedButton onClick={handleCloseBidOnOrderModal}>Back</OutlinedButton>
                         <DarkButton onClick={handleSubmit}>Place bid</DarkButton>
 
                     </Stack>
 
-                </>
+                </Stack>
             </BaseModal>
         }</GuardCustomerType>
     );
