@@ -153,12 +153,9 @@ const ReceiptUploadModal = ({ orderId, open, onClose, onSuccess }) => {
                     <OutlinedButton onClick={onClose}>Cancel</OutlinedButton>
 
                     <DarkButton onClick={async () => {
-                        if (setAmount > 0 && img) {
+                        if (amount > 0 && img) {
                             setUploadLoadingUploadLoading(true)
 
-                            // For some reason setting the content type header here produces problems with CORS.
-                            // Similar problem:
-                            // https://stackoverflow.com/questions/67594242/chrome-shows-a-cors-error-when-api-request-payload-is-too-big
                             const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/${orderId}/receipt`, {
                                 ...PUT_FETCH_OPTIONS,
                                 body: JSON.stringify({
@@ -175,7 +172,7 @@ const ReceiptUploadModal = ({ orderId, open, onClose, onSuccess }) => {
                             }
                             setUploadLoadingUploadLoading(false)
                         } else {
-                            enqueueSnackbar('Please enter the Receipt Amount & Upload the Bill', { variant: 'error' });
+                            enqueueSnackbar('Please enter the cost & upload the bill', { variant: 'error' });
 
                         }
                     }}>Upload</DarkButton>
