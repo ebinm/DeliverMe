@@ -61,12 +61,14 @@ export function PersonalProfile() {
                     <Typography variant={"h4"} component={"h2"}>Personal Profile</Typography>
                     <Divider sx={{"margin": "8px 0 16px 0"}}/>
                     <Stack gap={"16px"}>
-                        <TextField value={firstName} label={"First Name"}
-                                   onChange={e => setFirstName(e.target.value)}/>
+                        <TextField
+                            value={firstName} label={"First Name"}
+                            onChange={e => setFirstName(e.target.value)}/>
                         <TextField value={lastName} label={"Last Name"}
                                    onChange={e => setLastName(e.target.value)}/>
 
-                        <MuiPhoneNumber value={phoneNumber} variant={"outlined"} label={"Phone Number"} defaultCountry={"de"}
+                        <MuiPhoneNumber value={phoneNumber} variant={"outlined"} label={"Phone Number"}
+                                        defaultCountry={"de"}
                                         onChange={v => setPhoneNumber(v)}
                                         onlyCountries={["de", "gb"]} InputProps={{
                             endAdornment: <InfoPopover><Typography variant={"body1"}>Adding a phone number will

@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { CircularProgress, Grid, List, Box, Stack } from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import {Box, CircularProgress, Grid, List} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import OrderDetailsModal from './OrderDetailsModal';
 import BidOnOrderModal from './BidOnOrderModal';
-import { Show } from '../util/ControlFlow';
-import { DirectionsRenderer, GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
-import { OrderFilter } from './OrderFilter';
-import { OrderListItem } from './OrderListItem';
-import { GuardCustomerType } from "../util/GuardCustomerType";
-import { DarkButton } from "../util/Buttons";
-import { useSnackbar } from 'notistack';
+import {Show} from '../util/ControlFlow';
+import {DirectionsRenderer, GoogleMap, Marker, useJsApiLoader} from '@react-google-maps/api';
+import {OrderFilter} from './OrderFilter';
+import {OrderListItem} from './OrderListItem';
+import {GuardCustomerType} from "../util/GuardCustomerType";
+import {DarkButton} from "../util/Buttons";
+import {useSnackbar} from 'notistack';
 
 
 const ShopperChooseOrderView = () => {
@@ -107,7 +107,7 @@ const ShopperChooseOrderView = () => {
 
     const handleSelectOrder = () => {
         if (selectedOrder === null) {
-            enqueueSnackbar('Select a Order first!', { variant: 'error' });
+            enqueueSnackbar('Select an order first!', { variant: 'error' });
         } else {
             handleOpenOrderDetailsModal();
         }

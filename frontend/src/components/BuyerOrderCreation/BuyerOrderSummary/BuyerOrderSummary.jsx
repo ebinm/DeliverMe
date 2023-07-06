@@ -182,7 +182,7 @@ export function BuyerOrderSummary({
                             console.log(destination)
                             if (destination === null) {
                                 setLoading(false)
-                                enqueueSnackbar('Cloud not find your Delivery Address!', {variant: 'error'});
+                                enqueueSnackbar('Cloud not find your delivery address!', {variant: 'error'});
                                 setConfirmModalOpen(false);
                                 return;
                             }

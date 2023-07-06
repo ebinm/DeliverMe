@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { Autocomplete } from '@react-google-maps/api';
-import { useSnackbar } from 'notistack';
-import { BaseModal } from "../../util/BaseModal"
-import { DarkButton, OutlinedButton } from "../../util/Buttons";
+import {Autocomplete} from '@react-google-maps/api';
+import {useSnackbar} from 'notistack';
+import {BaseModal} from "../../util/BaseModal"
+import {DarkButton, OutlinedButton} from "../../util/Buttons";
 
 const DefineCustomShopModal = ({
     showModal,
@@ -25,7 +25,7 @@ const DefineCustomShopModal = ({
 
         if (name === '') {
             console.log("No place selected");
-            enqueueSnackbar('Please add a Name for your Shop!', { variant: 'error' });
+            enqueueSnackbar('Please add a name for your shop!', { variant: 'error' });
             return;
         }
 
@@ -36,7 +36,7 @@ const DefineCustomShopModal = ({
 
                 const [street, postalCodeCity, country] = place.formatted_address.split(', ');
                 if (postalCodeCity == null) {
-                    enqueueSnackbar('Your Address has no street!', { variant: 'error' });
+                    enqueueSnackbar('Your address has no street!', { variant: 'error' });
                     return;
                 }
                 const [address, city] = postalCodeCity.split(' ');
@@ -50,7 +50,7 @@ const DefineCustomShopModal = ({
                 handleCloseModal();
             } else {
                 console.log("No place selected");
-                enqueueSnackbar('Select an Address from the List!', { variant: 'error' });
+                enqueueSnackbar('Select an address from the list!', { variant: 'error' });
             }
         }
     };

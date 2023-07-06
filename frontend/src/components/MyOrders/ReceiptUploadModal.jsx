@@ -106,7 +106,7 @@ const ReceiptUploadModal = ({orderId, open, onClose, onSuccess}) => {
                             </Show>
 
 
-                            <CustomFileInput defaultLabel={"Upload or drop your receipt here."} img={img}
+                            <CustomFileInput defaultLabel={"Upload or drop your receipt here and let us try and extract the cost."} img={img}
                                              setImg={setImg}/>
 
                             <DarkButton sx={{mb: 2, "width": "100%"}} onClick={() => setWebcamOpen(true)}
@@ -153,7 +153,7 @@ const ReceiptUploadModal = ({orderId, open, onClose, onSuccess}) => {
                     <Box alignSelf={"center"}><strong>{error}</strong></Box>
                 </Show>
 
-                <Stack direction={"row"} sx={{justifyContent: 'space-between', mt: 2}}>
+                <Stack direction={"row"} justifyContent={"flex-end"} gap={"8px"}>
                     <OutlinedButton onClick={onClose}>Cancel</OutlinedButton>
 
                     <DarkButton onClick={async () => {
