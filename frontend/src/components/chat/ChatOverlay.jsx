@@ -122,7 +122,7 @@ export function ChatOverlay({order, open, onClose}) {
 
 function ChatMessage({message, foreign}) {
 
-    return <Box boxShadow={2} sx={{
+    return <Box boxShadow={3} sx={{
         "alignSelf": foreign ? "start" : "end",
         "backgroundColor": foreign ? "#f2f2f7" : "#3d6cfe",
         "color": foreign ? "text.dark" : "white",
