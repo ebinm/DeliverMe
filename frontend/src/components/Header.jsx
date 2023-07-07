@@ -29,17 +29,19 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import MessageIcon from '@mui/icons-material/Message';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import Stack from "@mui/material/Stack";
 
 export default function Header() {
     const {customer} = useContext(CustomerContext)
 
     return (
         <header>
-            <Box bgcolor={"primary.main"} display={"flex"} flexDirection={"row"} justifyContent={"space-between"}
+            <Stack direction={"row"} bgcolor={"primary.main"} justifyContent={"space-between"}
                  alignItems={"center"} height={"90px"} width={"100%"} padding={"8px"}>
-                <Box sx={{"height": "100%"}}>
+
+                <Box sx={{ "maxWidth": "40%", "height": "100%"}}>
                     <NavLink to={"/"}>
-                        <img src={"/images/logo.svg"} alt={"DeliverMe Logo"} height={"100%"}/>
+                        <Box component={"img"} src={"/images/logo.svg"} alt={"DeliverMe Logo"} sx={{"height": "100%", "maxWidth": "100%", "padding": "12px"}}/>
                     </NavLink>
                 </Box>
 
@@ -47,7 +49,7 @@ export default function Header() {
                     <AuthenticationMenu/>
                 }>{resolved => <LoggedInMenu customer={resolved}/>}
                 </Show>
-            </Box>
+            </Stack>
         </header>
     )
 }

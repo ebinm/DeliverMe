@@ -12,8 +12,14 @@ import {For, Show} from "../util/ControlFlow";
 import Button from "@mui/material/Button";
 import SendIcon from '@mui/icons-material/Send';
 import ClearIcon from '@mui/icons-material/Clear';
+import {useTheme} from "@mui/system";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export function ChatOverlay({order, open, onClose}) {
+
+
+    const theme = useTheme();
+    const desktop = useMediaQuery(theme.breakpoints.up("sm"))
 
     const {customer} = useContext(CustomerContext)
 
@@ -43,7 +49,9 @@ export function ChatOverlay({order, open, onClose}) {
                 <ChatMessageContext.Consumer>{({messages, sendMessage, setText, text, error}) =>
 
                     <>
-                        <Box sx={{"flex": "1"}} onClick={onClose}/>
+                        <Show when={desktop}>
+                            <Box sx={{"flex": "1"}} onClick={onClose}/>
+                        </Show>
 
                         <Stack sx={{"flex": "2", "backgroundColor": "white"}} direction={"column"}>
 

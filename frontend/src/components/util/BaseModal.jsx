@@ -7,9 +7,9 @@ export function BaseModal(props) {
 
     return (
         <Modal open={open} onClose={onClose}
-            sx={{ "display": "flex", "alignItems": "center", "justifyContent": "center", "borderRadius": 16 }}>
+            sx={{ "display": "flex", "alignItems": "center", "justifyContent": "center", "borderRadius": 16}}>
 
-            <Paper sx={{ "display": "flex", "padding": "30px", "minHeight": "30%", "minWidth": "50%", "overflowY": "auto", "justifyContent": "space-between", "flexDirection": "column", ...sx }} {...other}>
+            <Paper sx={{ "display": "flex", "padding": "30px", "minHeight": "30%", "minWidth": "50%", "justifyContent": "space-between", "flexDirection": "column", "maxHeight": "90vh", ...sx }} {...other}>
                 <Show when={title}>{() =>
                     <div>
                         <Typography align="center" fontWeight={"Bold"} variant="h5" sx={{ mb: 1 }}>

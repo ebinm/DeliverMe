@@ -19,14 +19,14 @@ const deliverMeTheme = createTheme({
         orange: "#FFAC33"
     },
     components: {
-        MuiTextField: {
+
+
+        MuiInputLabel: {
             defaultProps: {
-                InputLabelProps: {
-                    sx: {
-                        "color": "text.main",
-                        "&.Mui-focused": {
-                            "color": "primary.dark",
-                        }
+                sx: {
+                    "color": "text.main",
+                    "&.Mui-focused": {
+                        "color": "primary.dark",
                     }
                 }
             },
