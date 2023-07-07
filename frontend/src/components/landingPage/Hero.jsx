@@ -1,5 +1,6 @@
-import {Box, Button, Grid, Typography} from "@mui/material";
+import {Box, Grid, Typography} from "@mui/material";
 import Pictures from "./Carousel";
+import {DarkButton} from "../util/Buttons";
 
 const Hero = () => {
 
@@ -38,14 +39,14 @@ const Hero = () => {
                         effort.
                         With DeliverMe you can get your groceries from any local store delivered to your door step.
                     </Typography>
-                    <Button
+                    <DarkButton
                         href={"/buyer/order/create"}
                         variant="contained"
                         color="primary"
-                        sx={{width: '400px', height: '60px', fontSize: '16px', backgroundColor: 'primary.dark'}}
+                        sx={{maxWidth: '400px', height: '60px', fontSize: '16px'}}
                     >
                         ORDER NOW
-                    </Button>
+                    </DarkButton>
                 </Grid>
                 <Grid item xs={12} md={5}>
                     <Pictures/>
