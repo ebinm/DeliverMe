@@ -23,18 +23,18 @@ const ShopperChooseOrderView = () => {
     const [directions, setDirections] = useState(null);
     const [mapKey, setMapKey] = useState(0);
 
-    const { enqueueSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
 
     // We use useState as a way of handling a constant here to stop useJsApiLoader from triggering more than once.
     const [googleLibraries] = useState(["places"]);
-    const { isLoaded } = useJsApiLoader({
+    const {isLoaded} = useJsApiLoader({
         googleMapsApiKey: "AIzaSyCAiDt2WyuMhekA25EMEQgx_wVO_WQW8Ok",
         libraries: googleLibraries
     });
 
     useEffect(() => {
         if (map) {
-            const defaultCenter = { lat: 48.137154, lng: 11.576124 }
+            const defaultCenter = {lat: 48.137154, lng: 11.576124}
             map.setCenter(defaultCenter);
         }
     }, [map]);
@@ -42,12 +42,15 @@ const ShopperChooseOrderView = () => {
     useEffect(() => {
         console.log('Fetching orders from backend...');
 
+        const abortController = new AbortController()
+
         const fetchOrders = async () => {
             try {
                 const response = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/open`,
                     {
                         credentials: "include",
-                        withCredentials: true
+                        withCredentials: true,
+                        signal: abortController.signal
                     }
                 );
                 const data = await response.json();
@@ -61,6 +64,10 @@ const ShopperChooseOrderView = () => {
         };
 
         fetchOrders();
+
+        return () => {
+            abortController.abort()
+        }
     }, []);
 
 
@@ -107,7 +114,7 @@ const ShopperChooseOrderView = () => {
 
     const handleSelectOrder = () => {
         if (selectedOrder === null) {
-            enqueueSnackbar('Select an order first!', { variant: 'error' });
+            enqueueSnackbar('Select an order first!', {variant: 'error'});
         } else {
             handleOpenOrderDetailsModal();
         }
@@ -128,27 +135,27 @@ const ShopperChooseOrderView = () => {
                     order={selectedOrder}
                     handleCloseOrderDetailsModal={handleCloseOrderDetailsModal}
                 />
-                <Grid container sx={{ mb: 2 }}>
-                    <Typography variant="h4" sx={{ paddingLeft: '16px' }}>Open Orders</Typography>
+                <Grid container sx={{mb: 2}}>
+                    <Typography variant="h4" sx={{paddingLeft: '16px'}}>Open Orders</Typography>
                 </Grid>
                 <Grid container spacing={8}>
-                    <Grid item md={4} >
+                    <Grid item md={4}>
 
-                        <OrderFilter orders={orders} setFilteredOrders={setFilteredOrders} />
+                        <OrderFilter orders={orders} setFilteredOrders={setFilteredOrders}/>
 
-                        <Divider />
+                        <Divider/>
 
-                        <List sx={{ maxHeight: '60vh', overflow: 'auto' }}>
+                        <List sx={{maxHeight: '60vh', overflow: 'auto'}}>
                             {filteredOrders.map((order) => (
                                 <OrderListItem key={order._id} order={order}
-                                    handleOpenOrderDetailsModal={handleOpenOrderDetailsModal}
-                                    selectedOrder={selectedOrder}
-                                    setSelectedOrder={setSelectedOrder} />
+                                               handleOpenOrderDetailsModal={handleOpenOrderDetailsModal}
+                                               selectedOrder={selectedOrder}
+                                               setSelectedOrder={setSelectedOrder}/>
                             ))}
                         </List>
                     </Grid>
-                    <Grid item md={8} sx={{ mb: 2 }}>
-                        <Show when={isLoaded} fallback={<CircularProgress sx={{ color: "primary.dark" }} />}>
+                    <Grid item md={8} sx={{mb: 2}}>
+                        <Show when={isLoaded} fallback={<CircularProgress sx={{color: "primary.dark"}}/>}>
                             <GoogleMap
                                 key={mapKey}
                                 mapContainerStyle={{
@@ -200,4 +207,4 @@ const ShopperChooseOrderView = () => {
     )
 };
 
-export { ShopperChooseOrderView };
+export {ShopperChooseOrderView};
