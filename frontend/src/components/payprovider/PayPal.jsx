@@ -1,13 +1,14 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
+import {PayPalScriptProvider, PayPalButtons} from "@paypal/react-paypal-js"
+import { AccordionDetails } from '@mui/material';
 
 export default function PayPal() {
-
-  const paypal = useRef(); 
-
-  useEffect(() => { 
-      window.paypal
-        .Buttons({
-          createOrder: (data, actions, err) => {
+  return(
+    <PayPalScriptProvider options={{
+      "client-id": process.env.CLIENT_ID
+      }}>
+      <PayPalButtons 
+        createOrder={(data, actions, err)  => {
             return actions.order.create({
               intent: 'CAPTURE',
               purchase_units: [
@@ -25,27 +26,24 @@ export default function PayPal() {
                         email_address: 'anxhela.maloku@tum.de',
                       }
                     }]
-                },
+                  },
               }
               ],
             
             });
-          },
-          onApprove: async (data, actions) => {
-            const order = await actions.order.capture();
-            console.log(order);
-          },
-          onError: (err) => {
-            console.log(err);
-          },
-        })
-        //.render(paypal.current);
-      }, []);
-
-  return (
-    <div>
-      <div ref={paypal}></div>
-    </div>
-    
-  );
+          }}
+          onApprove={ (data, actions) => {
+            return actions.order.capture().then(function(datails){
+              alert(
+                "transaction went through" + AccordionDetails.payer.name.given
+              )
+            })
+          }}
+          onError = {(err) => {
+            return alert ("Transaction failed");
+          }
+        }  
+      />
+    </PayPalScriptProvider>
+  )
 }

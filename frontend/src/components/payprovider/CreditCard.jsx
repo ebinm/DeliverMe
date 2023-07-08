@@ -42,9 +42,8 @@ export default function CreditCard() {
         {
           ...POST_FETCH_OPTIONS,
           body: JSON.stringify({
-            amount: 70,
-            currency: 'eur',
             id,
+            amount: 70,
           })
       });
         if (response.data.success) {
