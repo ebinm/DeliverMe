@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Box, CircularProgress, Grid, List} from '@mui/material';
+import {CircularProgress, List} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import OrderDetailsModal from './OrderDetailsModal';
@@ -11,9 +11,17 @@ import {OrderListItem} from './OrderListItem';
 import {GuardCustomerType} from "../util/GuardCustomerType";
 import {DarkButton} from "../util/Buttons";
 import {useSnackbar} from 'notistack';
+import Stack from "@mui/material/Stack";
+import {useTheme} from "@mui/system";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 
 const ShopperChooseOrderView = () => {
+
+    const theme = useTheme();
+    const desktop = useMediaQuery(theme.breakpoints.up("md"))
+
+
     const [map, setMap] = useState(null);
     const [showOrderDetailsModal, setShowOrderDetailsModal] = useState(false);
     const [showBidOnOrderModal, setShowBidOnOrderModal] = useState(false);
@@ -23,18 +31,18 @@ const ShopperChooseOrderView = () => {
     const [directions, setDirections] = useState(null);
     const [mapKey, setMapKey] = useState(0);
 
-    const { enqueueSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
 
     // We use useState as a way of handling a constant here to stop useJsApiLoader from triggering more than once.
     const [googleLibraries] = useState(["places"]);
-    const { isLoaded } = useJsApiLoader({
+    const {isLoaded} = useJsApiLoader({
         googleMapsApiKey: "AIzaSyCAiDt2WyuMhekA25EMEQgx_wVO_WQW8Ok",
         libraries: googleLibraries
     });
 
     useEffect(() => {
         if (map) {
-            const defaultCenter = { lat: 48.137154, lng: 11.576124 }
+            const defaultCenter = {lat: 48.137154, lng: 11.576124}
             map.setCenter(defaultCenter);
         }
     }, [map]);
@@ -107,7 +115,7 @@ const ShopperChooseOrderView = () => {
 
     const handleSelectOrder = () => {
         if (selectedOrder === null) {
-            enqueueSnackbar('Select an order first!', { variant: 'error' });
+            enqueueSnackbar('Select an order first!', {variant: 'error'});
         } else {
             handleOpenOrderDetailsModal();
         }
@@ -128,76 +136,79 @@ const ShopperChooseOrderView = () => {
                     order={selectedOrder}
                     handleCloseOrderDetailsModal={handleCloseOrderDetailsModal}
                 />
-                <Grid container sx={{ mb: 2 }}>
-                    <Typography variant="h4" sx={{ paddingLeft: '16px' }}>Open Orders</Typography>
-                </Grid>
-                <Grid container spacing={8}>
-                    <Grid item md={4} >
-
-                        <OrderFilter orders={orders} setFilteredOrders={setFilteredOrders} />
-
-                        <Divider />
-
-                        <List sx={{ maxHeight: '60vh', overflow: 'auto' }}>
-                            {filteredOrders.map((order) => (
-                                <OrderListItem key={order._id} order={order}
-                                    handleOpenOrderDetailsModal={handleOpenOrderDetailsModal}
-                                    selectedOrder={selectedOrder}
-                                    setSelectedOrder={setSelectedOrder} />
-                            ))}
-                        </List>
-                    </Grid>
-                    <Grid item md={8} sx={{ mb: 2 }}>
-                        <Show when={isLoaded} fallback={<CircularProgress sx={{ color: "primary.dark" }} />}>
-                            <GoogleMap
-                                key={mapKey}
-                                mapContainerStyle={{
-                                    width: '100%',
-                                    height: '65vh'
-                                }}
-                                zoom={14}
-                                onLoad={map => setMap(map)}
-                            >
-                                {directions && ( //TODO: show travel time, choose between car and bike
-                                    <>
-                                        <DirectionsRenderer
-                                            options={{
-                                                directions: directions,
-                                                suppressMarkers: true,
-                                                preserveViewport: false,
-                                            }}
-                                        />
-
-                                        {selectedOrder.groceryShop && (<Marker
-                                            key={selectedOrder.groceryShop.place_id}
-                                            position={selectedOrder.groceryShop.geometry.location}
-                                            label="Shop"
-                                        />)}
-
-                                        {selectedOrder.destination.geometry && (<Marker
-                                            key={selectedOrder.destination.place_id}
-                                            position={selectedOrder.destination.geometry.location}
-                                            label="Destination"
-                                        />)}
 
 
-                                    </>
-                                )}
-                            </GoogleMap>
-                        </Show>
-                    </Grid>
-                </Grid>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'row-reverse',
-                    }}
-                >
-                    <DarkButton onClick={() => handleSelectOrder()}>Select Order</DarkButton>
-                </Box>
+                <Stack direction={"column"} width={"100%"} gap={"32px"} height={"100%"}
+                       justifyContent={"space-between"}>
+
+                    {/* TODO do not hardcode the height...*/}
+                    <Stack direction={{md: "row", xs: "column"}} sx={{"height": "100%"}} gap={"32px"}
+                           maxHeight={{"sm": "auto", "md": "70lvh"}}>
+
+                        <Stack direction={"column"} flex={1}>
+                            <Typography variant="h4" sx={{paddingLeft: '16px'}}>Open Orders</Typography>
+                            <OrderFilter orders={orders} setFilteredOrders={setFilteredOrders}/>
+
+                            <Divider/>
+
+                            <List sx={{overflow: 'auto'}}>
+                                {filteredOrders.map((order) => (
+                                    <OrderListItem key={order._id} order={order}
+                                                   handleOpenOrderDetailsModal={handleOpenOrderDetailsModal}
+                                                   selectedOrder={selectedOrder}
+                                                   setSelectedOrder={setSelectedOrder}/>
+                                ))}
+                            </List>
+                        </Stack>
+
+
+                        <Stack direction={"column"} flex={2} gap={"16px"}>
+                            <Show when={isLoaded} fallback={<CircularProgress sx={{color: "primary.dark"}}/>}>
+                                <GoogleMap
+                                    key={mapKey}
+                                    mapContainerStyle={{
+                                        width: '100%',
+                                        height: '100%',
+                                        minHeight: desktop ? undefined : "800px"
+                                    }}
+                                    zoom={14}
+                                    onLoad={map => setMap(map)}
+                                >
+                                    {directions && ( //TODO: show travel time, choose between car and bike
+                                        <>
+                                            <DirectionsRenderer
+                                                options={{
+                                                    directions: directions,
+                                                    suppressMarkers: true,
+                                                    preserveViewport: false,
+                                                }}
+                                            />
+
+                                            {selectedOrder.groceryShop && (<Marker
+                                                key={selectedOrder.groceryShop.place_id}
+                                                position={selectedOrder.groceryShop.geometry.location}
+                                                label="Shop"
+                                            />)}
+
+                                            {selectedOrder.destination.geometry && (<Marker
+                                                key={selectedOrder.destination.place_id}
+                                                position={selectedOrder.destination.geometry.location}
+                                                label="Destination"
+                                            />)}
+
+
+                                        </>
+                                    )}
+                                </GoogleMap>
+                            </Show>
+                        </Stack>
+                    </Stack>
+
+                    <DarkButton onClick={() => handleSelectOrder()} alignSelf={"end"}>Select Order</DarkButton>
+                </Stack>
             </>
         }</GuardCustomerType>
     )
 };
 
-export { ShopperChooseOrderView };
+export {ShopperChooseOrderView};

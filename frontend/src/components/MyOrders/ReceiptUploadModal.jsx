@@ -11,7 +11,6 @@ import Webcam from "react-webcam";
 import CameraIcon from '@mui/icons-material/Camera';
 import NoPhotographyIcon from '@mui/icons-material/NoPhotography';
 import CircularProgress from '@mui/material/CircularProgress';
-import Divider from '@mui/material/Divider';
 import {useSnackbar} from "notistack";
 import {CustomFileInput} from "../util/CustomFileUpload";
 
@@ -76,11 +75,9 @@ const ReceiptUploadModal = ({orderId, open, onClose, onSuccess}) => {
     return (
         <BaseModal open={open} onClose={onClose} title={"Upload your Receipt"}>
             <>
-                <Show when={!uploadLoading} fallback={<CircularProgress sx={{"color": "primary.dark"}}/>}>{() =>
+                <Show when={!uploadLoading} fallback={<CircularProgress alignSelf={"center"} sx={{"color": "primary.dark"}}/>}>{() =>
                     <>
-
                         <Show when={!webcamOpen}>
-
 
                             <CurrencyInput label={"Total amount spent"} amount={amount} setAmount={setAmount}
                                            currency={currency}
@@ -116,7 +113,7 @@ const ReceiptUploadModal = ({orderId, open, onClose, onSuccess}) => {
                         </Show>
 
 
-                        <Show when={webcamOpen}>
+                        <Show when={webcamOpen} gap={"16px"}>
                             <Box alignSelf={"center"}>
                                 <Webcam
                                     audio={false}
@@ -130,16 +127,19 @@ const ReceiptUploadModal = ({orderId, open, onClose, onSuccess}) => {
 
                             <Stack
                                 direction={"row"}
+                                flexWrap={"wrap"}
                                 sx={{mt: 2, justifyContent: 'center'}}
-                                divider={<Divider orientation="vertical" flexItem/>}
-                                spacing={{xs: 1, sm: 1, md: 1}}
+                                width={"100%"}
+                                gap={"16px"}
+                                // divider={<Divider orientation="vertical" flexItem/>}
+                                // spacing={{xs: 1, sm: 1, md: 1}}
                             >
-                                <DarkButton onClick={() => capture()}
+                                <DarkButton sx={{"flex": 1}} onClick={() => capture()}
                                             startIcon={<CameraIcon sx={{"fontSize": "2rem"}}/>}>
                                     Take photo
                                 </DarkButton>
 
-                                <DarkButton onClick={() => setWebcamOpen(false)}
+                                <DarkButton sx={{"flex": 1}} onClick={() => setWebcamOpen(false)}
                                             startIcon={<NoPhotographyIcon sx={{"fontSize": "2rem"}}/>}>
                                     Close Camera
                                 </DarkButton>
@@ -153,7 +153,7 @@ const ReceiptUploadModal = ({orderId, open, onClose, onSuccess}) => {
                     <Box alignSelf={"center"}><strong>{error}</strong></Box>
                 </Show>
 
-                <Stack direction={"row"} justifyContent={"flex-end"} gap={"8px"}>
+                <Stack direction={"row"} justifyContent={"flex-end"} gap={"8px"} mt={"16px"}>
                     <OutlinedButton onClick={onClose}>Cancel</OutlinedButton>
 
                     <DarkButton onClick={async () => {

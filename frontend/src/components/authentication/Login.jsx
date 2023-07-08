@@ -46,7 +46,7 @@ export function Login() {
             exclusive
             sx={{
                 "marginTop": "8px",
-                "height": "2.3rem"
+                "min-height": "2.3rem"
             }}
             variant="contained"
             aria-label="Choose customer type button"
@@ -57,6 +57,7 @@ export function Login() {
             }}>
             <ToggleButton value={"buyer"} sx={{
                 "flexGrow": 1,
+                "padding": 0,
                 "&.Mui-selected": {
                     "backgroundColor": "primary.dark",
                     "color": "white"
@@ -69,6 +70,7 @@ export function Login() {
 
             <ToggleButton value={"shopper"} sx={{
                 "flexGrow": 1,
+                "padding": 0,
                 "&.Mui-selected": {
                     "backgroundColor": "primary.dark",
                     "color": "white"
