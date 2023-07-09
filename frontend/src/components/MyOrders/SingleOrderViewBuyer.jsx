@@ -20,7 +20,7 @@ export function SingleOrderViewBuyer({ order, orderName, setOrders }) {
             {/*TODO "Jetzt kostenpflichtig betsellen"*/}
             <Typography align="center" sx={{ "margin": "8px" }}>Are you sure you want to accept this bid? This cannot be
                 undone.</Typography>
-            <Stack direction={"row-reverse"} gap={"8px"} sx={{ "mt": "32px" }}>
+            <Stack direction={{"xs": "column-reverse", "sm": "row-reverse"}} gap={"8px"} sx={{ "mt": "32px" }}>
                 <DarkButton sx={{ "flexGrow": "1" }} onClick={async () => {
                     const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/${order._id}/selectBid`, {
                         ...PUT_FETCH_OPTIONS,

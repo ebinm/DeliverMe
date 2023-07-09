@@ -86,7 +86,7 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
                 }</Show>
 
                 <Show when={order?.selectedBid?.createdBy}>{() =>
-                    <Button onClick={() => navigate(`./${order._id}/chat`)} sx={{
+                    <Button onClick={() => navigate(`/${customer.type.toLowerCase()}/my-orders/${order._id}/chat`)} sx={{
                         "padding": "0",
                         "minWidth": 0,
                     }}>

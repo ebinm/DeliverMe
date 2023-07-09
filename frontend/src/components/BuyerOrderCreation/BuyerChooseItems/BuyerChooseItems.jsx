@@ -145,7 +145,7 @@ export function BuyerChooseItems({
                     }</Show>
                 </form>
 
-                <Stack direction={"row-reverse"} gap={"16px"}>
+                <Stack direction={{"xs": "column-reverse", "sm": "row-reverse"}} gap={"16px"}>
                     <DarkButton onClick={() => {
                         if (formRef.current.reportValidity()) {
                             onSubmit(items, from, to, notes)

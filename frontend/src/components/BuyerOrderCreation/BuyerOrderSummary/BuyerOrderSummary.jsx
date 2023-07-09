@@ -151,7 +151,7 @@ export function BuyerOrderSummary({
                     </AccordionDetails>
                 </Accordion>
 
-                <Stack direction={"row-reverse"} gap={"16px"} padding={"16px"}>
+                <Stack direction={{"xs": "column-reverse", "sm": "row-reverse"}} gap={"16px"} padding={"16px"}>
                     <DarkButton onClick={() => {
                         if (formRef.current.reportValidity()) {
                             setConfirmModalOpen(true)
@@ -172,9 +172,11 @@ export function BuyerOrderSummary({
                     <Typography align="center" sx={{"padding": "16px"}}>Are you sure you want to place the
                         order?</Typography>
 
-                    <Stack direction={"row-reverse"} justifyContent={"space-between"} gap={"16px"}>
+                    <Stack direction={{"xs": "column", "sm": "row"}} width={"100%"} justifyContent={"flex-end"} gap={"16px"}>
 
-                        <DarkButton sx={{"flexGrow": "1"}} onClick={async () => {
+                        <OutlinedButton onClick={() => setConfirmModalOpen(false)}>Cancel</OutlinedButton>
+
+                        <DarkButton onClick={async () => {
 
                             setLoading(true)
 
@@ -224,8 +226,6 @@ export function BuyerOrderSummary({
                                 </Show>
                             </Show>
                         </DarkButton>
-                        <OutlinedButton sx={{"flexGrow": "1"}}
-                                        onClick={() => setConfirmModalOpen(false)}>Cancel</OutlinedButton>
                     </Stack>
                 </BaseModal>
             </Paper>
