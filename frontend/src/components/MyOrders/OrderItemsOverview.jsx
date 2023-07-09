@@ -49,7 +49,7 @@ function MobileOrderItemsOverview({items}) {
 
     return <Stack direction={"column"} gap={"8px"}>
         <For each={items} fallback={<Typography color={"text.light"}>No items selected</Typography>}>{item =>
-            <Paper sx={{"curser": "pointer", "padding": "8px"}} onClick={() => setSelectedItem(item)}>
+            <Paper key={item._id || item.localId} sx={{"curser": "pointer", "padding": "8px"}} onClick={() => setSelectedItem(item)}>
                 <Stack direction={"column"}>
                     <Typography>{item.quantity} {formatUnitNumerusClausus(item.unit, item.quantity)} of {item.name}...</Typography>
                 </Stack>
