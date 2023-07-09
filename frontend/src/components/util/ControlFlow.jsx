@@ -11,15 +11,15 @@
  * a dependency on the when. Use function children to circumvent this problem
  *
  * @template T
- * @param children {JSX.Element | (resolved: T) => JSX.Element}
+ * @param children {JSX.Element | ((resolved: T) => JSX.Element)}
  * @param when {T | undefined | false}
- * @param fallback {JSX.Element}
+ * @param fallback {JSX.Element | ((item: T) => JSX.Element)}
  * @returns {JSX.Element}
  * @constructor
  */
 function Show({children, when, fallback}) {
     return <>{
-        when ? (typeof children === "function" ? children(when) : children) : fallback
+        when ? (typeof children === "function" ? children(when) : children) : (typeof fallback === "function" ? fallback() : fallback)
     }</>
 }
 
@@ -30,12 +30,15 @@ function Show({children, when, fallback}) {
  * @template T
  * @param children {(item: T) => JSX.Element}
  * @param each  {T[] | undefined | false}
- * @param fallback {JSX.Element}
+ * @param fallback {JSX.Element | ((item: T) => JSX.Element)}
  * @returns {JSX.Element}
  * @constructor
  */
 function For({children, each, fallback}) {
     if (fallback && (!each || each.length === 0)) {
+        if(typeof fallback === "function"){
+            return fallback()
+        }
         return fallback
     }
 

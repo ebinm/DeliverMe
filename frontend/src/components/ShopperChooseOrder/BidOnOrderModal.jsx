@@ -11,7 +11,7 @@ import {DarkButton, OutlinedButton} from "../util/Buttons";
 import {PUT_FETCH_OPTIONS} from "../../util/util";
 
 
-const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, handleCloseOrderDetailsModal, order }) => {
+const BidOnOrderModal = ({showBidOnOrderModal, handleCloseBidOnOrderModal, handleCloseOrderDetailsModal, order}) => {
 
     const [bidAmount, setBidAmount] = useState(0);
     const [bidCurrency, setBidCurrency] = useState("EUR");
@@ -19,7 +19,7 @@ const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, hand
     const [bidNotes, setBidNotes] = useState("");
 
 
-    const { enqueueSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
 
 
     const handleSubmit = async () => {
@@ -39,7 +39,9 @@ const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, hand
         if (res.ok) {
             handleCloseBidOnOrderModal();
             handleCloseOrderDetailsModal();
-            enqueueSnackbar('Bid successfully created!', { variant: 'success' });
+            enqueueSnackbar('Bid successfully created!', {variant: 'success'});
+        } else {
+            enqueueSnackbar('Could not place bid. Make sure you have bid a positive amount.', {variant: 'error'});
         }
 
 
@@ -55,8 +57,9 @@ const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, hand
                 title={"Create your Bid"}
             >
                 <Stack gap={"8px"}>
-                    <CurrencyInput sx={{"width":"100%"}} align="center" label={"Bid Amount"} amount={bidAmount} setAmount={setBidAmount}
-                        currency={bidCurrency} setCurrency={setBidCurrency} />
+                    <CurrencyInput sx={{"width": "100%"}} align="center" label={"Bid Amount"} amount={bidAmount}
+                                   setAmount={setBidAmount}
+                                   currency={bidCurrency} setCurrency={setBidCurrency}/>
 
                     <DateTimePicker
                         label={"Expected Deliver Time"}
@@ -64,8 +67,8 @@ const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, hand
                         name={"BidDate"}
                         value={bidDate}
                         onChange={value => !isNaN(value) && setBidDate(value)}
-                        slots={{ "actionBar": ((props) => <CustomDateTimePickerActionBar {...props} />) }}
-                        slotProps={{ "textField": { variant: "outlined" } }} />
+                        slots={{"actionBar": ((props) => <CustomDateTimePickerActionBar {...props} />)}}
+                        slotProps={{"textField": {variant: "outlined"}}}/>
 
                     <TextField
                         value={bidNotes} onChange={e => setBidNotes(e.target.value)}
@@ -74,13 +77,12 @@ const BidOnOrderModal = ({ showBidOnOrderModal, handleCloseBidOnOrderModal, hand
 
 
                     <Stack
-                        direction={{ xs: 'column', sm: 'row' }}
-                        sx={{ mt: 4, justifyContent: 'flex-end' }}
+                        direction={{xs: 'column', sm: 'row'}}
+                        sx={{mt: 4, justifyContent: 'flex-end'}}
                         gap={"8px"}
                     >
                         <OutlinedButton onClick={handleCloseBidOnOrderModal}>Back</OutlinedButton>
                         <DarkButton onClick={handleSubmit}>Place bid</DarkButton>
-
                     </Stack>
 
                 </Stack>

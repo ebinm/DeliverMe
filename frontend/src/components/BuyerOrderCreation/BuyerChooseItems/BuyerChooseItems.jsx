@@ -1,22 +1,22 @@
 import Typography from "@mui/material/Typography";
-import {Box, MenuItem, Paper, Select, Table, TableBody, TableCell, TableHead, TableRow} from "@mui/material";
+import {Box, Paper} from "@mui/material";
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Divider from "@mui/material/Divider";
-import {For, Show} from "../../util/ControlFlow";
+import {Show} from "../../util/ControlFlow";
 import SpeakerNotesOutlinedIcon from '@mui/icons-material/SpeakerNotesOutlined';
 import AccessAlarmsOutlinedIcon from '@mui/icons-material/AccessAlarmsOutlined';
 import {DateTimePicker} from "@mui/x-date-pickers";
-import {memo, useCallback, useRef} from "react";
+import {useCallback, useRef} from "react";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
-import {formatUnitNumerusClausus} from "../../../util/util";
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import Button from "@mui/material/Button";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import {DarkButton, OutlinedButton} from "../../util/Buttons";
 import {CustomDateTimePickerActionBar} from "../../util/CustomDateTimePickerActionBar";
 import moment from "moment";
-import {InfoPopover} from "../../util/InfoPopover";
+import {DesktopItemTable} from "./DesktopItemTable";
+import useMediaQuery from '@mui/material/useMediaQuery';
+import {useTheme} from "@mui/system";
+import {MobileItemTable} from "./MobileItemTable";
 
 
 export function BuyerChooseItems({
@@ -34,6 +34,9 @@ export function BuyerChooseItems({
                                  }) {
 
     const formRef = useRef()
+
+    const theme = useTheme();
+    const desktop = useMediaQuery(theme.breakpoints.up("sm"))
 
     const setItemsSimple = useCallback(
         (newItem, localId) => {
@@ -65,7 +68,7 @@ export function BuyerChooseItems({
         <Typography variant={"h4"} component={"h1"}>Fill your order</Typography>
 
         <Paper sx={paperSx}>
-            <Stack direction={"row"} shadow={1}
+            <Stack direction={{"sm": "row", "xs": "column"}} shadow={1} spacing={"16px"}
                    justifyContent={"space-around"} backgroundColor={"white"}>
 
                 <Show when={shop?.name}>
@@ -131,35 +134,15 @@ export function BuyerChooseItems({
 
 
         <Paper sx={paperSx}>
-
             <Stack direction={"column"} gap={"32px"}>
                 <DarkButton sx={{"alignSelf": "flex-end"}} startIcon={<AddCircleIcon/>} variant={"text"}
                             onClick={addNewItem}>Add
                     Item</DarkButton>
-                <form ref={formRef}>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell itemType={"head"}>Product Name</TableCell>
-                                <TableCell itemType={"head"}>Quantity</TableCell>
-                                <TableCell itemType={"head"}>Brand (Optional)</TableCell>
-                                <TableCell itemType={"head"}>If unavailable</TableCell>
-                                <TableCell itemType={"head"}
-                                           sx={{"display": "flex", "alignItems": "center", gap: "8px"}}>Additional
-                                    notes <InfoPopover><Typography>Here you can specify for example an upper bound on
-                                        the price or what to do when the item is
-                                        not available.</Typography></InfoPopover>
-                                </TableCell>
-                                <TableCell itemType={"head"}/>
-                            </TableRow>
-                        </TableHead>
 
-                        <TableBody>
-                            <For each={items}>{(item) =>
-                                <SingleItemView key={item.localId} item={item} setSelf={setItemsSimple}/>
-                            }</For>
-                        </TableBody>
-                    </Table>
+                <form ref={formRef}>
+                    <Show when={desktop} fallback={() => <MobileItemTable items={items} setItemsSimple={setItemsSimple}/>}>{() =>
+                        <DesktopItemTable items={items} setItemsSimple={setItemsSimple}/>
+                    }</Show>
                 </form>
 
                 <Stack direction={"row-reverse"} gap={"16px"}>
@@ -174,87 +157,6 @@ export function BuyerChooseItems({
         </Paper>
     </>
 }
-
-
-const SingleItemView = memo(({item, setSelf}) => {
-
-    return <TableRow>
-        <TableCell>
-            <TextField value={item.name} name={"grocery-item-name-input"}
-                       required
-                       variant={"standard"}
-                       onChange={(e) => {
-                           // e is a synthetic event which might change value between now and when the callback
-                           // of setSelf is called
-                           const value = e.target.value
-                           setSelf(prev => ({...prev, name: value}), item.localId)
-                       }}/>
-        </TableCell>
-
-        <TableCell>
-            <Stack direction={"row"} alignItems={"center"} gap={"8px"}>
-                <TextField value={item.quantity} type={"number"} inputProps={{"min": "1"}}
-                           name={"grocery-item-quantity-input"}
-                           variant={"standard"}
-                           onChange={(e) => {
-                               const value = e.target.value
-                               setSelf(prev => ({...prev, quantity: parseInt(value)}), item.localId)
-                           }}/>
-
-                <Select value={item.unit}
-                        name={"grocery-item-unit-input"}
-                        variant={"standard"}
-                        onChange={e => {
-                            const value = e.target.value
-                            setSelf(prev => ({...prev, unit: value}), item.localId)
-                        }
-                        }>
-                    <MenuItem value={"Unit"}>{formatUnitNumerusClausus("Unit", item.quantity)}</MenuItem>
-                    <MenuItem value={"kg"}>kg</MenuItem>
-                    <MenuItem value={"lb"}>lb</MenuItem>
-                </Select>
-            </Stack>
-        </TableCell>
-
-        <TableCell>
-            <TextField value={item.brandName}
-                       variant={"standard"}
-                       name={"grocery-item-brand-name-input"}
-                       onChange={(e) => {
-                           const value = e.target.value
-                           setSelf(prev => ({...prev, brandName: value}), item.localId)
-                       }}/>
-        </TableCell>
-
-        <TableCell>
-            <Select value={item.ifItemUnavailable}
-                    variant={"standard"}
-                    name={"grocery-item-if-item-unavailable-input"}
-                    onChange={e => {
-                        const value = e.target.value
-                        setSelf(prev => ({...prev, ifItemUnavailable: value}), item.localId)
-                    }}>
-                <MenuItem value={"Unspecified"}>Unspecified</MenuItem>
-                <MenuItem value={"Buy Nothing"}>Buy Nothing</MenuItem>
-                <MenuItem value={"Ignore Brand"}>Ignore Brand</MenuItem>
-                <MenuItem value={"See Notes"}>See Notes</MenuItem>
-            </Select>
-        </TableCell>
-
-        <TableCell>
-            <TextField value={item.note} name={"grocery-item-note-input"}
-                       variant={"standard"}
-                       multiline
-                       onChange={(e) => setSelf(prev => ({...prev, note: e.currentTarget?.value}), item.localId)}/>
-        </TableCell>
-
-        <TableCell>
-            <Button onClick={() => setSelf(undefined, item.localId)}>
-                <RemoveCircleIcon sx={{"color": "primary.dark"}}/>
-            </Button>
-        </TableCell>
-    </TableRow>
-})
 
 
 const containerSx = {

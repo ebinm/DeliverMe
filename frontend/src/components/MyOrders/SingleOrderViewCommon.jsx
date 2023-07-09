@@ -23,8 +23,7 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
         "color": "white",
         "height": "1.6em",
         "width": "1.6em",
-        "aspectRatio": 1,
-        "ml": "8px"
+        "aspectRatio": 1
     }
 
     const {customer} = useContext(CustomerContext)
@@ -58,16 +57,22 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
 
     return <Box ref={ref} boxShadow={3} borderRadius={"8px"} padding={"16px"} mt={"16px"} display={"flex"}
                 flexDirection={"column"} backgroundColor={"white"}>
-        <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"} alignItems={"center"}>
+        <Stack direction={{sm: "row", xs: "column"}} justifyContent={"space-between"} alignItems={{
+            sm: "center",
+            xs: "start"
+        }} gap={"16px"}>
 
-            <Box display={"flex"} flexDirection={"row"} gap={"32px"} alignItems={"center"}>
+            <Stack direction={{sm: "row", xs: "column"}} gap={{"sm": "32px", xs: "8px"}} alignItems={{
+                sm: "center",
+                xs: "start"
+            }}>
                 <Typography variant={"h5"} component={"h2"} fontWeight={"bold"}>{orderName}</Typography>
                 <Box bgcolor={getStatusColor(order.status)} padding={"0 24px"} borderRadius={"8px"}>
                     <Typography component={"span"} variant={"h6"}>{order.status}</Typography>
                 </Box>
-            </Box>
+            </Stack>
 
-            <Box display={"flex"} flexDirection={"row"} alignItems={"start"}>
+            <Stack gap={"8px"} display={"flex"} flexDirection={"row"} alignItems={"start"}>
                 <Show when={contact?.phoneNumber}>{phoneNumber =>
                     <Link href={`tel:${phoneNumber}`}>
                         <PhoneIcon sx={iconSx}/>
@@ -89,8 +94,8 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
                     </Button>
                 }</Show>
 
-            </Box>
-        </Box>
+            </Stack>
+        </Stack>
 
         <Show when={order?.groceryShop}>
             <Box display={"grid"} gridTemplateColumns={"min-content auto"} gap={"8px"} mt={"16px"}>

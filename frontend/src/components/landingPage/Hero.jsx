@@ -1,20 +1,14 @@
-import {Box, Button, Grid, Typography} from "@mui/material";
+import {Box, Grid, Typography} from "@mui/material";
 import Pictures from "./Carousel";
+import {DarkButton} from "../util/Buttons";
 
 const Hero = () => {
 
-    return (
-        <Box sx={{
-            width: '100%',
-            display: 'flex',
-            minHeight: '600px',
-            alignItems: 'center',
-            justifyContent: 'center',
+    return (<Box sx={{
+            width: '100%', display: 'flex', minHeight: '600px', alignItems: 'center', justifyContent: 'center',
         }}>
             <Grid container spacing={6} sx={{
-                display: 'flex',
-                alignItems: 'center',
-                maxWidth: '1500px',
+                display: 'flex', alignItems: 'center', maxWidth: '1500px',
             }}>
                 <Grid item xs={12} md={7}>
                     <Typography variant="h1" fontWeight={700} sx={{
@@ -38,21 +32,20 @@ const Hero = () => {
                         effort.
                         With DeliverMe you can get your groceries from any local store delivered to your door step.
                     </Typography>
-                    <Button
+                    <DarkButton
                         href={"/buyer/order/create"}
-                        variant="contained"
-                        color="primary"
-                        sx={{width: '400px', height: '60px', fontSize: '16px', backgroundColor: 'primary.dark'}}
+                        sx={{
+                            maxWidth: '400px', height: '60px', fontSize: '16px', width: "100%"
+                        }}
                     >
                         ORDER NOW
-                    </Button>
+                    </DarkButton>
                 </Grid>
                 <Grid item xs={12} md={5}>
                     <Pictures/>
                 </Grid>
             </Grid>
-        </Box>
-    );
+        </Box>);
 };
 
 export default Hero;
