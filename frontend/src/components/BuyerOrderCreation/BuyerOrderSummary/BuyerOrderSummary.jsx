@@ -199,7 +199,7 @@ export function BuyerOrderSummary({
                                 credentials: 'include',
                                 body: JSON.stringify(
                                     {
-                                        items, to, from, notes, groceryShop: shop, destination: destination
+                                        items, latestDeliveryDate: to, earliestDeliveryDate: from, additionalNotes: notes, groceryShop: shop, destination: destination
                                     }
                                 )
                             })

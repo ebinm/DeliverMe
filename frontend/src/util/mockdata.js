@@ -3,8 +3,8 @@ const mockedOrders = [
         _id: "iuvhjadfoiuj3c2roi",
         status: "In Progress",
         creationDate: new Date().toUTCString(),
-        latestDeliveryTime: new Date().toUTCString(),
-        earliestDeliveryTime: new Date().toUTCString(),
+        latestDeliveryDate: new Date().toUTCString(),
+        earliestDeliveryDate: new Date().toUTCString(),
         totalCostOfOrder: undefined,
         note: "Please do not ring the doorbell",
         groceryShop: {
@@ -124,8 +124,8 @@ const mockedOrders = [
         _id: "tq28uhzajpa21233tt242t3423t4356793474pajc9j",
         status: "In Progress",
         creationDate: new Date().toUTCString(),
-        latestDeliveryTime: new Date().toUTCString(),
-        earliestDeliveryTime: new Date().toUTCString(),
+        latestDeliveryDate: new Date().toUTCString(),
+        earliestDeliveryDate: new Date().toUTCString(),
         totalCostOfOrder: undefined,
         note: "Please do not ring the doorbell",
         groceryShop: {
