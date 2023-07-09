@@ -71,7 +71,7 @@ function MobileJourneyItem({title, text, src, alt}) {
     return <Paper sx={{padding: "16px"}}>
         <Box display={"grid"} gridTemplateColumns={"minmax(min-content, max-content) auto"} alignItems={"center"} columnGap={"24px"}>
             <Box component={"img"} src={src} alt={alt} width={'100%'}
-                 gridRow={"span 2"} maxWidth={"140px"} minWidth={"80px"} aspectRatio={1}/>
+                 gridRow={"span 2"} maxWidth={"140px"} minWidth={"80px"} sx={{"aspectRatio": 1}}/>
             <Typography variant="h3" sx={{
                 alignSelf: "end", fontWeight: '500', fontSize: '1.25rem', lineHeight: '1.6', letterSpacing: '0.0075em',
             }}>

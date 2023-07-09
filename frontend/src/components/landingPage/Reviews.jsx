@@ -95,7 +95,7 @@ function SingleReview(props) {
             <Stack direction={"row"} alignItems={"center"} gap={"16px"} sx={{"alignItems": "center"}} mb={"32px"}>
                 <Avatar alt={props.item.firstName + " " + props.item.lastName} src={props.item.avatar}/>
 
-                <Stack direction={"row"} flexWrap={"wrap"} container columnGap={"16px"}
+                <Stack direction={"row"} flexWrap={"wrap"} columnGap={"16px"}
                        justifyContent={"space-between"} alignItems={"center"} flex={1}>
                     <Grid justifyContent="left" item xs sx={{"minWidth": "70%"}}>
                         <Typography variant="h5" sx={{
@@ -150,14 +150,11 @@ function Buyer(props) {
 }
 
 function averageRating(buyers) {
-    let length = buyers.length;
     let agg = 0;
     for (let buyer of buyers) {
         agg += buyer.review.rating;
     }
-    let result = agg / length
-    console.log(result)
-    return result
+    return agg / buyers.length
 }
 
 export default Reviews

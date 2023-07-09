@@ -34,8 +34,6 @@ const Hero = () => {
                     </Typography>
                     <DarkButton
                         href={"/buyer/order/create"}
-                        variant="contained"
-                        color="primary"
                         sx={{
                             maxWidth: '400px', height: '60px', fontSize: '16px', width: "100%"
                         }}
