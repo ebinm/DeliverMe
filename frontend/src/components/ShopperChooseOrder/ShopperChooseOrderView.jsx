@@ -50,12 +50,15 @@ const ShopperChooseOrderView = () => {
     useEffect(() => {
         console.log('Fetching orders from backend...');
 
+        const abortController = new AbortController()
+
         const fetchOrders = async () => {
             try {
                 const response = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/open`,
                     {
                         credentials: "include",
-                        withCredentials: true
+                        withCredentials: true,
+                        signal: abortController.signal
                     }
                 );
                 const data = await response.json();
@@ -69,6 +72,10 @@ const ShopperChooseOrderView = () => {
         };
 
         fetchOrders();
+
+        return () => {
+            abortController.abort()
+        }
     }, []);
 
 
