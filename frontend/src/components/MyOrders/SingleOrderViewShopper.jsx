@@ -9,6 +9,7 @@ import {RatingModal} from "../util/RatingModal";
 import {For, Show} from "../util/ControlFlow"
 import {CustomerContext} from "../../util/context/CustomerContext";
 import ReceiptUploadModal from "./ReceiptUploadModal";
+import Avatar from "@mui/material/Avatar";
 
 export function SingleOrderViewShopper({ order, setOrders }) {
 
@@ -20,7 +21,7 @@ export function SingleOrderViewShopper({ order, setOrders }) {
     return <>
         <SingleOrderViewCommon
             showDeliveryAddress
-            orderName={`${order?.createdBy?.firstName} ${order?.createdBy?.lastName}`}
+            orderName={<Stack direction={"row"} alignItems={"center"} gap={"8px"}><Avatar sx={{"display": {"sm": "inherit", "xs": "none"}}}  src={order?.createdBy?.profilePicture}/>{order?.createdBy?.firstName} {order?.createdBy?.lastName}</Stack>}
             order={order}
             contact={order.createdBy}
             bidView={

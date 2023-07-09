@@ -40,6 +40,10 @@ const BidOnOrderModal = ({showBidOnOrderModal, handleCloseBidOnOrderModal, handl
             handleCloseBidOnOrderModal();
             handleCloseOrderDetailsModal();
             enqueueSnackbar('Bid successfully created!', {variant: 'success'});
+            setBidAmount(0)
+            // We keep the currency
+            setBidDate(null)
+            setBidNotes("")
         } else {
             enqueueSnackbar('Could not place bid. Make sure you have bid a positive amount.', {variant: 'error'});
         }

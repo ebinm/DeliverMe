@@ -86,7 +86,7 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
                 }</Show>
 
                 <Show when={order?.selectedBid?.createdBy}>{() =>
-                    <Button onClick={() => navigate(`./${order._id}/chat`)} sx={{
+                    <Button onClick={() => navigate(`/${customer.type.toLowerCase()}/my-orders/${order._id}/chat`)} sx={{
                         "padding": "0",
                         "minWidth": 0,
                     }}>
@@ -106,15 +106,26 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
             </Box>
         </Show>
 
-        <DateDisplay from={order?.earliestDeliveryTime} to={order?.latestDeliveryTime}/>
+        <DateDisplay from={order?.earliestDeliveryDate} to={order?.latestDeliveryDate}/>
+
         <Show when={showDeliveryAddress && order?.destination}>{destination =>
-            <Stack direction={"row"}>
+            <Stack direction={{md: "row", sm: "column"}}>
                 <Typography variant={"body1"}>Delivery Address:&nbsp;</Typography>
                 <Typography variant={"body1"}
                             color={"text.light"}>{destination.street}, {destination.city}</Typography>
             </Stack>
         }
         </Show>
+
+        <Show when={order?.additionalNotes}>{notes =>
+            <Stack direction={{md: "row", sm: "column"}}>
+                <Typography variant={"body1"}>Additional Notes:&nbsp;</Typography>
+                <Typography variant={"body1"}
+                            color={"text.light"}>{notes}</Typography>
+            </Stack>
+        }
+        </Show>
+
 
         <Divider sx={{"margin": "8px 0"}}/>
 

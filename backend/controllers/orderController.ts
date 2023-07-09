@@ -25,7 +25,7 @@ export async function getOrdersForBuyer(buyerId: string): Promise<Order[]> {
 export async function getOrdersForShopper(shopperId: string) {
     const orders = await OrderModel.find({
         "$or": [
-            {"status": OrderStatus.Open, "bids": {"$elemMatch": {"createdBy": shopperId}}},
+            {"status": OrderStatus.Open, "bids": {"$elemMatch": {"createdBy._id": shopperId}}},
             {"selectedBid.createdBy": shopperId}
         ]
     })
@@ -42,7 +42,7 @@ export async function getOrdersForShopper(shopperId: string) {
     // TODO figure out how to do this in the query
     orders.forEach(order => {
         // @ts-ignore
-        order.bids = order.bids.filter(bid => bid.createdBy._id = shopperId)
+        order.bids = order.bids.filter(bid => bid.createdBy._id === shopperId)
     })
 
     return orders
