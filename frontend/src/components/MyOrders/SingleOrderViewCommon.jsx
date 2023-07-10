@@ -1,6 +1,7 @@
 import {Box, Divider, Link, Typography} from "@mui/material";
 import {Show} from "../util/ControlFlow";
 import PhoneIcon from "@mui/icons-material/Phone";
+import PaidRoundedIcon from '@mui/icons-material/PaidRounded';
 import EmailIcon from "@mui/icons-material/Email";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
@@ -68,6 +69,11 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
             </Box>
 
             <Box display={"flex"} flexDirection={"row"}>
+                <Show when={order.status === "In Payment" && customer.type.toLowerCase()=== 'buyer'}>
+                    <Button onClick={() => navigate(`./${order._id}/checkout`)}>
+                        <PaidRoundedIcon sx={iconSx}/>
+                    </Button>
+                </Show>
                 <Show when={contact?.phoneNumber}>{phoneNumber =>
                     <Link href={`tel:${phoneNumber}`}>
                         <PhoneIcon sx={iconSx}/>

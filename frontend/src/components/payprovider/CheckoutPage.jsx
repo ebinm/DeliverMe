@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useContext } from 'react';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -6,8 +6,26 @@ import Paper from '@mui/material/Paper';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import Modal from '@mui/material/Modal';
 import PaymentForm from './PaymentForm';
+import {DarkButton, OutlinedButton} from "../util/Buttons";
+import {useSnackbar} from "notistack";
+import {PUT_FETCH_OPTIONS} from "../../util/util";
+import {CustomerContext} from "../../util/context/CustomerContext";
+import {useNavigate } from "react-router-dom";
 
-const theme = createTheme();
+
+export function CheckoutPage({order, setOrders, onSuccess}) {
+  const [open, setOpen] = useState(true);
+  const [error, setError] = useState(undefined);
+  const [uploadLoading, setUploadLoading] = useState(false)
+  const navigate = useNavigate();
+
+  const {enqueueSnackbar} = useSnackbar();
+
+  const [amount, setAmount] = useState(0);
+  const [currency, setCurrency] = useState("EUR");
+  const {customer} = useContext(CustomerContext);
+
+  const theme = createTheme();
 
 const containerStyle = {
   position: 'center',
@@ -47,23 +65,52 @@ const rowStyle = {
   marginBottom: '10px',
 };
 
-const CheckoutPage = () => {
-  const [open, setOpen] = useState(true);
+const handleClose = () => {
+  setOpen(false);
+};
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+const handleConfirm = async () => {
+  console.log('Order confirmed');
+  handleClose();
+  navigate(`/${customer.type.toLowerCase()}/my-orders`);
+
+  if (order && typeof order === 'object') {
+    const updatedOrder = { ...order, status: "Finished" }; // Create a new object with updated status
+    
+    try {
+      const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/${order.id}/receipt`, {
+        ...PUT_FETCH_OPTIONS,
+        body: JSON.stringify({
+          costAmount: amount,
+          costCurrency: currency
+        })
+      });
+
+      if (res.ok) {
+        setOrders((prevOrders) => {
+          const updatedOrders = prevOrders.map((o) => (o.id === order.id ? updatedOrder : o));
+          return updatedOrders 
+        });
+        onSuccess();
+      } else {
+        setError(JSON.stringify((await res.json()).msg));
+      }
+    } catch (error) {
+      setError(error.message);
+    }
+  } else {
+    setError("Invalid order");
+  }
+
+  setUploadLoading(false);
+  return enqueueSnackbar("Payment done", {variant: "success"});
+};
 
   const handleCancel = () => {
-    // Handle cancel order
+    navigate(`/${customer.type.toLowerCase()}/my-orders`);
     console.log('Order canceled');
-    handleClose(); // Close the popup window
-  };
-
-  const handleConfirm = () => {
-    // Handle confirm order
-    console.log('Order confirmed');
-    handleClose();
+    handleClose(); 
+    return enqueueSnackbar("Payment cancelled", {variant: "warning"});
   };
 
   const buttonContainerStyle = {
@@ -71,14 +118,6 @@ const CheckoutPage = () => {
     justifyContent: 'flex-end', // Align buttons to the right
     marginTop: '20px', // Add some margin for spacing
     marginRight: '60px',
-  };
-
-  const confirmButtonStyle = {
-    height: '59.71940612792969px',
-    width: '200px',
-    background: '#AAC0AA',
-    borderRadius: '10px',
-    marginLeft: '10px', // Add some spacing between buttons
   };
   
   const cancelButtonStyle = {
@@ -89,8 +128,10 @@ const CheckoutPage = () => {
     borderRadius: '10px',
   };
   
-  return (
-    <Modal open={open} onClose={handleClose} style={modalStyle}>
+  
+    return <Modal
+                open={open} 
+                style={modalStyle}>
       <div>
         <ThemeProvider theme={theme}>
           <Container>
@@ -116,22 +157,22 @@ const CheckoutPage = () => {
                 </div>
               </div>
               <div style={lineStyle} />
-              <PaymentForm  />
+              <PaymentForm/>
               <div style={lineStyle} />
               <div style={buttonContainerStyle}>
   <Button sx={cancelButtonStyle} variant="contained" onClick={handleCancel}>
     Cancel
   </Button>
-  <Button sx={confirmButtonStyle} variant="contained" color="primary" onClick={handleConfirm}>
-    Confirm Order
-  </Button>
+  <DarkButton onClick={handleConfirm}>
+    Confirm
+  </DarkButton>
+
 </div>
             </Paper>
           </Container>
         </ThemeProvider>
       </div>
     </Modal>
-  );
-};
-
-export default CheckoutPage;
+    
+  
+}
