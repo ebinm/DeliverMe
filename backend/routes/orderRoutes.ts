@@ -12,6 +12,7 @@ import {
 } from "../controllers/orderController";
 import {bidOnOrder, selectBid} from "../controllers/bidController";
 import {rateBuyer, rateShopper} from "../controllers/reviewController";
+import { performCheckout, capturePayment } from '../controllers/payController';
 
 const
     router = express.Router();
@@ -145,6 +146,23 @@ router.post("/:id/chat", authenticated, async (req: AuthenticatedRequest, res, n
         next(e.message)
     }
 })
+
+router.post("/:id/checkout", authenticated, async (req: AuthenticatedRequest, res) => {
+    
+    const order = await performCheckout(req.customerId, req.params.id);
+  
+    if (order) {
+      res.json(order);
+    } else {
+      res.status(500).json({ error: "Failed to create PayPal order" });
+    }
+  });
+
+router.post(":id/capture",authenticated, async (req: AuthenticatedRequest, res) => {
+    const captureData = await capturePayment(req.params.id);
+    res.json(captureData);
+});
+  
 
 
 router.put("/:id/rate", authenticated, async (req: AuthenticatedRequest, res, next) => {

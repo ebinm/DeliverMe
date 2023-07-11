@@ -65,9 +65,10 @@ export async function sendMessage(customerId: string, senderType: CustomerType, 
     return await notificationService.sendChatMessage(order, message)
 }
 
+
+
 export async function uploadReceipt(customerId, orderId: string, receipt: Receipt) {
     const order = await OrderModel.findById(orderId)
-
     if (customerId !== order?.selectedBid?.createdBy?.toString()) {
         throw Error("Customer is not authorized to upload a receipt for this order.")
     }
