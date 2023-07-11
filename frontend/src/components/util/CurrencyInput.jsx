@@ -1,9 +1,9 @@
-import {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {MenuItem, Select, TextField} from "@mui/material";
 import Stack from "@mui/material/Stack";
 
 
-export function CurrencyInput({amount, setAmount, currency, setCurrency, sx, label, fullWidth=true}) {
+export function CurrencyInput({amount, setAmount, currency, setCurrency, sx, label, fullWidth= true, textFieldInputProps }) {
     const [inputting, setInputting] = useState(false)
 
     const numberFormatter = useMemo(() => new Intl.NumberFormat(undefined, {
@@ -32,6 +32,7 @@ export function CurrencyInput({amount, setAmount, currency, setCurrency, sx, lab
                 "step": "0.01",
                 "min": "0.0"
             }}
+            InputProps={textFieldInputProps}
 
             onFocus={() => {
                 setInputting(true)
@@ -52,7 +53,7 @@ export function CurrencyInput({amount, setAmount, currency, setCurrency, sx, lab
                 setAmount(x)
             }}
             type={inputting ? "number" : "text"}
-        />
+                />
         <Select
             value={currency}
             label={"Currency"}

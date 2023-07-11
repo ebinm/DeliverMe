@@ -46,7 +46,7 @@ export function Login() {
             exclusive
             sx={{
                 "marginTop": "8px",
-                "min-height": "2.3rem"
+                "minHeight": "2.3rem"
             }}
             variant="contained"
             aria-label="Choose customer type button"
