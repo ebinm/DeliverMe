@@ -71,7 +71,7 @@ export default function PayPal() {
                         value: formattedAmount
                       },
                       payee: {
-                        email_address: 'anxhela.maloku@tum.de'
+                        email_address: 'anxhela.maloku@tum.de' //TODO: shopper email, haven't changed due to test issues!!
                       }
                     }
                   ]
