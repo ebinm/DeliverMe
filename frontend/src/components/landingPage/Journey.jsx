@@ -14,7 +14,7 @@ const Journey = () => {
 
     const sectionItems = [{
         id: 1,
-        src: "images/journey1.png",
+        src: "images/journey1.svg",
         alt: "Journey1",
         offset: "60px",
         title: 'Location',
@@ -23,21 +23,21 @@ const Journey = () => {
         id: 2,
         alt: "Journey2",
         offset: "120px",
-        src: "images/journey2.png",
+        src: "images/journey2.svg",
         title: 'Shop groceries',
         sentence: 'Specify the groceries that you want',
     }, {
         id: 3,
         alt: "Journey3",
         offset: "120px",
-        src: "images/journey3.png",
+        src: "images/journey3.svg",
         title: 'Personal Shopper',
         sentence: 'Select a personal shopper for the delivery',
     }, {
         id: 4,
         alt: "Journey4",
         offset: "60px",
-        src: "images/journey4.png",
+        src: "images/journey4.svg",
         title: 'Groceries',
         sentence: 'Receive the groceries at your home',
     },];
