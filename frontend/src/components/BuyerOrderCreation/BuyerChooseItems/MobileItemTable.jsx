@@ -116,12 +116,15 @@ function ModalEditContent({item, setSelf, onClose}) {
                    label={"Additional Notes"}
                    multiline
                    onChange={(e) => setSelf(prev => ({...prev, note: e.currentTarget?.value}), item.localId)}
-                   endAdornment={
-                       <InfoPopover><Typography>Here you can specify for example an upper bound
-                           on
-                           the price or what to do when the item is
-                           not available.</Typography></InfoPopover>
-                   }/>
+                   InputProps={{
+                       endAdornment:
+                           <InfoPopover><Typography>Here you can specify for example an upper bound
+                               on
+                               the price or what to do when the item is
+                               not available.</Typography></InfoPopover>
+
+                   }}
+        />
         <DarkButton sx={{"alignSelf": "end"}} onClick={onClose}>Close</DarkButton>
     </Stack>
 }

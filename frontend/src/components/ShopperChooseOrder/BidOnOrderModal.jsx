@@ -9,6 +9,8 @@ import {CurrencyInput} from "../util/CurrencyInput";
 import {GuardCustomerType} from "../util/GuardCustomerType";
 import {DarkButton, OutlinedButton} from "../util/Buttons";
 import {PUT_FETCH_OPTIONS} from "../../util/util";
+import {InfoPopover} from "../util/InfoPopover";
+import Typography from "@mui/material/Typography";
 
 
 const BidOnOrderModal = ({showBidOnOrderModal, handleCloseBidOnOrderModal, handleCloseOrderDetailsModal, order}) => {
@@ -25,14 +27,10 @@ const BidOnOrderModal = ({showBidOnOrderModal, handleCloseBidOnOrderModal, handl
     const handleSubmit = async () => {
 
         const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/${order._id}/bid`, {
-            ...PUT_FETCH_OPTIONS,
-            body: JSON.stringify({
+            ...PUT_FETCH_OPTIONS, body: JSON.stringify({
                 moneyBid: {
-                    currency: bidCurrency,
-                    amount: bidAmount,
-                },
-                timeBid: bidDate,
-                note: bidNotes,
+                    currency: bidCurrency, amount: bidAmount,
+                }, timeBid: bidDate, note: bidNotes,
             })
         })
 
@@ -53,46 +51,48 @@ const BidOnOrderModal = ({showBidOnOrderModal, handleCloseBidOnOrderModal, handl
     };
 
 
-    return (
-        <GuardCustomerType requiredType={"SHOPPER"}>{() =>
-            <BaseModal
-                open={showBidOnOrderModal}
-                onClose={handleCloseBidOnOrderModal}
-                title={"Create your Bid"}
+    return (<GuardCustomerType requiredType={"SHOPPER"}>{() => <BaseModal
+        open={showBidOnOrderModal}
+        onClose={handleCloseBidOnOrderModal}
+        title={"Create your Bid"}
+    >
+        <Stack gap={"8px"}>
+            <CurrencyInput sx={{"width": "100%"}} align="center" label={"Bid Amount"} amount={bidAmount}
+                           setAmount={setBidAmount}
+                           textFieldInputProps={{
+                               endAdornment: <InfoPopover><Typography>Here you specify your personal fee for completing
+                                   this purchase. You will receive this fee in addition to the actual cost of the
+                                   purchase from the shopper.</Typography></InfoPopover>
+
+                           }}
+                           currency={bidCurrency} setCurrency={setBidCurrency}/>
+
+            <DateTimePicker
+                label={"Expected Deliver Time"}
+                disablePast
+                name={"BidDate"}
+                value={bidDate}
+                onChange={value => !isNaN(value) && setBidDate(value)}
+                slots={{"actionBar": ((props) => <CustomDateTimePickerActionBar {...props} />)}}
+                slotProps={{"textField": {variant: "outlined"}}}/>
+
+            <TextField
+                value={bidNotes} onChange={e => setBidNotes(e.target.value)}
+                multiline label={"Additional Notes"}
+            />
+
+
+            <Stack
+                direction={{xs: 'column', sm: 'row'}}
+                sx={{mt: 4, justifyContent: 'flex-end'}}
+                gap={"8px"}
             >
-                <Stack gap={"8px"}>
-                    <CurrencyInput sx={{"width": "100%"}} align="center" label={"Bid Amount"} amount={bidAmount}
-                                   setAmount={setBidAmount}
-                                   currency={bidCurrency} setCurrency={setBidCurrency}/>
+                <OutlinedButton onClick={handleCloseBidOnOrderModal}>Back</OutlinedButton>
+                <DarkButton onClick={handleSubmit}>Place bid</DarkButton>
+            </Stack>
 
-                    <DateTimePicker
-                        label={"Expected Deliver Time"}
-                        disablePast
-                        name={"BidDate"}
-                        value={bidDate}
-                        onChange={value => !isNaN(value) && setBidDate(value)}
-                        slots={{"actionBar": ((props) => <CustomDateTimePickerActionBar {...props} />)}}
-                        slotProps={{"textField": {variant: "outlined"}}}/>
-
-                    <TextField
-                        value={bidNotes} onChange={e => setBidNotes(e.target.value)}
-                        multiline label={"Additional Notes"}
-                    />
-
-
-                    <Stack
-                        direction={{xs: 'column', sm: 'row'}}
-                        sx={{mt: 4, justifyContent: 'flex-end'}}
-                        gap={"8px"}
-                    >
-                        <OutlinedButton onClick={handleCloseBidOnOrderModal}>Back</OutlinedButton>
-                        <DarkButton onClick={handleSubmit}>Place bid</DarkButton>
-                    </Stack>
-
-                </Stack>
-            </BaseModal>
-        }</GuardCustomerType>
-    );
+        </Stack>
+    </BaseModal>}</GuardCustomerType>);
 };
 
 export default BidOnOrderModal;
