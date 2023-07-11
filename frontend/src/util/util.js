@@ -32,4 +32,12 @@ const PUT_FETCH_OPTIONS = {
     }
 }
 
-export {PUT_FETCH_OPTIONS, formatUnitNumerusClausus, tryLoadFromLocalStorage}
+const POST_FETCH_OPTIONS = {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+        "Content-Type": "application/json"
+    }
+}
+
+export {PUT_FETCH_OPTIONS, POST_FETCH_OPTIONS, formatUnitNumerusClausus, tryLoadFromLocalStorage}

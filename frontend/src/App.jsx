@@ -2,7 +2,7 @@ import React from "react";
 import Header from "./components/Header";
 import {BuyerMyOrders} from "./components/MyOrders/BuyerMyOrders";
 import {ShopperMyOrders} from "./components/MyOrders/ShopperMyOrders";
-import CheckoutForm from "./components/payprovider/CheckoutPage";
+import {CheckoutPage} from "./components/payprovider/CheckoutPage";
 import {Route, Routes} from "react-router-dom";
 import {ShopperChooseOrderView} from "./components/ShopperChooseOrder/ShopperChooseOrderView";
 import {Signup} from "./components/authentication/Signup";
@@ -49,7 +49,7 @@ function App() {
                                     <Route path={"/buyer/my-orders/:id?/chat?"} element={<BuyerMyOrders/>}/>
 
                                     <Route path={"/buyer/order/create/*"} element={<BuyerOrderCreationView/>}/>
-                                    <Route path={"/checkout"} element={<CheckoutForm/>}/>
+                                    <Route path={"/buyer/my-orders/:id?/checkout"} element={<CheckoutPage/>}/>
                                     <Route path={"/me"} element={<PersonalProfile/>}/>
                                 </Routes>
                             </main>
