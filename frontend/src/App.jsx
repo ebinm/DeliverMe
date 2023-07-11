@@ -4,7 +4,6 @@ import {BuyerMyOrders} from "./components/MyOrders/BuyerMyOrders";
 import {ShopperMyOrders} from "./components/MyOrders/ShopperMyOrders";
 import {CheckoutPage} from "./components/payprovider/CheckoutPage";
 import {Route, Routes} from "react-router-dom";
-import {TestExample} from "./components/TestExample";
 import {ShopperChooseOrderView} from "./components/ShopperChooseOrder/ShopperChooseOrderView";
 import {Signup} from "./components/authentication/Signup";
 import {CustomerProvider} from "./util/context/CustomerContext";
@@ -16,36 +15,48 @@ import {SnackbarProvider} from 'notistack';
 import {BuyerOrderCreationView} from "./components/BuyerOrderCreation/BuyerOrderCreationView";
 import LandingPage from "./components/landingPage/LandingPage";
 import './App.css';
+import {PersonalProfile} from "./components/PersonalProfile/PersonalProfile";
+import {styled} from '@mui/material/styles';
+
+
+const StyledSnackbarProvider = styled(SnackbarProvider)``;
 
 function App() {
+
     return (
-        <CustomerProvider>
-            <SnackbarProvider>
-                <NotificationProvider>
-                    <LocalizationProvider dateAdapter={AdapterMoment}>
-                        <Header/>
-                        <main>
-                            <Routes>
-                                <Route path={"/"} element={<LandingPage/>}/>
-                                <Route path={"/shopper/signup"} element={<Signup type={"shopper"}/>}/>
-                                <Route path={"/buyer/signup"} element={<Signup type={"buyer"}/>}/>
-                                <Route path={"/login"} element={<Login/>}/>
+            <CustomerProvider>
+                <StyledSnackbarProvider
+                    maxSnack={3}
 
-                                <Route path={"/shopper/my-orders/:id?/chat?"} element={<ShopperMyOrders/>}/>
-                                <Route path={"/shopper/browseorders"} element={<ShopperChooseOrderView/>}/>
+                    sx={{
+                        fontSize: 16,
+                        fontFamily: 'Roboto, sans-serif'
+                    }}
+                >
+                    <NotificationProvider>
+                        <LocalizationProvider dateAdapter={AdapterMoment}>
+                            <Header/>
+                            <main>
+                                <Routes>
+                                    <Route path={"/"} element={<LandingPage/>}/>
+                                    <Route path={"/shopper/signup"} element={<Signup type={"shopper"}/>}/>
+                                    <Route path={"/buyer/signup"} element={<Signup type={"buyer"}/>}/>
+                                    <Route path={"/login"} element={<Login/>}/>
 
-                                <Route path={"/buyer/my-orders/:id?/chat?"} element={<BuyerMyOrders/>}/>
+                                    <Route path={"/shopper/my-orders/:id?/chat?"} element={<ShopperMyOrders/>}/>
+                                    <Route path={"/shopper/browseorders"} element={<ShopperChooseOrderView/>}/>
 
-                                <Route path={"/buyer/order/create/*"} element={<BuyerOrderCreationView/>}/>
-                                <Route path={"/buyer/my-orders/:id?/checkout"} element={<CheckoutPage/>}/>
+                                    <Route path={"/buyer/my-orders/:id?/chat?"} element={<BuyerMyOrders/>}/>
 
-                                <Route path={"test"} element={<TestExample/>}/>
-                            </Routes>
-                        </main>
-                    </LocalizationProvider>
-                </NotificationProvider>
-            </SnackbarProvider>
-        </CustomerProvider>
+                                    <Route path={"/buyer/order/create/*"} element={<BuyerOrderCreationView/>}/>
+                                    <Route path={"/buyer/my-orders/:id?/checkout"} element={<CheckoutPage/>}/>
+                                    <Route path={"/me"} element={<PersonalProfile/>}/>
+                                </Routes>
+                            </main>
+                        </LocalizationProvider>
+                    </NotificationProvider>
+                </StyledSnackbarProvider>
+            </CustomerProvider>
     );
 }
 

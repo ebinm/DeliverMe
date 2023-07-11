@@ -19,6 +19,18 @@ const deliverMeTheme = createTheme({
         orange: "#FFAC33"
     },
     components: {
+
+
+        MuiInputLabel: {
+            defaultProps: {
+                sx: {
+                    "color": "text.main",
+                    "&.Mui-focused": {
+                        "color": "primary.dark",
+                    }
+                }
+            },
+        },
         MuiListItemButton: {
             styleOverrides: {
                 root: {

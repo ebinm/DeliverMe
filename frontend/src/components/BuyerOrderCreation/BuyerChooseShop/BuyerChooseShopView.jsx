@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Box, CircularProgress, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText} from '@mui/material';
+import {Box, CircularProgress, List, ListItem, ListItemButton, ListItemIcon, ListItemText} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
@@ -10,9 +10,14 @@ import {Show} from "../../util/ControlFlow";
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 import {ShopListItem} from './ShopListItem';
 import {DarkButton, OutlinedButton} from "../../util/Buttons";
+import {useTheme} from "@mui/system";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 
-const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) => {
+const BuyerChooseShopView = ({onSubmitShop, setSelectedShop, selectedShop}) => {
+
+    const theme = useTheme();
+    const desktop = useMediaQuery(theme.breakpoints.up("md"))
 
     const [map, setMap] = useState(null);
     const [mapCenter, setMapCenter] = useState(null);
@@ -29,7 +34,7 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
 
     useEffect(() => {
         if (map) {
-            const defaultCenter = { lat: 48.137154, lng: 11.576124 }
+            const defaultCenter = {lat: 48.137154, lng: 11.576124}
             map.setCenter(defaultCenter);
             setMapCenter(defaultCenter);
         }
@@ -37,7 +42,7 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
 
     // We use useState as a way of handling a constant here to stop useJsApiLoader from triggering more than once.
     const [googleLibraries] = useState(["places"]);
-    const { isLoaded } = useJsApiLoader({
+    const {isLoaded} = useJsApiLoader({
         googleMapsApiKey: "AIzaSyCAiDt2WyuMhekA25EMEQgx_wVO_WQW8Ok",
         libraries: googleLibraries
     });
@@ -49,39 +54,38 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
             const placesService = new window.google.maps.places.PlacesService(map);
             const request = {
                 location: mapCenter,
-                radius: 100, // Info: for low API usage radius is reduced (4000)
+                radius: 100,
                 type: 'grocery_or_supermarket'
             };
 
             placesService.nearbySearch(request, (results, status) => {
-                // !!!!! for low API usage !!!!!
-
-                // if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-                //     // Fetch operating hours for each shop
-                //     const shopPromises = results.map((place) => {
-                //         return new Promise((resolve) => {
-                //             const detailsRequest = {
-                //                 placeId: place.place_id,
-                //                 fields: ['opening_hours']
-                //             };
-                //             placesService.getDetails(detailsRequest, (placeResult, placeStatus) => {
-                //                 if (placeStatus === window.google.maps.places.PlacesServiceStatus.OK) {
-                //                     // Add operating hours to the place object
-                //                     place.opening_hours = placeResult.opening_hours;
-                //                 }
-                //                 resolve(place);
-                //             });
-                //         });
-                //     });
-
-                //     // Wait for all promises to resolve and set the updated shops state
-                //     Promise.all(shopPromises).then((updatedShops) => {
-                //         setShops(updatedShops);
-                //         console.log("Shop infos: ", updatedShops);
-                //     });
-                // }
                 setShops(results);
-                console.log("Fetched shops: ", results);
+                console.log("Successfully Fetched Shops: ", results);
+
+                if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+                    // Fetch operating hours for each shop
+                    const shopPromises = results.map((place) => {
+                        return new Promise((resolve) => {
+                            const detailsRequest = {
+                                placeId: place.place_id,
+                                fields: ['opening_hours']
+                            };
+                            placesService.getDetails(detailsRequest, (placeResult, placeStatus) => {
+                                if (placeStatus === window.google.maps.places.PlacesServiceStatus.OK) {
+                                    // Add operating hours to the place object
+                                    place.opening_hours = placeResult.opening_hours;
+                                }
+                                resolve(place);
+                            });
+                        });
+                    });
+
+                    // Wait for all promises to resolve and set the updated shops state
+                    Promise.all(shopPromises).then((updatedShops) => {
+                        setShops(updatedShops);
+                        console.log("Successfully Fetched opening hours: ", updatedShops);
+                    });
+                }
             });
         }
     }, [map, mapCenter]);
@@ -101,7 +105,7 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
             autocompleteService.getPlacePredictions(request, (predictions, status) => {
                 if (status === window.google.maps.places.PlacesServiceStatus.OK && predictions?.length > 0) {
                     const placeId = predictions[0].place_id;
-                    placesService.getDetails({ placeId }, (place, status) => {
+                    placesService.getDetails({placeId}, (place, status) => {
                         if (status === window.google.maps.places.PlacesServiceStatus.OK) {
                             map.setCenter(place.geometry.location);
                             setMapCenter(place.geometry.location);
@@ -124,6 +128,7 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
     };
 
     const handleListEntryClick = (shop) => {
+
         const [street, city] = shop.vicinity.split(', ');
         shop.city = city;
         shop.street = street;
@@ -146,89 +151,103 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
         map.setCenter(place.geometry.location);
         setMapCenter(place.geometry.location);
 
-        const [street, postalCodeCity, country] = place.formattedAddress.split(', ');
-        const [address, city] = postalCodeCity.split(' ');
-        place.city = city;
-        place.street = street;
-
         setCustomShop(place);
         setSelectedShop(place);
     };
 
+    // Yes, these are a lot of nested stacks, but it makes creating a responsive design easier
     return (
-        <Box sx={{ "height": "100%" }}>
-            <DefineCustomShopModal
-                showModal={showModal}
-                handleCloseModal={handleCloseModal}
-                searchValue={searchValue}
-                setSearchValue={setSearchValue}
-                handleCustomShopSelect={handleCustomShopSelect}
-            />
+        <Stack direction={"column"} width={"100%"} gap={"32px"} height={"100%"}
+               justifyContent={"space-between"}>
 
-            <Grid container spacing={5}>
-                <Grid item xs={6} md={4}>
+            {/* TODO do not hardcode the height...*/}
+            <Stack direction={{md: "row", xs: "column"}} sx={{"height": "100%"}} gap={"32px"} maxHeight={{"sm": "auto", "md": "70lvh"}}>
+                <DefineCustomShopModal
+                    showModal={showModal}
+                    handleCloseModal={handleCloseModal}
+                    searchValue={searchValue}
+                    setSearchValue={setSearchValue}
+                    handleCustomShopSelect={handleCustomShopSelect}
+                />
+
+                <Stack direction={"column"} flex={1}>
                     <Typography variant={"h4"} component={"h1"}> Select a Shop</Typography>
-                </Grid>
-                <Grid item xs={6} md={8}>
+
+
+                    <Show when={isLoaded} fallback={<CircularProgress sx={{color: "primary.dark"}}/>}>
+                        <Box sx={{overflow: 'auto'}}>
+                            <List>
+                                <Divider sx={{mb: 2}}/>
+
+                                <ListItem key={0}>
+                                    <ListItemButton variant="outlined"
+                                                    sx={{bgcolor: "primary.dark", borderRadius: '10px', boxShadow: 3}}
+                                                    onClick={() => handleOpenModal()}>
+                                        <ListItemIcon sx={{justifyContent: 'left'}}>
+                                            {<TravelExploreIcon/>}
+                                        </ListItemIcon>
+                                        <ListItemText
+                                            disableTypography
+                                            primary={<Typography style={{
+                                                color: '#FFFFFF',
+                                                fontFamily: 'Roboto',
+                                                textTransform: 'uppercase'
+                                            }}>
+                                                Define Custom Shop
+                                            </Typography>}
+                                        />
+                                    </ListItemButton>
+                                </ListItem>
+
+                                {CustomShop &&
+                                    (<ListItem key={1}>
+                                        <ListItemButton
+                                            selected={selectedShop === CustomShop}
+                                            sx={{bgcolor: "white", borderRadius: '10px', boxShadow: 3}}
+                                            onClick={() => handleListEntryClick(CustomShop)}>
+                                            <ListItemText primary={CustomShop.name} secondary="Your Custom Shop"/>
+                                        </ListItemButton>
+                                    </ListItem>)}
+
+                                <Divider sx={{mt: 2, mb: 2}}/>
+
+                                {shops
+                                    .map(shop => (
+                                        <ShopListItem key={shop.place_id} shop={shop} selectedShop={selectedShop}
+                                                      currentDay={currentDay}
+                                                      handleListEntryClick={handleListEntryClick}/>
+                                    ))}
+                            </List>
+                        </Box>
+
+                    </Show>
+
+                </Stack>
+
+                <Stack direction={"column"} flex={2} gap={"16px"}>
                     <Stack
-                        direction={{ xs: 'column', sm: 'row' }}
-                        divider={<Divider orientation="vertical" flexItem />}
-                        spacing={{ xs: 1, sm: 1, md: 1 }}
-                        sx={{ mb: 2 }}
+                        direction={{xs: 'column', sm: 'row'}}
+                        divider={<Divider orientation="vertical" flexItem/>}
                     >
                         <TextField
                             id="location"
-                            label="Seach Location"
+                            label="Search Location"
                             defaultValue={searchValue}
                             onChange={handleInputChange}
                             onKeyDown={handleInputKeyDown}
-                            sx={{ width: '100%' }}
+                            sx={{width: '100%'}}
                         />
-                        <DarkButton onClick={handlePlaceSelect}>Search</DarkButton>
+                        <DarkButton sx={{"alignSelf": "stretch", "minWidth": ""}}
+                                    onClick={handlePlaceSelect}>Search</DarkButton>
                     </Stack>
-                </Grid>
-            </Grid>
-            <Grid container spacing={5} sx={{ mb: 2 }}>
-                <Show when={isLoaded} fallback={<CircularProgress  sx={{color: "primary.dark"}} />}>
-                    <Grid item xs={6} md={4} sx={{ maxHeight: '70vh', overflow: 'auto' }}>
-                        <List>
 
-                            <Divider sx={{ mb: 2 }} />
 
-                            <ListItem key={0}>
-                                <ListItemButton variant="outlined"
-                                    sx={{ bgcolor: "primary.dark", borderRadius: '10px', boxShadow: 3 }}
-                                    onClick={() => handleOpenModal()}>
-                                    <ListItemIcon sx={{ justifyContent: 'left' }}>
-                                        {<TravelExploreIcon />}
-                                    </ListItemIcon>
-                                    <ListItemText primary="Define Custom Shop" />
-                                </ListItemButton>
-                            </ListItem>
-
-                            {CustomShop &&
-                                (<ListItem key={1}>
-                                    <ListItemButton
-                                        selected={selectedShop === CustomShop}
-                                        sx={{ bgcolor: "white", borderRadius: '10px', boxShadow: 3 }}
-                                        onClick={() => handleListEntryClick(CustomShop)}>
-                                        <ListItemText primary={CustomShop.name} secondary="Your Custom Shop" />
-                                    </ListItemButton>
-                                </ListItem>)}
-
-                            <Divider sx={{ mt: 2, mb: 2 }} />
-
-                            {shops
-                                .map(shop => (
-                                    <ShopListItem key={shop.place_id} shop={shop} selectedShop={selectedShop} handleListEntryClick={handleListEntryClick} />
-                                ))}
-                        </List>
-                    </Grid>
-                    <Grid item xs={6} md={8}>
+                    <Show when={isLoaded} fallback={<CircularProgress sx={{color: "primary.dark"}}/>}>
                         <GoogleMap
                             mapContainerStyle={{
                                 width: '100%',
-                                height: '70vh'
+                                height: '100%',
+                                minHeight: desktop ? undefined : "800px"
                             }}
                             zoom={14}
                             onLoad={map => setMap(map)}
@@ -240,27 +259,23 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
                             ) : null}
 
                         </GoogleMap>
-                    </Grid>
-                </Show>
-            </Grid>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'row-reverse',
-                }}
-            >
-                <Stack
-                    direction={{ xs: 'column', sm: 'row' }}
-                    divider={<Divider orientation="vertical" flexItem />}
-                    spacing={{ xs: 1, sm: 1, md: 1 }}
-                    sx={{ mb: 2 }}
-                >
-                    <OutlinedButton  onClick={() => onSubmitShop(null)}>Skip</OutlinedButton>
-                    <DarkButton onClick={() => onSubmitShop(selectedShop)}>Select Shop</DarkButton>
+                    </Show>
                 </Stack>
-            </Box>
-        </Box>
+
+
+            </Stack>
+
+            <Stack
+                direction={"row"}
+                alignSelf={"end"}
+                flexWrap={"wrap"}
+                gap={"8px"}
+            >
+                <OutlinedButton onClick={() => onSubmitShop(null)}>Skip</OutlinedButton>
+                <DarkButton onClick={() => onSubmitShop(selectedShop)}>Select Shop</DarkButton>
+            </Stack>
+        </Stack>
     );
 };
 
-export { BuyerChooseShopView };
+export {BuyerChooseShopView};

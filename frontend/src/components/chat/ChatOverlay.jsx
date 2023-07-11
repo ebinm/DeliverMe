@@ -12,8 +12,14 @@ import {For, Show} from "../util/ControlFlow";
 import Button from "@mui/material/Button";
 import SendIcon from '@mui/icons-material/Send';
 import ClearIcon from '@mui/icons-material/Clear';
+import {useTheme} from "@mui/system";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export function ChatOverlay({order, open, onClose}) {
+
+
+    const theme = useTheme();
+    const desktop = useMediaQuery(theme.breakpoints.up("sm"))
 
     const {customer} = useContext(CustomerContext)
 
@@ -43,7 +49,9 @@ export function ChatOverlay({order, open, onClose}) {
                 <ChatMessageContext.Consumer>{({messages, sendMessage, setText, text, error}) =>
 
                     <>
-                        <Box sx={{"flex": "1"}} onClick={onClose}/>
+                        <Show when={desktop}>
+                            <Box sx={{"flex": "1"}} onClick={onClose}/>
+                        </Show>
 
                         <Stack sx={{"flex": "2", "backgroundColor": "white"}} direction={"column"}>
 
@@ -62,7 +70,7 @@ export function ChatOverlay({order, open, onClose}) {
                                        margin={"16px 0"}>
                                     <Avatar imgProps={{sx: {padding: '0px'}}} sx={{"width": "56", "height": "56"}}
                                             alt={otherPerson.firstName + " " + otherPerson.lastName}
-                                            src={`data:image/jpeg;base64,${otherPerson.profilePicture}`}/>
+                                            src={otherPerson.profilePicture}/>
                                     <Typography
                                         variant={"h5"}>{otherPerson.firstName} {otherPerson.lastName}</Typography>
                                 </Stack>
@@ -122,7 +130,7 @@ export function ChatOverlay({order, open, onClose}) {
 
 function ChatMessage({message, foreign}) {
 
-    return <Box boxShadow={2} sx={{
+    return <Box boxShadow={3} sx={{
         "alignSelf": foreign ? "start" : "end",
         "backgroundColor": foreign ? "#f2f2f7" : "#3d6cfe",
         "color": foreign ? "text.dark" : "white",

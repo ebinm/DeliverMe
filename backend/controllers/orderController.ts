@@ -3,7 +3,7 @@ import {Receipt} from "../models/receipt";
 import {notificationService} from "../index";
 import {NotificationType} from "../models/notification";
 import {Message} from "../models/message";
-import {CustomerType} from "../models/customer";
+import {CustomerType, Shopper} from "../models/customer";
 
 export async function getAllOrders(): Promise<Order[]> {
 
@@ -13,8 +13,11 @@ export async function getAllOrders(): Promise<Order[]> {
 
 export async function getOrdersForBuyer(buyerId: string): Promise<Order[]> {
     return OrderModel.find({"createdBy": buyerId})
-        .populate({path: "bids.createdBy", select: "firstName lastName avgRating profilePicture"})
-        .populate({path: "selectedBid.createdBy", select: "firstName lastName avgRating profilePicture"})
+        .populate({path: "bids.createdBy", select: "firstName lastName avgRating profilePicture email phoneNumber"})
+        .populate({
+            path: "selectedBid.createdBy",
+            select: "firstName lastName avgRating profilePicture email phoneNumber"
+        })
         .select("-groceryBill")
         .sort({creationDate: -1});
 }
@@ -22,13 +25,16 @@ export async function getOrdersForBuyer(buyerId: string): Promise<Order[]> {
 export async function getOrdersForShopper(shopperId: string) {
     const orders = await OrderModel.find({
         "$or": [
-            {"status": OrderStatus.Open, "bids": {"$elemMatch": {"createdBy": shopperId}}},
+            {"status": OrderStatus.Open, "bids": {"$elemMatch": {"createdBy._id": shopperId}}},
             {"selectedBid.createdBy": shopperId}
         ]
     })
-        .populate({path: "createdBy", select: "firstName lastName _id profilePicture"})
-        .populate({path: "bids.createdBy", select: "firstName lastName avgRating profilePicture"})
-        .populate({path: "selectedBid.createdBy", select: "firstName lastName avgRating profilePicture"})
+        .populate({path: "createdBy", select: "firstName lastName _id profilePicture phoneNumber email"})
+        .populate({path: "bids.createdBy", select: "firstName lastName avgRating profilePicture email phoneNumber"})
+        .populate({
+            path: "selectedBid.createdBy",
+            select: "firstName lastName avgRating profilePicture email phoneNumber"
+        })
         .select("-groceryBill")
         .sort({creationDate: -1});
 
@@ -36,7 +42,7 @@ export async function getOrdersForShopper(shopperId: string) {
     // TODO figure out how to do this in the query
     orders.forEach(order => {
         // @ts-ignore
-        order.bids = order.bids.filter(bid => bid.createdBy._id = shopperId)
+        order.bids = order.bids.filter(bid => bid.createdBy._id === shopperId)
     })
 
     return orders
@@ -91,8 +97,9 @@ export async function uploadReceipt(customerId, orderId: string, receipt: Receip
 }
 
 export async function getOpenOrders(shopperId: string): Promise<Order[]> {
+    const shopperPromise = Shopper.findById(shopperId)
 
-    return OrderModel.aggregate().match({
+    const orders = await OrderModel.aggregate().match({
         "status": "Open"
     }).lookup({
         from: "buyers", localField: "createdBy",
@@ -106,11 +113,22 @@ export async function getOpenOrders(shopperId: string): Promise<Order[]> {
             "$filter": {
                 "input": "$bids",
                 "as": "bids",
-                "cond": {"createdBy": shopperId}
+                "cond": {"createdBy": shopperId},
             }
         }
-    });
+    })
 
+    const shopper = await shopperPromise
+
+    // Doing this in the query is non-trivial, so we do it separately
+    // (we only select our own bids, so we can do this)
+    orders.forEach(order => {
+        order.bids?.forEach(bid => {
+            bid.createdBy = shopper
+        })
+    })
+
+    return orders
 }
 
 export async function getOrderById(orderId: string): Promise<Order> {

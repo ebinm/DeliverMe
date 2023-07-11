@@ -1,27 +1,27 @@
-import {Accordion, AccordionDetails, AccordionSummary, ButtonGroup, Typography} from "@mui/material";
-import {Show} from "../util/ControlFlow";
-import {BidSelectionView} from "./BidSelectionView";
-import {useState} from "react";
-import {SingleBidView} from "./SingleBidView";
-import {SingleOrderViewCommon} from "./SingleOrderViewCommon";
+import { Accordion, AccordionDetails, AccordionSummary, ButtonGroup, Typography } from "@mui/material";
+import { Show } from "../util/ControlFlow";
+import { BidSelectionView } from "./BidSelectionView";
+import { useState } from "react";
+import { SingleBidView } from "./SingleBidView";
+import { SingleOrderViewCommon } from "./SingleOrderViewCommon";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import {BaseModal} from "../util/BaseModal";
+import { BaseModal } from "../util/BaseModal";
 import Stack from "@mui/material/Stack";
-import {DarkButton, OutlinedButton} from "../util/Buttons";
-import {PUT_FETCH_OPTIONS} from "../../util/util";
+import { DarkButton, OutlinedButton } from "../util/Buttons";
+import { PUT_FETCH_OPTIONS } from "../../util/util";
 
-export function SingleOrderViewBuyer({order, orderName, setOrders}) {
+export function SingleOrderViewBuyer({ order, orderName, setOrders }) {
 
     const [selectedBid, setSelectedBid] = useState()
     const [confirmOrderModalOpen, setConfirmOrderModalOpen] = useState(false)
 
     return <>
-        <BaseModal open={confirmOrderModalOpen} onClose={() => setConfirmOrderModalOpen(false)}>
+        <BaseModal open={confirmOrderModalOpen} onClose={() => setConfirmOrderModalOpen(false)} title={"Warning"}>
             {/*TODO "Jetzt kostenpflichtig betsellen"*/}
-            <Typography sx={{"margin": "8px"}}>Are you sure you want to accept this bid? This cannot be
+            <Typography align="center" sx={{ "margin": "8px" }}>Are you sure you want to accept this bid? This cannot be
                 undone.</Typography>
-            <Stack direction={"row-reverse"} gap={"8px"} sx={{"mt": "32px"}}>
-                <DarkButton onClick={async () => {
+            <Stack direction={{"xs": "column-reverse", "sm": "row-reverse"}} gap={"8px"} sx={{ "mt": "32px" }}>
+                <DarkButton sx={{ "flexGrow": "1" }} onClick={async () => {
                     const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/${order._id}/selectBid`, {
                         ...PUT_FETCH_OPTIONS,
                         body: JSON.stringify({
@@ -46,7 +46,7 @@ export function SingleOrderViewBuyer({order, orderName, setOrders}) {
                     }
 
                 }}>Confirm</DarkButton>
-                <OutlinedButton onClick={() => {
+                <OutlinedButton sx={{ "flexGrow": "1" }} onClick={() => {
                     setConfirmOrderModalOpen(false)
                 }}>Cancel</OutlinedButton>
             </Stack>
@@ -55,7 +55,7 @@ export function SingleOrderViewBuyer({order, orderName, setOrders}) {
         <SingleOrderViewCommon
             orderName={orderName}
             order={order} contact={order.selectedBid?.createdBy}
-            buttons={<ButtonGroup sx={{"justifyContent": "end"}}>
+            buttons={<ButtonGroup sx={{ "justifyContent": "end" }}>
                 <Show when={selectedBid !== undefined}>
                     <DarkButton onClick={() => {
                         setConfirmOrderModalOpen(true)
@@ -65,17 +65,17 @@ export function SingleOrderViewBuyer({order, orderName, setOrders}) {
 
             bidView={
                 <Show when={order.selectedBid}
-                      fallback={<BidSelectionView bids={order.bids} selected={selectedBid}
-                                                  setSelected={setSelectedBid}/>}>{selectedBid =>
-                    <Accordion defaultExpanded={true}>
-                        <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                            <Typography color={"text.light"} variant={"h6"} component={"h3"}>Selected bid</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <SingleBidView bid={selectedBid} highlightOnHover={false}/>
-                        </AccordionDetails>
-                    </Accordion>
-                }
+                    fallback={<BidSelectionView bids={order.bids} selected={selectedBid}
+                        setSelected={setSelectedBid} />}>{selectedBid =>
+                            <Accordion defaultExpanded={true}>
+                                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                    <Typography color={"text.light"} variant={"h6"} component={"h3"}>Selected bid</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <SingleBidView bid={selectedBid} highlightOnHover={false} />
+                                </AccordionDetails>
+                            </Accordion>
+                    }
                 </Show>
             }
         />

@@ -52,11 +52,19 @@ export async function deleteBid(bidId: string) {
 
 export async function bidOnOrder(shopperId: string, orderId: string, bid: Bid): Promise<Order> {
 
+    if(typeof bid.moneyBid.amount !== "number" || bid.moneyBid.amount <= 0){
+        throw new Error("The bid has a bad format")
+    }
+
+    bid.moneyBid.amount = Math.round(bid.moneyBid.amount * 100) / 100
+
     const order = await getOrderById(orderId);
 
     if (!order) {
         throw new Error("Order with orderId does not exist")
     }
+
+
 
     //@ts-ignore
     bid.createdBy = shopperId.toString()

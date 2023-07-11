@@ -1,12 +1,27 @@
-import {Modal, Paper} from "@mui/material";
+import {Divider, Modal, Paper, Typography} from "@mui/material";
+import {Show} from "./ControlFlow";
 
 export function BaseModal(props) {
-    const {open, onClose, children, sx, ...other} = props
-    return <Modal open={open} onClose={onClose}
-                  sx={{"display": "flex", "alignItems": "center", "justifyContent": "center"}}>
-        <Paper sx={{"padding": "16px", "maxHeight": "80vh", "overflowY": "auto",  ...sx}} {...other}>
-            {children}
-        </Paper>
-    </Modal>
+
+    const { open, onClose, title, children, sx, ...other } = props
+
+    return (
+        <Modal open={open} onClose={onClose}
+            sx={{ "display": "flex", "alignItems": "center", "justifyContent": "center", "borderRadius": 16}}>
+
+            <Paper sx={{ "display": "flex", "padding": "30px", "minHeight": "30%", "justifyContent": "space-between", "flexDirection": "column", "maxHeight": "90vh", "overflow": "auto", ...sx }} {...other}>
+                <Show when={title}>{() =>
+                    <div>
+                        <Typography align="center" fontWeight={"Bold"} variant="h5" sx={{ mb: 1 }}>
+                            {title}
+                        </Typography>
+                        <Divider sx={{mb:4}}/>
+                    </div>
+                }</Show>
+                {children}
+            </Paper>
+
+        </Modal>
+    )
 
 }

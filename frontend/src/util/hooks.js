@@ -1,8 +1,12 @@
-import {useCallback, useContext, useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useRef, useState} from "react";
 import {tryLoadFromLocalStorage} from "./util";
 import {CustomerContext} from "./context/CustomerContext";
 
 
+/**
+ *
+ * @returns An array of the items, a local set state function, the loading state, an error object, a refetch function
+ */
 function useFetch(endpoint, options = {}, onSuccess = undefined, onFinally = undefined) {
 
     // A note on the loading state: We do not consider abortions to be errors as they trigger
@@ -13,15 +17,19 @@ function useFetch(endpoint, options = {}, onSuccess = undefined, onFinally = und
     const [error, setError] = useState(undefined)
     const [item, setItem] = useState(undefined)
 
-    useEffect(() => {
+    const abortControllerRef = useRef()
+
+    async function callFetch(){
         if (!endpoint) {
             return
         }
 
+        abortControllerRef.current?.abort()
         const ac = new AbortController()
+        abortControllerRef.current = ac
         setLoading(true)
         setError(undefined)
-        fetch(endpoint, {signal: ac.signal, ...options})
+        await fetch(endpoint, {signal: ac.signal, ...options})
             .then(res => {
                 if (res.ok) {
                     return res.json()
@@ -43,9 +51,13 @@ function useFetch(endpoint, options = {}, onSuccess = undefined, onFinally = und
         }).finally(() => {
             onFinally && onFinally()
         })
+    }
+
+    useEffect(() => {
+        callFetch()
 
         return () => {
-            ac.abort()
+            abortControllerRef.current?.abort()
             setLoading(false)
             setError({msg: "Aborted fetch"})
         }
@@ -55,7 +67,8 @@ function useFetch(endpoint, options = {}, onSuccess = undefined, onFinally = und
         item,
         setItem,
         loading,
-        error
+        error,
+        callFetch
     ]
 }
 

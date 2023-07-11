@@ -3,7 +3,6 @@ import {Route, Routes, useNavigate} from "react-router-dom";
 import {BuyerChooseItems} from "./BuyerChooseItems/BuyerChooseItems";
 import {BuyerOrderSummary} from "./BuyerOrderSummary/BuyerOrderSummary";
 import {useCacheLocalStorageForCustomer} from "../../util/hooks";
-import {GuardCustomerType} from "../util/GuardCustomerType";
 
 
 export function BuyerOrderCreationView() {
@@ -18,7 +17,6 @@ export function BuyerOrderCreationView() {
 
 
     return (
-        <GuardCustomerType requiredType={"BUYER"} navigateOnInvalidType={"/shopper/browseorders"}>{() =>
             <Routes>
                 <Route index={true} path={"/"}
                        element={<BuyerChooseShopView setSelectedShop={setSelectedShop} selectedShop={selectedShop}
@@ -46,6 +44,5 @@ export function BuyerOrderCreationView() {
                            clearShop()
                        }}/>}/>
             </Routes>
-        }</GuardCustomerType>
     )
 }

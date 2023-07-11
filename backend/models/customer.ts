@@ -12,6 +12,7 @@ interface Customer extends mongoose.Document {
     profilePicture: string,
     avgRating: number,
     notifications: UserNotification[],
+    phoneNumber: string | null | undefined
 }
 
 /**
@@ -44,6 +45,10 @@ const CustomerSchema = new mongoose.Schema<Customer>({
     avgRating: {
         type: Number,
         default: null
+    },
+    phoneNumber: {
+        type: String,
+        required: false
     }
 });
 

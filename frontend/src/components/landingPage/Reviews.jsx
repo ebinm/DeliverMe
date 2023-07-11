@@ -1,5 +1,9 @@
 import React from 'react'
 import {Avatar, Grid, Paper, Rating, Typography} from "@mui/material";
+import Stack from "@mui/material/Stack";
+import {useTheme} from "@mui/system";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import moment from "moment";
 
 function Reviews() {
     let shoppers = [
@@ -61,8 +65,9 @@ function Reviews() {
     ]
 
     return (
-        <div style={{maxWidth: '1400px', justifySelf: 'center'}}>
+        <Stack direction={"column"} style={{justifySelf: 'center', "width": "100%", "maxWidth": "1400px"}}>
             <Typography variant="h3" sx={{
+                mt: "32px",
                 justifySelf: 'center',
                 paddingTop: '50px',
                 paddingBottom: '50px',
@@ -74,22 +79,25 @@ function Reviews() {
             }}>
                 Featured Personal Shoppers
             </Typography>
-            {shoppers.map((item, i) => <Item key={i} item={item}/>)}
-        </div>
+            {shoppers.map((item, i) => <SingleReview key={i} item={item}/>)}
+        </Stack>
     )
 }
 
-function Item(props) {
+function SingleReview(props) {
+    const theme = useTheme();
+    const desktop = useMediaQuery(theme.breakpoints.up("md"))
+
     return (
         <Paper style={{
-            padding: "40px", marginTop: 10, minWidth: '1200px'
+            padding: "40px", marginTop: 10, flexGrow: 1
         }}>
-            <div>
-                <Grid container wrap="nowrap" spacing={2}>
-                    <Grid item>
-                        <Avatar alt={props.item.firstName + " " + props.item.lastName} src={props.item.avatar}/>
-                    </Grid>
-                    <Grid justifyContent="left" item xs zeroMinWidth>
+            <Stack direction={"row"} alignItems={"center"} gap={"16px"} sx={{"alignItems": "center"}} mb={"32px"}>
+                <Avatar alt={props.item.firstName + " " + props.item.lastName} src={props.item.avatar}/>
+
+                <Stack direction={"row"} flexWrap={"wrap"} columnGap={"16px"}
+                       justifyContent={"space-between"} alignItems={"center"} flex={1}>
+                    <Grid justifyContent="left" item xs sx={{"minWidth": "70%"}}>
                         <Typography variant="h5" sx={{
                             margin: 0,
                             textAlign: "left"
@@ -102,16 +110,17 @@ function Item(props) {
                             opacity: 0.7,
                             marginBottom: 1
                         }}>
-                            Personal Shopper   &#8729;   {props.item.buyers.length} reviews
+                            Personal Shopper   &#8729;   {props.item.buyers.length}&nbsp;reviews
                         </Typography>
                     </Grid>
-                    <Grid>
-                        <Rating name="Rating {props.item.firstName} {props.item.lastName}" precision={0.5}
-                                size='large' value={averageRating(props.item.buyers)} readOnly/>
-                    </Grid>
-                </Grid>
-                {props.item.buyers.map((item, i) => <Buyer key={i} item={item}/>)}
-            </div>
+
+                    <Rating name="Rating {props.item.firstName} {props.item.lastName}" precision={0.5}
+                            size={desktop ? "large" : "small"} value={averageRating(props.item.buyers)} readOnly/>
+
+                </Stack>
+            </Stack>
+
+            {props.item.buyers.map((item, i) => <Buyer key={i} item={item}/>)}
         </Paper>
     )
 }
@@ -134,56 +143,18 @@ function Buyer(props) {
                 marginBottom: 1.5,
                 fontSize: '0.8rem'
             }}>
-                posted {calculatePastDays(props.item.review.date)}
+                posted {moment(props.item.review.date).fromNow() }
             </Typography>
         </>
     )
 }
 
-function calculatePastDays(date) {
-    let currentDate = new Date();
-    let difference = currentDate.getTime() - date.getTime();
-    let totalDays = Math.floor(difference / (1000 * 3600 * 24));
-
-    if (totalDays === 0) {
-        return "today"
-    } else {
-        if (totalDays < 30) {
-            return totalDays + " days ago"
-        } else {
-            let totalMonths = Math.floor(totalDays / 30);
-
-            if (totalMonths < 12) {
-
-                if (totalMonths > 1) {
-                    return totalMonths + " months ago"
-                } else {
-                    return totalMonths + " month ago"
-                }
-
-            } else {
-                let totalYears = Math.floor(totalMonths / 12);
-
-                if (totalYears > 1) {
-                    return totalYears + " years ago"
-                } else {
-                    return totalYears + " year ago"
-                }
-            }
-
-        }
-    }
-}
-
 function averageRating(buyers) {
-    let length = buyers.length;
     let agg = 0;
     for (let buyer of buyers) {
         agg += buyer.review.rating;
     }
-    let result = agg / length
-    console.log(result)
-    return result
+    return agg / buyers.length
 }
 
 export default Reviews

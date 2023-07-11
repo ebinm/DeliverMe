@@ -19,7 +19,7 @@ export function BuyerMyOrders() {
                 <For fallback={<Typography>You have not created any orders yet.</Typography>}
                      each={orders}>{(order, index) =>
                     <SingleOrderViewBuyer setOrders={setOrders} key={order._id} order={order}
-                                          orderName={`Order ${index}`}/>
+                                          orderName={`Order ${index + 1}`}/>
                 }</For>
             </Show>
 

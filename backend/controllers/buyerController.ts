@@ -17,7 +17,7 @@ export async function findBuyerById(id: string): Promise<Customer & Typed> {
 
 }
 
-export async function updateBuyer(buyerId: string, buyer: Customer) {
+export async function updateBuyer(buyerId: string, buyer: Partial<Customer>) {
 
     const newBuyer = await Buyer.findByIdAndUpdate(buyerId, { $set: buyer }, {
         new: true,
