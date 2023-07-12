@@ -36,7 +36,7 @@ export function createNotificationService(server: io.Server): NotificationServic
             .then((res) => {
                 res.notifications?.forEach((it) => {
                     if (socket !== undefined) {
-                        socket.emit("notification", JSON.stringify(it))
+                        socket.emit("initial_notification", JSON.stringify(it))
                     }
                 })
             })
