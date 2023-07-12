@@ -1,14 +1,8 @@
 import React, { useState, useContext } from 'react';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Paper from '@mui/material/Paper';
-import {createTheme, ThemeProvider} from '@mui/material/styles';
-import Modal from '@mui/material/Modal';
+import { Box, Container, Typography } from '@mui/material';
 import PaymentForm from './PaymentForm';
 import {DarkButton, OutlinedButton} from "../util/Buttons";
 import {useSnackbar} from "notistack";
-import {PUT_FETCH_OPTIONS} from "../../util/util";
 import {useFetch} from "../../util/hooks";
 import {CustomerContext} from "../../util/context/CustomerContext";
 import {useNavigate } from "react-router-dom";
@@ -32,47 +26,20 @@ export  function CheckoutPage() {
 
   const {customer} = useContext(CustomerContext);
 
-const modalStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-};
 
-const lineStyle = {
-  borderBottom: '1px solid #E2E8F0',
-  width: '95%',
-  margin: '10px',
-};
 
-const contentStyle = {
-  margin: '40px',
-  flex: 1,
-};
+  const lineStyle = {
+    borderBottom: '1px solid #E2E8F0',
+    width: '98%',
+    margin: '10px',
+  };
 
-const paymentDetailsStyle = {
-  margin: '20px',
-};
+  const rowStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: '10px',
+  };
 
-const rowStyle = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  marginBottom: '10px',
-};
-
-const buttonContainerStyle = {
-  display: 'flex',
-  justifyContent: 'flex-end', // Align buttons to the right
-  marginTop: '20px', // Add some margin for spacing
-  marginRight: '60px',
-};
-
-const cancelButtonStyle = {
-  height: '59.71940612792969px',
-  width: '200px',
-  background: 'white',
-  color: '#4A5568',
-  borderRadius: '10px',
-};
 
 const handleClose = () => {
   setOpen(false);
@@ -95,23 +62,22 @@ const handleConfirm = async () => {
   
   
     return <BaseModal
-                open={open} 
-                style={modalStyle}>
-      <div>
+                open={open} >
+      <Box>
           <Container>
-              <div className="payment-details" style={paymentDetailsStyle}>
+              <Box >
                 <Typography component="h1" variant="h5" align="left">
                   Payment Details
                 </Typography>
-              </div>
+              </Box>
               <div style={lineStyle} />
               
-              <div style={contentStyle}>
+              <Box>
               {orders && orders?.selectedBid &&(
                 <div style={rowStyle}>
                   {/*  total-bill?? */}
                   <Typography variant="body1">Delivery Costs (with fee)</Typography>
-                  <Typography variant="body1">{orders?.selectedBid?.moneyBid.amount}  {orders?.selectedBid?.moneyBid.currency}</Typography>
+                  <Typography variant="body1">{orders?.selectedBid?.moneyBid.amount} {orders?.selectedBid?.moneyBid.currency}</Typography>
                 </div>
               )}
 
@@ -127,24 +93,18 @@ const handleConfirm = async () => {
                   <Typography variant="body1">{orders?.selectedBid?.moneyBidWithFee.amount}  {orders?.selectedBid?.moneyBidWithFee.currency}</Typography>
                 </div>
                 )}
-              </div>
+              </Box>
               
               
               <div style={lineStyle} />
               <PaymentForm/>
               <div style={lineStyle} />
-              <div style={buttonContainerStyle}>
-  <Button sx={cancelButtonStyle} variant="contained" onClick={handleCancel}>
-    Cancel
-  </Button>
-
-  <DarkButton onClick={handleConfirm}>
-    Confirm
-  </DarkButton>
-
-</div>
+              <Box display="flex" flexDirection="row">
+                 <OutlinedButton onClick={handleCancel}>Cancel</OutlinedButton>
+                 <DarkButton onClick={handleConfirm}>Confirm</DarkButton>
+              </Box>
           </Container>
-      </div>
+      </Box>
     </BaseModal>
     
   

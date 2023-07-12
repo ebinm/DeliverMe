@@ -42,6 +42,7 @@ export default function PayPal() {
   };
 
   const formattedAmount = orders?.selectedBid?.moneyBidWithFee.amount.toFixed(2);
+  const fee = orders?.selectedBid?.moneyBidWithFee.amount.toFixed(2);
 
 
   if (!paypalReady) {
@@ -72,7 +73,7 @@ export default function PayPal() {
                       },
                       payee: {
                         email_address: 'anxhela.maloku@tum.de' //TODO: shopper email, haven't changed due to test issues!!
-                      }
+                      },
                     }
                   ]
                 }
