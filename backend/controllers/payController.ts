@@ -26,8 +26,12 @@ export async function performCheckout(customerId: string, orderId: string) {
         throw new Error("You cannot pay for someone else's order")
     }
 
-    if (!buyer || order.status !== OrderStatus.InPayment) {
+    if (!buyer) {
         throw new Error("Could not find buyer")
+    }
+
+    if (order.status !== OrderStatus.InPayment) {
+        throw new Error("Order in wrong status.")
     }
 
 
@@ -120,6 +124,7 @@ export async function capturePayment(orderId: string, customerId: string, transa
 
     if (response.ok) {
         const captureParsedResult = await response.json()
+        console.log(captureParsedResult)
 
         const shopperReceivedAmount = order.selectedBid.moneyBid.amount
         const shopperReceivedCurrency = order.selectedBid.moneyBid.currency
@@ -163,9 +168,7 @@ export async function capturePayment(orderId: string, customerId: string, transa
         order.status = OrderStatus.Finished
         await order.save()
 
-        return {
-            result: captureParsedResult.result
-        }
+        return captureParsedResult
     } else {
         throw new Error("Order not successfully captured.")
     }

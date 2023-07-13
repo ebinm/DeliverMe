@@ -1,8 +1,7 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {PayPalButtons, PayPalScriptProvider} from "@paypal/react-paypal-js";
 import {useSnackbar} from "notistack";
 import {loadScript} from "@paypal/paypal-js";
-import {CustomerContext} from "../../util/context/CustomerContext";
 import {useNavigate, useParams} from "react-router-dom";
 import {useFetch} from "../../util/hooks";
 import {POST_FETCH_OPTIONS} from "../../util/util";
@@ -11,11 +10,10 @@ export default function PayPal({onTransactionComplete}) {
     const {enqueueSnackbar} = useSnackbar();
     const params = useParams();
     const navigate = useNavigate();
-    const {customer} = useContext(CustomerContext);
 
 
     const [paypalReady, setPaypalReady] = useState(false);
-    const [orders,] = useFetch(`${process.env.REACT_APP_BACKEND}/api/orders/${params.id}`, {credentials: 'include'})
+    const [order,] = useFetch(`${process.env.REACT_APP_BACKEND}/api/orders/${params.id}`, {credentials: 'include'})
 
     useEffect(() => {
         loadScript({"client-id": process.env.CLIENT_ID})
@@ -53,14 +51,12 @@ export default function PayPal({onTransactionComplete}) {
                     })
                         .then(res => res.json())
                         .then(details => {
-                            console.log("Capture Result", details)
-                            console.log(details)
-                            const transaction = orderData.purchase_units[0].payments.captures[0];
+                            const transaction = details.purchase_units[0].payments.captures[0];
                             if (transaction.status === 'COMPLETED') {
+                                enqueueSnackbar("Transaction status: " + transaction.status, {variant: "success"}); // transaction.status && transaction.id
                                 onTransactionComplete(); // Call the callback function to notify transaction completion
                                 navigate("/buyer/my-orders")
                             }
-                            enqueueSnackbar("Transaction status: " + transaction.status, {variant: "success"}); // transaction.status && transaction.id
                             return details
                         })
                         .catch(details => {
