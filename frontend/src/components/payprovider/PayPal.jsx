@@ -61,8 +61,8 @@ export default function PayPal({ onTransactionComplete }) {
       <PayPalButtons
         createOrder={(data, actions, err) => {
           const totalAmount = (orders.groceryBill.costAmount + orders?.selectedBid?.moneyBidWithFee.amount).toFixed(2);
-          const shopperAmount = orders?.selectedBid?.moneyBid.amount.toFixed(2);
-          const fee = (orders?.selectedBid?.moneyBidWithFee.amount - orders?.selectedBid?.moneyBid.amount).toFixed(2);
+          //const shopperAmount = orders?.selectedBid?.moneyBid.amount.toFixed(2);
+          //const fee = (orders?.selectedBid?.moneyBidWithFee.amount - orders?.selectedBid?.moneyBid.amount).toFixed(2);
 
           return actions.order.create({
             intent: 'CAPTURE',
@@ -99,12 +99,13 @@ export default function PayPal({ onTransactionComplete }) {
              
               console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
               const transaction = orderData.purchase_units[0].payments.captures[0];
+              handleStatusChange();
               if (transaction.status === 'COMPLETED') {
                 onTransactionComplete(); // Call the callback function to notify transaction completion
                 navigate(`/${customer.type.toLowerCase()}/my-orders`);
               }
               enqueueSnackbar("Transaction status: " + transaction.status, { variant: "success"}); // transaction.status && transaction.id
-              handleStatusChange();
+              
 
             })
             .catch((err) => {
