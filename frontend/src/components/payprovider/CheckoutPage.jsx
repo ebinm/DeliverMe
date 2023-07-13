@@ -1,146 +1,108 @@
-import React, {useContext, useState} from 'react';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import PaymentForm from './PaymentForm';
-import {DarkButton} from "../util/Buttons";
+import React, { useState, useContext } from 'react';
+import { Box, Container, Typography, FormControlLabel } from '@mui/material';
+import { styled } from '@mui/system';
+import { FaPaypal } from 'react-icons/fa';
+import {DarkButton, OutlinedButton} from "../util/Buttons";
 import {useSnackbar} from "notistack";
 import {useFetch} from "../../util/hooks";
 import {CustomerContext} from "../../util/context/CustomerContext";
-import {useNavigate, useParams} from "react-router-dom";
-import {BaseModal} from '../util/BaseModal';
+import {useNavigate,useParams } from "react-router-dom";
+import { BaseModal } from '../util/BaseModal';
+import PayPal from './PayPal';
 
+export  function CheckoutPage() {
+  const [open, setOpen] = useState(true);
+  const [isTransactionCompleted, setTransactionCompleted] = useState(false);
+  const params = useParams();
+  const [orders, setOrder] =  useFetch(`${process.env.REACT_APP_BACKEND}/api/orders/${params.id}`, {credentials: 'include'})
+  const {customer} = useContext(CustomerContext);
+  const navigate = useNavigate();
+  const {enqueueSnackbar} = useSnackbar();
+  
+  const handleTransactionComplete = () => {
+    setTransactionCompleted(true);
+  };
 
-export function CheckoutPage() {
-    const [open, setOpen] = useState(true);
-    const params = useParams();
+  const IconContainer = styled(Box)({
+    display: 'flex',
+    alignItems: 'center',
+  });
+  
+  const Icon = styled('div')(({ theme }) => ({
+    marginLeft: theme.spacing(1),
+  }));
 
-    const [orders, ] = useFetch(`${process.env.REACT_APP_BACKEND}/api/orders/${params.id}`, {credentials: 'include'})
-    console.log(orders);
+const handleClose = () => {
+  setOpen(false);
+};
 
+const handleConfirm = async () => {
+  console.log('Order confirmed');
+  handleClose();
+  navigate(`/${customer.type.toLowerCase()}/my-orders`);
+};
 
-    const navigate = useNavigate();
+  const handleCancel = () => {
+    navigate(`/${customer.type.toLowerCase()}/my-orders`);
+    console.log('Order cancelled');
+    handleClose(); 
+    return enqueueSnackbar("Payment cancelled", {variant: "warning"});
+  };
 
-    const {enqueueSnackbar} = useSnackbar();
-
-    const {customer} = useContext(CustomerContext);
-
-    const modalStyle = {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    };
-
-    const lineStyle = {
-        borderBottom: '1px solid #E2E8F0',
-        width: '95%',
-        margin: '10px',
-    };
-
-    const contentStyle = {
-        margin: '40px',
-        flex: 1,
-    };
-
-    const paymentDetailsStyle = {
-        margin: '20px',
-    };
-
-    const rowStyle = {
-        display: 'flex',
-        justifyContent: 'space-between',
-        marginBottom: '10px',
-    };
-
-    const buttonContainerStyle = {
-        display: 'flex',
-        justifyContent: 'flex-end', // Align buttons to the right
-        marginTop: '20px', // Add some margin for spacing
-        marginRight: '60px',
-    };
-
-    const cancelButtonStyle = {
-        height: '59.71940612792969px',
-        width: '200px',
-        background: 'white',
-        color: '#4A5568',
-        borderRadius: '10px',
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const handleConfirm = async () => {
-        console.log('Order confirmed');
-        handleClose();
-        navigate(`/${customer.type.toLowerCase()}/my-orders`);
-    };
-
-    const handleCancel = () => {
-        navigate(`/${customer.type.toLowerCase()}/my-orders`);
-        console.log('Order cancelled');
-        handleClose();
-        return enqueueSnackbar("Payment cancelled", {variant: "warning"});
-    };
-
-
-    return <BaseModal
-        open={open}
-        style={modalStyle}>
-        <div>
-            <Container>
-                <div className="payment-details" style={paymentDetailsStyle}>
-                    <Typography component="h1" variant="h5" align="left">
-                        Payment Details
-                    </Typography>
+   return <BaseModal
+            open={open && !isTransactionCompleted}>
+        <Box>
+          <Container>
+              <Box >
+                <Typography component="h1" variant="h5" align="left">
+                  Payment Details
+                </Typography>
+              </Box>
+              <div style={{ borderBottom: '1px solid #E2E8F0', width: '98%', margin: '10px' }} />
+              {orders && orders?.selectedBid && orders.groceryBill && (
+              <Box>
+              
+                <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
+                  {/*  total-bill?? */}
+                  <Typography variant="body1">Delivery Costs (with fee)</Typography>
+                  <Typography variant="body1">{orders?.selectedBid?.moneyBidWithFee.amount.toFixed(2)} {orders?.selectedBid?.moneyBidWithFee.currency}</Typography>
                 </div>
-                <div style={lineStyle}/>
-
-                <div style={contentStyle}>
-                    {orders && orders?.selectedBid && (
-                        <div style={rowStyle}>
-                            {/*  total-bill?? */}
-                            <Typography variant="body1">Delivery Costs (with fee)</Typography>
-                            <Typography
-                                variant="body1">{orders?.selectedBid?.moneyBidWithFee.amount} {orders?.selectedBid?.moneyBidWithFee.currency}</Typography>
-                        </div>
-                    )}
-
-                    {orders && orders.groceryBill && (
-                        <div style={rowStyle}>
-                            <Typography variant="body1">Grocery Bill</Typography>
-                            <Typography
-                                variant="body1">{orders.groceryBill.costAmount} {orders.groceryBill.costCurrency}</Typography>
-                        </div>
-                    )}
-                    {orders && orders?.selectedBid && (
-                        <div style={rowStyle}>
-                            <Typography variant="body1">Total</Typography>
-                            {/* TODO  Technically, we can not just add the two numbers if currencies diverge */}
-                            <Typography
-                                variant="body1">{(orders?.selectedBid?.moneyBidWithFee.amount + orders.groceryBill.costAmount).toFixed(2)} {orders?.selectedBid?.moneyBidWithFee.currency}</Typography>
-                        </div>
-                    )}
+              
+                <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
+                  <Typography variant="body1">Grocery Bill</Typography>
+                  <Typography variant="body1">{orders.groceryBill.costAmount.toFixed(2)}  {orders.groceryBill.costCurrency}</Typography>
                 </div>
-
-
-                <div style={lineStyle}/>
-                <PaymentForm/>
-                <div style={lineStyle}/>
-                <div style={buttonContainerStyle}>
-                    <Button sx={cancelButtonStyle} variant="contained" onClick={handleCancel}>
-                        Cancel
-                    </Button>
-
-                    <DarkButton onClick={handleConfirm}>
-                        Confirm
-                    </DarkButton>
-
+               
+                <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
+                  <Typography variant="body1">Total</Typography>
+                  <Typography variant="body1">{(orders.groceryBill.costAmount + orders?.selectedBid?.moneyBidWithFee.amount).toFixed(2)}  {orders.groceryBill.costCurrency}</Typography>
                 </div>
-            </Container>
-        </div>
+              </Box>
+              )}
+              
+              
+              <div style={{ borderBottom: '1px solid #E2E8F0', width: '98%', margin: '10px' }} />
+              
+              <Box>
+                <Box display="flex" alignItems="center">
+                  <Typography variant="body1">PayPal</Typography>
+                  <IconContainer>
+                    <Icon>
+                      <FaPaypal size={20} />
+                    </Icon>
+                  </IconContainer>
+                </Box>
+            
+              <Box flex={1} display="flex" justifyContent="center" alignItems="center" marginTop={2}>
+                <PayPal onTransactionComplete={handleTransactionComplete} />
+              </Box>
+            </Box>
+              <div style={{ borderBottom: '1px solid #E2E8F0', width: '98%', margin: '10px' }} />
+              <Box display="flex" flexDirection="row">
+                 <OutlinedButton onClick={handleCancel}>Cancel</OutlinedButton>
+                 <DarkButton onClick={handleConfirm}>Confirm</DarkButton>
+              </Box>
+          </Container>
+      </Box>
     </BaseModal>
-
-
 }

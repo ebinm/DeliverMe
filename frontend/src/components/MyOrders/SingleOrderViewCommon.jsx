@@ -1,7 +1,6 @@
 import {Box, Divider, Link, Typography} from "@mui/material";
 import {Show} from "../util/ControlFlow";
 import PhoneIcon from "@mui/icons-material/Phone";
-import PaidRoundedIcon from '@mui/icons-material/PaidRounded';
 import EmailIcon from "@mui/icons-material/Email";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
@@ -14,6 +13,7 @@ import {ChatOverlay} from "../chat/ChatOverlay";
 import Button from "@mui/material/Button";
 import ChatIcon from '@mui/icons-material/Chat';
 import {CustomerContext} from "../../util/context/CustomerContext";
+import {DarkButton} from "../util/Buttons";
 
 
 export function SingleOrderViewCommon({order, contact, buttons, bidView, orderName, showDeliveryAddress = false}) {
@@ -74,11 +74,6 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
             </Stack>
 
             <Stack gap={"8px"} display={"flex"} flexDirection={"row"} alignItems={"start"}>
-                <Show when={order.status === "In Payment" && customer.type.toLowerCase()=== 'buyer'}>
-                    <Button onClick={() => navigate(`/buyer/my-orders/${order._id}/checkout`)}>
-                        <PaidRoundedIcon sx={iconSx}/>
-                    </Button>
-                </Show>
                 <Show when={contact?.phoneNumber}>{phoneNumber =>
                     <Link href={`tel:${phoneNumber}`}>
                         <PhoneIcon sx={iconSx}/>
@@ -92,10 +87,11 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
                 }</Show>
 
                 <Show when={order?.selectedBid?.createdBy}>{() =>
-                    <Button onClick={() => navigate(`/${customer.type.toLowerCase()}/my-orders/${order._id}/chat`)} sx={{
-                        "padding": "0",
-                        "minWidth": 0,
-                    }}>
+                    <Button onClick={() => navigate(`/${customer.type.toLowerCase()}/my-orders/${order._id}/chat`)}
+                            sx={{
+                                "padding": "0",
+                                "minWidth": 0,
+                            }}>
                         <ChatIcon sx={iconSx}/>
                     </Button>
                 }</Show>
@@ -148,6 +144,14 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
                 navigate(`/${customer.type.toLowerCase()}/my-orders/`)
             }}/>
         }</Show>
+        <Show when={order.status === "In Payment" && customer.type.toLowerCase() === 'buyer'} sx={{
+            "padding": "0",
+            "minWidth": 0,
+        }}>
+            <DarkButton onClick={() => navigate(`/buyer/my-orders/${order._id}/checkout`)}>
+                Checkout
+            </DarkButton>
+        </Show>
     </Box>
 }
 
