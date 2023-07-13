@@ -33,10 +33,10 @@ const socketIOSerer = new io.Server(server,
         cors: {
             credentials: true,
             origin: (origin, callback) => {
-        
+
                 // TODO remove this
                 callback(null, true)
-        
+
                 // if (corsWhitelist.indexOf(origin) !== -1) {
                 //     callback(null, true)
                 // } else {

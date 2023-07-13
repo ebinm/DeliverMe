@@ -21,7 +21,8 @@ export async function updateBuyer(buyerId: string, buyer: Partial<Customer>) {
 
     const newBuyer = await Buyer.findByIdAndUpdate(buyerId, { $set: buyer }, {
         new: true,
-    });
+    }).select("-__v -profilePicture -notifications");
+
     return {
         type: "Buyer",
         ...newBuyer.toJSON()

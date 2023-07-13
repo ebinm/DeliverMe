@@ -353,7 +353,7 @@ function notificationTypeToLink(type, orderId, customerType) {
             return [true, `/${customerType.toLowerCase()}/my-orders/${orderId || ""}`]
         case "PaymentRequired":
             // TODO actual path
-            return [false, "/checkout"]
+            return [false, `/buyer/my-orders/${orderId}/checkout`]
         default:
             return [false, undefined]
     }

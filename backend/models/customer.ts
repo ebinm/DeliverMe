@@ -12,7 +12,8 @@ interface Customer extends mongoose.Document {
     profilePicture: string,
     avgRating: number,
     notifications: UserNotification[],
-    phoneNumber: string | null | undefined
+    phoneNumber: string | null | undefined,
+    paypalAccount: string | undefined
 }
 
 /**
@@ -47,6 +48,10 @@ const CustomerSchema = new mongoose.Schema<Customer>({
         default: null
     },
     phoneNumber: {
+        type: String,
+        required: false
+    },
+    paypalAccount: {
         type: String,
         required: false
     }

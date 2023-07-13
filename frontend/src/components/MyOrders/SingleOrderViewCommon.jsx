@@ -75,7 +75,7 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
 
             <Stack gap={"8px"} display={"flex"} flexDirection={"row"} alignItems={"start"}>
                 <Show when={order.status === "In Payment" && customer.type.toLowerCase()=== 'buyer'}>
-                    <Button onClick={() => navigate(`./${order._id}/checkout`)}>
+                    <Button onClick={() => navigate(`/buyer/my-orders/${order._id}/checkout`)}>
                         <PaidRoundedIcon sx={iconSx}/>
                     </Button>
                 </Show>

@@ -1,151 +1,146 @@
-import React, { useState, useContext } from 'react';
+import React, {useContext, useState} from 'react';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import Paper from '@mui/material/Paper';
-import {createTheme, ThemeProvider} from '@mui/material/styles';
-import Modal from '@mui/material/Modal';
 import PaymentForm from './PaymentForm';
-import {DarkButton, OutlinedButton} from "../util/Buttons";
+import {DarkButton} from "../util/Buttons";
 import {useSnackbar} from "notistack";
-import {PUT_FETCH_OPTIONS} from "../../util/util";
 import {useFetch} from "../../util/hooks";
 import {CustomerContext} from "../../util/context/CustomerContext";
-import {useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom"; 
-import { BaseModal } from '../util/BaseModal';
+import {useNavigate, useParams} from "react-router-dom";
+import {BaseModal} from '../util/BaseModal';
 
 
+export function CheckoutPage() {
+    const [open, setOpen] = useState(true);
+    const params = useParams();
+
+    const [orders, ] = useFetch(`${process.env.REACT_APP_BACKEND}/api/orders/${params.id}`, {credentials: 'include'})
+    console.log(orders);
 
 
-export  function CheckoutPage() {
-  const [open, setOpen] = useState(true);
-  const params = useParams();
+    const navigate = useNavigate();
 
-  const [orders, setOrder] =  useFetch(`${process.env.REACT_APP_BACKEND}/api/orders/${params.id}`, {credentials: 'include'})
-  console.log(orders);
-  
+    const {enqueueSnackbar} = useSnackbar();
 
-  const navigate = useNavigate();
+    const {customer} = useContext(CustomerContext);
 
-  const {enqueueSnackbar} = useSnackbar();
+    const modalStyle = {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    };
 
-  const {customer} = useContext(CustomerContext);
+    const lineStyle = {
+        borderBottom: '1px solid #E2E8F0',
+        width: '95%',
+        margin: '10px',
+    };
 
-const modalStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-};
+    const contentStyle = {
+        margin: '40px',
+        flex: 1,
+    };
 
-const lineStyle = {
-  borderBottom: '1px solid #E2E8F0',
-  width: '95%',
-  margin: '10px',
-};
+    const paymentDetailsStyle = {
+        margin: '20px',
+    };
 
-const contentStyle = {
-  margin: '40px',
-  flex: 1,
-};
+    const rowStyle = {
+        display: 'flex',
+        justifyContent: 'space-between',
+        marginBottom: '10px',
+    };
 
-const paymentDetailsStyle = {
-  margin: '20px',
-};
+    const buttonContainerStyle = {
+        display: 'flex',
+        justifyContent: 'flex-end', // Align buttons to the right
+        marginTop: '20px', // Add some margin for spacing
+        marginRight: '60px',
+    };
 
-const rowStyle = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  marginBottom: '10px',
-};
+    const cancelButtonStyle = {
+        height: '59.71940612792969px',
+        width: '200px',
+        background: 'white',
+        color: '#4A5568',
+        borderRadius: '10px',
+    };
 
-const buttonContainerStyle = {
-  display: 'flex',
-  justifyContent: 'flex-end', // Align buttons to the right
-  marginTop: '20px', // Add some margin for spacing
-  marginRight: '60px',
-};
+    const handleClose = () => {
+        setOpen(false);
+    };
 
-const cancelButtonStyle = {
-  height: '59.71940612792969px',
-  width: '200px',
-  background: 'white',
-  color: '#4A5568',
-  borderRadius: '10px',
-};
+    const handleConfirm = async () => {
+        console.log('Order confirmed');
+        handleClose();
+        navigate(`/${customer.type.toLowerCase()}/my-orders`);
+    };
 
-const handleClose = () => {
-  setOpen(false);
-};
+    const handleCancel = () => {
+        navigate(`/${customer.type.toLowerCase()}/my-orders`);
+        console.log('Order cancelled');
+        handleClose();
+        return enqueueSnackbar("Payment cancelled", {variant: "warning"});
+    };
 
-const handleConfirm = async () => {
-  console.log('Order confirmed');
-  handleClose();
-  navigate(`/${customer.type.toLowerCase()}/my-orders`);
-};
 
-  const handleCancel = () => {
-    navigate(`/${customer.type.toLowerCase()}/my-orders`);
-    console.log('Order cancelled');
-    handleClose(); 
-    return enqueueSnackbar("Payment cancelled", {variant: "warning"});
-  };
-
-  
-  
-  
     return <BaseModal
-                open={open} 
-                style={modalStyle}>
-      <div>
-          <Container>
-              <div className="payment-details" style={paymentDetailsStyle}>
-                <Typography component="h1" variant="h5" align="left">
-                  Payment Details
-                </Typography>
-              </div>
-              <div style={lineStyle} />
-              
-              <div style={contentStyle}>
-              {orders && orders?.selectedBid &&(
-                <div style={rowStyle}>
-                  {/*  total-bill?? */}
-                  <Typography variant="body1">Delivery Costs (with fee)</Typography>
-                  <Typography variant="body1">{orders?.selectedBid?.moneyBid.amount}  {orders?.selectedBid?.moneyBid.currency}</Typography>
+        open={open}
+        style={modalStyle}>
+        <div>
+            <Container>
+                <div className="payment-details" style={paymentDetailsStyle}>
+                    <Typography component="h1" variant="h5" align="left">
+                        Payment Details
+                    </Typography>
                 </div>
-              )}
+                <div style={lineStyle}/>
 
-                {orders && orders.groceryBill && (
-                <div style={rowStyle}>
-                  <Typography variant="body1">Grocery Bill</Typography>
-                  <Typography variant="body1">{orders.groceryBill.costAmount}  {orders.groceryBill.costCurrency}</Typography>
+                <div style={contentStyle}>
+                    {orders && orders?.selectedBid && (
+                        <div style={rowStyle}>
+                            {/*  total-bill?? */}
+                            <Typography variant="body1">Delivery Costs (with fee)</Typography>
+                            <Typography
+                                variant="body1">{orders?.selectedBid?.moneyBidWithFee.amount} {orders?.selectedBid?.moneyBidWithFee.currency}</Typography>
+                        </div>
+                    )}
+
+                    {orders && orders.groceryBill && (
+                        <div style={rowStyle}>
+                            <Typography variant="body1">Grocery Bill</Typography>
+                            <Typography
+                                variant="body1">{orders.groceryBill.costAmount} {orders.groceryBill.costCurrency}</Typography>
+                        </div>
+                    )}
+                    {orders && orders?.selectedBid && (
+                        <div style={rowStyle}>
+                            <Typography variant="body1">Total</Typography>
+                            {/* TODO  Technically, we can not just add the two numbers if currencies diverge */}
+                            <Typography
+                                variant="body1">{(orders?.selectedBid?.moneyBidWithFee.amount + orders.groceryBill.costAmount).toFixed(2)} {orders?.selectedBid?.moneyBidWithFee.currency}</Typography>
+                        </div>
+                    )}
                 </div>
-                )}
-                {orders && orders?.selectedBid &&(
-                <div style={rowStyle}>
-                  <Typography variant="body1">Total</Typography>
-                  <Typography variant="body1">{orders?.selectedBid?.moneyBidWithFee.amount}  {orders?.selectedBid?.moneyBidWithFee.currency}</Typography>
+
+
+                <div style={lineStyle}/>
+                <PaymentForm/>
+                <div style={lineStyle}/>
+                <div style={buttonContainerStyle}>
+                    <Button sx={cancelButtonStyle} variant="contained" onClick={handleCancel}>
+                        Cancel
+                    </Button>
+
+                    <DarkButton onClick={handleConfirm}>
+                        Confirm
+                    </DarkButton>
+
                 </div>
-                )}
-              </div>
-              
-              
-              <div style={lineStyle} />
-              <PaymentForm/>
-              <div style={lineStyle} />
-              <div style={buttonContainerStyle}>
-  <Button sx={cancelButtonStyle} variant="contained" onClick={handleCancel}>
-    Cancel
-  </Button>
-
-  <DarkButton onClick={handleConfirm}>
-    Confirm
-  </DarkButton>
-
-</div>
-          </Container>
-      </div>
+            </Container>
+        </div>
     </BaseModal>
-    
-  
+
+
 }
