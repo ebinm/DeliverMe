@@ -124,8 +124,6 @@ export async function capturePayment(orderId: string, customerId: string, transa
 
     if (response.ok) {
         const captureParsedResult = await response.json()
-        console.log(captureParsedResult)
-
         const shopperReceivedAmount = order.selectedBid.moneyBid.amount
         const shopperReceivedCurrency = order.selectedBid.moneyBid.currency
         // TODO check validity of bid amount
