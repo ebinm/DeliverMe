@@ -23,7 +23,7 @@ export function SingleBidView({bid, selected = false, setSelected = () => undefi
         style: "currency", currency: bid.moneyBidWithFee.currency
     }), [bid.moneyBidWithFee.currency])
 
-    const stars = Math.min(5, Math.floor(bid.createdBy.avgRating))
+    const stars = bid.createdBy.avgRating
 
     return <Show when={desktop}
                  fallback={() => <MobileSingleBidView customer={customer} currencyFormatter={currencyFormatter}
