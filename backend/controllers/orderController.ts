@@ -4,6 +4,8 @@ import {notificationService} from "../index";
 import {NotificationType} from "../models/notification";
 import {Message} from "../models/message";
 import {CustomerType, Shopper} from "../models/customer";
+import mongoose from "mongoose";
+
 
 export async function getAllOrders(): Promise<Order[]> {
 
@@ -112,8 +114,10 @@ export async function getOpenOrders(shopperId: string): Promise<Order[]> {
         "bids": {
             "$filter": {
                 "input": "$bids",
-                "as": "bids",
-                "cond": {"createdBy": shopperId},
+                "as": "bid",
+                "cond": {
+                    "$eq": ["$$bid.createdBy", new mongoose.Types.ObjectId(shopperId)]
+                },
             }
         }
     })
