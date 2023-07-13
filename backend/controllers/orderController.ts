@@ -86,7 +86,7 @@ export async function uploadReceipt(customerId, orderId: string, receipt: Receip
     order.status = OrderStatus.InPayment
 
     //@ts-ignore
-    notificationService.notifyBuyerById(order.createdBy, {
+    notificationService.notifyBuyerById(order.createdBy._id.toString(), {
         msg: "You order has been completed",
         orderId: order._id,
         date: new Date(),

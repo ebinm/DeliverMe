@@ -1,78 +1,36 @@
 import React, { useState, useContext } from 'react';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Paper from '@mui/material/Paper';
-import {createTheme, ThemeProvider} from '@mui/material/styles';
-import Modal from '@mui/material/Modal';
-import PaymentForm from './PaymentForm';
+import { Box, Container, Typography, FormControlLabel } from '@mui/material';
+import { styled } from '@mui/system';
+import { FaPaypal } from 'react-icons/fa';
 import {DarkButton, OutlinedButton} from "../util/Buttons";
 import {useSnackbar} from "notistack";
-import {PUT_FETCH_OPTIONS} from "../../util/util";
 import {useFetch} from "../../util/hooks";
 import {CustomerContext} from "../../util/context/CustomerContext";
-import {useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom"; 
+import {useNavigate,useParams } from "react-router-dom";
 import { BaseModal } from '../util/BaseModal';
-
-
-
+import PayPal from './PayPal';
 
 export  function CheckoutPage() {
   const [open, setOpen] = useState(true);
+  const [isTransactionCompleted, setTransactionCompleted] = useState(false);
   const params = useParams();
-
   const [orders, setOrder] =  useFetch(`${process.env.REACT_APP_BACKEND}/api/orders/${params.id}`, {credentials: 'include'})
-  console.log(orders);
-  
-
-  const navigate = useNavigate();
-
-  const {enqueueSnackbar} = useSnackbar();
-
   const {customer} = useContext(CustomerContext);
+  const navigate = useNavigate();
+  const {enqueueSnackbar} = useSnackbar();
+  
+  const handleTransactionComplete = () => {
+    setTransactionCompleted(true);
+  };
 
-const modalStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-};
-
-const lineStyle = {
-  borderBottom: '1px solid #E2E8F0',
-  width: '95%',
-  margin: '10px',
-};
-
-const contentStyle = {
-  margin: '40px',
-  flex: 1,
-};
-
-const paymentDetailsStyle = {
-  margin: '20px',
-};
-
-const rowStyle = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  marginBottom: '10px',
-};
-
-const buttonContainerStyle = {
-  display: 'flex',
-  justifyContent: 'flex-end', // Align buttons to the right
-  marginTop: '20px', // Add some margin for spacing
-  marginRight: '60px',
-};
-
-const cancelButtonStyle = {
-  height: '59.71940612792969px',
-  width: '200px',
-  background: 'white',
-  color: '#4A5568',
-  borderRadius: '10px',
-};
+  const IconContainer = styled(Box)({
+    display: 'flex',
+    alignItems: 'center',
+  });
+  
+  const Icon = styled('div')(({ theme }) => ({
+    marginLeft: theme.spacing(1),
+  }));
 
 const handleClose = () => {
   setOpen(false);
@@ -91,61 +49,60 @@ const handleConfirm = async () => {
     return enqueueSnackbar("Payment cancelled", {variant: "warning"});
   };
 
-  
-  
-  
-    return <BaseModal
-                open={open} 
-                style={modalStyle}>
-      <div>
+   return <BaseModal
+            open={open && !isTransactionCompleted}>
+        <Box>
           <Container>
-              <div className="payment-details" style={paymentDetailsStyle}>
+              <Box >
                 <Typography component="h1" variant="h5" align="left">
                   Payment Details
                 </Typography>
-              </div>
-              <div style={lineStyle} />
+              </Box>
+              <div style={{ borderBottom: '1px solid #E2E8F0', width: '98%', margin: '10px' }} />
+              {orders && orders?.selectedBid && orders.groceryBill && (
+              <Box>
               
-              <div style={contentStyle}>
-              {orders && orders?.selectedBid &&(
-                <div style={rowStyle}>
+                <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
                   {/*  total-bill?? */}
                   <Typography variant="body1">Delivery Costs (with fee)</Typography>
-                  <Typography variant="body1">{orders?.selectedBid?.moneyBid.amount}  {orders?.selectedBid?.moneyBid.currency}</Typography>
+                  <Typography variant="body1">{orders?.selectedBid?.moneyBidWithFee.amount.toFixed(2)} {orders?.selectedBid?.moneyBidWithFee.currency}</Typography>
                 </div>
-              )}
-
-                {orders && orders.groceryBill && (
-                <div style={rowStyle}>
+              
+                <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
                   <Typography variant="body1">Grocery Bill</Typography>
-                  <Typography variant="body1">{orders.groceryBill.costAmount}  {orders.groceryBill.costCurrency}</Typography>
+                  <Typography variant="body1">{orders.groceryBill.costAmount.toFixed(2)}  {orders.groceryBill.costCurrency}</Typography>
                 </div>
-                )}
-                {orders && orders?.selectedBid &&(
-                <div style={rowStyle}>
+               
+                <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
                   <Typography variant="body1">Total</Typography>
-                  <Typography variant="body1">{orders?.selectedBid?.moneyBidWithFee.amount}  {orders?.selectedBid?.moneyBidWithFee.currency}</Typography>
+                  <Typography variant="body1">{(orders.groceryBill.costAmount + orders?.selectedBid?.moneyBidWithFee.amount).toFixed(2)}  {orders.groceryBill.costCurrency}</Typography>
                 </div>
-                )}
-              </div>
+              </Box>
+              )}
               
               
-              <div style={lineStyle} />
-              <PaymentForm/>
-              <div style={lineStyle} />
-              <div style={buttonContainerStyle}>
-  <Button sx={cancelButtonStyle} variant="contained" onClick={handleCancel}>
-    Cancel
-  </Button>
-
-  <DarkButton onClick={handleConfirm}>
-    Confirm
-  </DarkButton>
-
-</div>
+              <div style={{ borderBottom: '1px solid #E2E8F0', width: '98%', margin: '10px' }} />
+              
+              <Box>
+                <Box display="flex" alignItems="center">
+                  <Typography variant="body1">PayPal</Typography>
+                  <IconContainer>
+                    <Icon>
+                      <FaPaypal size={20} />
+                    </Icon>
+                  </IconContainer>
+                </Box>
+            
+              <Box flex={1} display="flex" justifyContent="center" alignItems="center" marginTop={2}>
+                <PayPal onTransactionComplete={handleTransactionComplete} />
+              </Box>
+            </Box>
+              <div style={{ borderBottom: '1px solid #E2E8F0', width: '98%', margin: '10px' }} />
+              <Box display="flex" flexDirection="row">
+                 <OutlinedButton onClick={handleCancel}>Cancel</OutlinedButton>
+                 <DarkButton onClick={handleConfirm}>Confirm</DarkButton>
+              </Box>
           </Container>
-      </div>
+      </Box>
     </BaseModal>
-    
-  
 }

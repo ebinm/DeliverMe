@@ -25,6 +25,7 @@ export function ChatOverlay({order, open, onClose}) {
 
     const otherPerson = useMemo(() => (customer.type === "BUYER") ? order.selectedBid.createdBy : order.createdBy, [order, customer.type])
 
+
     return <>
         {/* I guess we are just hoping these z indices are correct*/}
         <Backdrop open={open} sx={{"zIndex": "10000"}}/>

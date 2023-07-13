@@ -68,7 +68,8 @@ router.patch("/", authenticated, async (req: AuthenticatedRequest, res, next) =>
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             phoneNumber: req.body.phoneNumber,
-            profilePicture: req.body.profilePicture
+            profilePicture: req.body.profilePicture,
+            paypalAccount: req.body.paypalAccount
         }
 
         if (req.customerType === "BUYER") {

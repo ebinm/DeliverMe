@@ -33,7 +33,7 @@ const PUT_FETCH_OPTIONS = {
 }
 
 const POST_FETCH_OPTIONS = {
-    method: "PUT",
+    method: "POST",
     credentials: "include",
     headers: {
         "Content-Type": "application/json"

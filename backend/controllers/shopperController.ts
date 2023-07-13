@@ -20,7 +20,7 @@ export async function updateShopper(shopperId: string, shopper: Partial<Customer
 
     const newShopper = await Shopper.findByIdAndUpdate(shopperId, { $set: shopper }, {
         new: true,
-    });
+    }).select("-__v -profilePicture -notifications");
     return {
         type: "SHOPPER",
         ...newShopper.toJSON()

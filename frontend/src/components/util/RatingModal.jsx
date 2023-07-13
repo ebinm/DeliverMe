@@ -9,7 +9,10 @@ import Avatar from "@mui/material/Avatar";
 import {Show} from "./ControlFlow";
 import {useSnackbar} from "notistack";
 
-
+/**
+ * This is a modal for rating the buyer and shopper.
+ *
+ */
 export function RatingModal({ open, onClose, order, buyer }) {
 
     const [rating, setRating] = useState(0)

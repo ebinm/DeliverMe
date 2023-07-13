@@ -53,7 +53,8 @@ export interface Order extends Document {
     items: Item[];
     selectedBid: Bid | null; // Allow null if no bid is selected
     bids: Bid[];
-    messages: Message[]
+    messages: Message[];
+    transactionId: string | null | undefined
 }
 
 const orderSchema = new Schema<Order>(
@@ -75,6 +76,7 @@ const orderSchema = new Schema<Order>(
         },
         bids: {type: [bidSchema], default: [], required: false},
         messages: {type: [messageSchema], default: [], required: false},
+        transactionId: {type: String, required: false}
     },
 );
 

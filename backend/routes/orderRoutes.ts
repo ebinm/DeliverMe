@@ -12,7 +12,7 @@ import {
 } from "../controllers/orderController";
 import {bidOnOrder, selectBid} from "../controllers/bidController";
 import {rateBuyer, rateShopper} from "../controllers/reviewController";
-import { performCheckout, capturePayment } from '../controllers/payController';
+import {performCheckout, capturePayment} from '../controllers/payController';
 
 const
     router = express.Router();
@@ -147,22 +147,33 @@ router.post("/:id/chat", authenticated, async (req: AuthenticatedRequest, res, n
     }
 })
 
-router.post("/:id/checkout", authenticated, async (req: AuthenticatedRequest, res) => {
-    
-    const order = await performCheckout(req.customerId, req.params.id);
-  
-    if (order) {
-      res.json(order);
-    } else {
-      res.status(500).json({ error: "Failed to create PayPal order" });
-    }
-  });
+router.post("/:id/checkout", authenticated, async (req: AuthenticatedRequest, res, next) => {
+    try {
+        const order = await performCheckout(req.customerId, req.params.id);
 
-router.post(":id/capture",authenticated, async (req: AuthenticatedRequest, res) => {
-    const captureData = await capturePayment(req.params.id);
-    res.json(captureData);
+        if (order) {
+            res.json(order);
+        } else {
+            res.status(500).json({error: "Failed to create PayPal order"});
+        }
+
+    } catch (e) {
+        console.log(e)
+        next(e.message)
+    }
 });
-  
+
+router.post("/:id/capture", authenticated, async (req: AuthenticatedRequest, res, next) => {
+    try {
+        // Technically we should be able to just get the order via the transactionId but
+        // we use the order id just to be sure.
+        const captureData = await capturePayment(req.params.id, req.customerId, req.body.transactionId);
+        res.json(captureData);
+    } catch (e) {
+        console.error(e)
+        next(e.message)
+    }
+});
 
 
 router.put("/:id/rate", authenticated, async (req: AuthenticatedRequest, res, next) => {
