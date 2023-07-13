@@ -86,7 +86,7 @@ export default function PayPal() {
             .then((orderData) => {
               console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
               const transaction = orderData.purchase_units[0].payments.captures[0];
-              enqueueSnackbar("Transaction ${transaction.status}: ${transaction.id}", { variant: "success"});
+              enqueueSnackbar("Transaction ${transaction.status}: ${transaction.id}", { variant: "success"}); //TODO: change Snackbar
               handleStatusChange();
             })
             .catch((err) => {

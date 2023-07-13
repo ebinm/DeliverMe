@@ -14,7 +14,7 @@ import Rating from "@mui/material/Rating";
 
 const OrderListItem = ({order, handleOpenOrderDetailsModal, selectedOrder, setSelectedOrder}) => {
 
-    const stars = Math.min(5, Math.floor(order.createdBy.avgRating))
+    const stars = order.createdBy.avgRating
 
     return (
         <ListItem key={order._id}>
