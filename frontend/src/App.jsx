@@ -43,13 +43,13 @@ function App() {
                                     <Route path={"/buyer/signup"} element={<Signup type={"buyer"}/>}/>
                                     <Route path={"/login"} element={<Login/>}/>
 
-                                    <Route path={"/shopper/my-orders/:id?/chat?"} element={<ShopperMyOrders/>}/>
-                                    <Route path={"/shopper/browseorders"} element={<ShopperChooseOrderView/>}/>
 
-                                    <Route path={"/buyer/my-orders/:id?/chat?"} element={<BuyerMyOrders/>}/>
-
-                                    <Route path={"/buyer/order/create/*"} element={<BuyerOrderCreationView/>}/>
+                                    <Route path={"/shopper/my-orders/:id?/:action?"} element={<ShopperMyOrders/>}/>
                                     <Route path={"/buyer/my-orders/:id?/checkout"} element={<CheckoutPage/>}/>
+                                    <Route path={"/buyer/my-orders/:id?/:action?"} element={<BuyerMyOrders/>}/>
+
+                                    <Route path={"/shopper/browseorders"} element={<ShopperChooseOrderView/>}/>
+                                    <Route path={"/buyer/order/create/*"} element={<BuyerOrderCreationView/>}/>
                                     <Route path={"/me"} element={<PersonalProfile/>}/>
                                 </Routes>
                             </main>
