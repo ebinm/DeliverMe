@@ -37,6 +37,9 @@ export function SingleBidView({bid, selected = false, setSelected = () => undefi
 
 
 function MobileSingleBidView({currencyFormatter, customer, stars, selected, setSelected, bid}) {
+
+    const [showReviewsModal, setShowReviewsModal] = useState(false);
+
     return <Paper onClick={() => setSelected(bid._id)} sx={{
         "padding": "8px", backgroundColor: bid._id === selected ? "selected.main" : undefined
     }}>
@@ -44,16 +47,31 @@ function MobileSingleBidView({currencyFormatter, customer, stars, selected, setS
             <Avatar imgProps={{sx: {padding: '0px'}}} alt={bid.createdBy.firstName + " " + bid.createdBy.lastName}
                     src={bid.createdBy.profilePicture}/>
             <Stack direction={"column"}>
-                <Typography variant={"h6"}
+                <Typography sx={{mt: "6px"}} variant={"h6"}
                             component={"h4"}
-                            sx={{
-                                "gridColumn": "span 2",
-                                "mt": "8px"
-                            }}>{bid.createdBy.firstName} {bid.createdBy.lastName}</Typography>
-                <Rating readOnly defaultValue={stars || null} precision={0.5}/>
+                            style={{"gridColumn": "span 2"}}>{bid.createdBy.firstName} {bid.createdBy.lastName}
+                </Typography>
+
+                <Stack direction={"row"}>
+                    <Rating sx={{mt: "8px"}} readOnly defaultValue={stars || null} precision={0.5}/>
+
+                    <IconButton aria-label="info" onClick={() => {
+                        setShowReviewsModal(true)
+                    }}>
+                        <InfoIcon/>
+                    </IconButton>
+                </Stack>
 
                 <Box display={"grid"} gridTemplateColumns={"min-content auto"} alignItems={"center"} columnGap={"8px"}
                      mt={"8px"}>
+
+                    <ReviewsModal
+                        open={showReviewsModal}
+                        onClose={() => setShowReviewsModal(false)}
+                        customer={bid.createdBy}
+                        type={"shopper"}
+                    />
+
                     <LightbulbOutlinedIcon sx={{"gridRow": "span 2"}}/>
                     <Typography sx={{color: "text.light"}}>Bid offered:</Typography>
                     <Typography>{currencyFormatter.format(customer.type === "BUYER" ? bid.moneyBidWithFee.amount : bid.moneyBid.amount)}</Typography>
