@@ -40,7 +40,7 @@ const OrderListItem = ({order, handleOpenReviewsModal, handleOpenOrderDetailsMod
                         </Box>
                         <Box>
                             <Stack direction={"row"} flexWrap={"wrap"} gap={"10px"} sx={{mb: 2}}>
-                                <Typography sx={{mt: "4px"}} variant={"h6"}
+                                <Typography sx={{mt: "6px"}} variant={"h6"}
                                             fontWeight="bold">{order?.createdBy?.firstName} {order?.createdBy?.lastName}</Typography>
                                 <Rating sx={{mt: "8px"}} readOnly defaultValue={stars || null} precision={0.5}/>
                                 <IconButton aria-label="info" onClick={handleOpenReviewsModal}>

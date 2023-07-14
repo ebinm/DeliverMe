@@ -4,6 +4,7 @@ import {notificationService} from "../index";
 import {NotificationType} from "../models/notification";
 import {Message} from "../models/message";
 import {CustomerType, Shopper} from "../models/customer";
+import mongoose from "mongoose";
 
 export async function getAllOrders(): Promise<Order[]> {
 
@@ -97,6 +98,7 @@ export async function uploadReceipt(customerId, orderId: string, receipt: Receip
 
 export async function getOpenOrders(shopperId: string): Promise<Order[]> {
     const shopperPromise = Shopper.findById(shopperId)
+        .select("-password -notifications -__v")
 
     const orders = await OrderModel.aggregate().match({
         "status": "Open"
@@ -106,38 +108,19 @@ export async function getOpenOrders(shopperId: string): Promise<Order[]> {
     }).addFields({
         createdBy: {$arrayElemAt: ["$createdBy", 0]} // extracts user from list
     }).project({
-        "createdBy.password": 0
-    }).lookup({
-        "from": "reviews",
-        "let": {"customer": "$createdBy._id"},
-        "pipeline": [
-            {"$match": {"$expr": {"$eq": ["$customer", "$$customer"]}}},
-            {
-                "$lookup": {
-                    "from": "shoppers",
-                    "let": {"createdBy": "$createdBy"},
-                    "pipeline": [
-                        {"$match": {"$expr": {"$eq": ["$_id", "$$createdBy"]}}}
-                    ],
-                    "as": "createdBy"
-                }
-            },
-            {
-                "$addFields": {
-                    createdBy: {$arrayElemAt: ["$createdBy", 0]} // extracts user from list
-                }
-            }
-        ],
-        "as": "createdBy.reviews"
+        "createdBy.password": 0, "createdBy.notifications": 0
     }).addFields({
         "bids": {
             "$filter": {
                 "input": "$bids",
-                "as": "bids",
-                "cond": {"createdBy": shopperId},
+                "as": "bid",
+                "cond": {
+                    "$eq": ["$$bid.createdBy", new mongoose.Types.ObjectId(shopperId)]
+                },
             }
         }
     })
+
 
     const shopper = await shopperPromise
 

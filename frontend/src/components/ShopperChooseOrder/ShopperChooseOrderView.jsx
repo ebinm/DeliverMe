@@ -163,6 +163,7 @@ const ShopperChooseOrderView = () => {
                     open={showReviewsModal}
                     onClose={() => handleCloseReviewsModal()}
                     customer={selectedCustomer}
+                    type={"buyer"}
                 />
 
 
