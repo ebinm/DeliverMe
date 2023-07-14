@@ -157,6 +157,8 @@ export function BuyerChooseItems({
 
                     <NextButton fromErr={fromErr} toErr={toErr} items={items} onClick={() => {
                         if (formRef.current.reportValidity()) {
+                            // Technically, we can skip this validation by just changing the url but
+                            // the malicious user will then simply run into backend validation errors.
                             onSubmit(items, from, to, notes)
                         }
                     }}>

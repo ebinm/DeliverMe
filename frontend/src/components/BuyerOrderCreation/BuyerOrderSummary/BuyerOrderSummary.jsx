@@ -183,8 +183,7 @@ export function BuyerOrderSummary({
                     <Typography align="center" sx={{"padding": "16px"}}>Are you sure you want to place the
                         order?</Typography>
 
-                    <Stack direction={{"xs": "column", "sm": "row"}} width={"100%"} justifyContent={"flex-end"}
-                           gap={"16px"}>
+                    <Stack direction={{"xs": "column", "sm": "row"}} width={"100%"} justifyContent={"flex-end"} gap={"16px"}>
 
                         <OutlinedButton onClick={() => setConfirmModalOpen(false)}>Cancel</OutlinedButton>
 
@@ -213,12 +212,7 @@ export function BuyerOrderSummary({
                                 credentials: 'include',
                                 body: JSON.stringify(
                                     {
-                                        items,
-                                        latestDeliveryDate: to,
-                                        earliestDeliveryDate: from,
-                                        additionalNotes: notes,
-                                        groceryShop: shop,
-                                        destination: destination
+                                        items, latestDeliveryDate: to, earliestDeliveryDate: from, additionalNotes: notes, groceryShop: shop, destination: destination
                                     }
                                 )
                             })
