@@ -1,6 +1,14 @@
 import express from 'express';
 import {authenticated, AuthenticatedRequest} from "../middleware/auth";
-import {createReview, deleteReview, getAllReviews, getReviewById, getReviewsOfBuyer, getReviewsOfShopper, updateReview
+import {
+    createReview,
+    deleteReview,
+    getAllReviews,
+    getReviewById,
+    getReviewsForBuyerByOrder, getReviewsForShopperByOrder,
+    getReviewsOfBuyer,
+    getReviewsOfShopper,
+    updateReview
 } from "../controllers/reviewController";
 
 const
@@ -65,6 +73,24 @@ router.get("/shopper/:id", authenticated, async (req: AuthenticatedRequest, res,
         res.json(await getReviewsOfShopper(req.params.id));
     } catch (e) {
         console.log(e)
+        next(e.message)
+    }
+})
+
+router.get("/buyer/:buyerId/order/:orderId", authenticated, async (req: AuthenticatedRequest, res, next) => {
+    try {
+        res.json(await getReviewsForBuyerByOrder(req.params.buyerId, req.params.orderId));
+    } catch (e) {
+        console.error(e)
+        next(e.message)
+    }
+})
+
+router.get("/shopper/:shopperId/order/:orderId", authenticated, async (req: AuthenticatedRequest, res, next) => {
+    try {
+        res.json(await getReviewsForShopperByOrder(req.params.shopperId, req.params.orderId));
+    } catch (e) {
+        console.error(e)
         next(e.message)
     }
 })

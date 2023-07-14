@@ -5,18 +5,18 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {DarkButton} from "../util/Buttons";
 import Stack from "@mui/material/Stack";
 import React, {useContext, useState} from "react";
-import {RatingModal} from "../util/RatingModal";
 import {For, Show} from "../util/ControlFlow"
 import {CustomerContext} from "../../util/context/CustomerContext";
 import ReceiptUploadModal from "./ReceiptUploadModal";
 import Avatar from "@mui/material/Avatar";
+import {useNavigate} from "react-router-dom";
 
 export function SingleOrderViewShopper({ order, setOrders }) {
 
     const { customer } = useContext(CustomerContext)
 
+    const navigate = useNavigate()
     const [uploadOpen, setUploadOpen] = useState(false)
-    const [ratingOpen, setRatingOpen] = useState(false)
 
     return <>
         <SingleOrderViewCommon
@@ -58,9 +58,7 @@ export function SingleOrderViewShopper({ order, setOrders }) {
             // setOrders may be undefined for example in the order selection screen.
             setOrders && setOrders(orders => orders.map(it => it !== order ? it : { ...it, status: "In Payment" }))
             setUploadOpen(false)
-            setRatingOpen(true)
+            navigate(`/shopper/my-orders/${order?._id}/review`)
         }} />
-
-        <RatingModal open={ratingOpen} onClose={() => setRatingOpen(false)} order={order} buyer={true} />
-    </>
+</>
 }

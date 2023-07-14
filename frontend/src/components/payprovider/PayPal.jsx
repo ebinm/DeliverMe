@@ -2,14 +2,13 @@ import React, {useEffect, useState} from 'react';
 import {PayPalButtons, PayPalScriptProvider} from "@paypal/react-paypal-js";
 import {useSnackbar} from "notistack";
 import {loadScript} from "@paypal/paypal-js";
-import {useNavigate, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {useFetch} from "../../util/hooks";
 import {POST_FETCH_OPTIONS} from "../../util/util";
 
 export default function PayPal({onTransactionComplete}) {
     const {enqueueSnackbar} = useSnackbar();
     const params = useParams();
-    const navigate = useNavigate();
 
 
     const [paypalReady, setPaypalReady] = useState(false);
@@ -55,7 +54,6 @@ export default function PayPal({onTransactionComplete}) {
                             if (transaction.status === 'COMPLETED') {
                                 enqueueSnackbar("Transaction status: " + transaction.status, {variant: "success"}); // transaction.status && transaction.id
                                 onTransactionComplete(); // Call the callback function to notify transaction completion
-                                navigate("/buyer/my-orders")
                             }
                             return details
                         })

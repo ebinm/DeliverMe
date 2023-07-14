@@ -179,5 +179,12 @@ async function updateAverage(review: Review) {
     }
 }
 
+export async function getReviewsForBuyerByOrder(buyerId: string, orderId: string){
+    return ReviewModel.findOne({type: "Buyer", order: orderId, customer: {_id: buyerId}});
+}
+
+export async function getReviewsForShopperByOrder(buyerId: string, orderId: string){
+    return ReviewModel.findOne({type: "Shopper", order: orderId, customer: {_id: buyerId}});
+}
 
 
