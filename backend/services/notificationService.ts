@@ -6,6 +6,13 @@ import {NotificationType, UserNotification} from "../models/notification";
 import {Order, OrderModel} from "../models/order";
 import {Message} from "../models/message";
 
+/**
+ * A service for providing notification and chat functionality.
+ *
+ * Notifications and chat messages sent using this service are persisted to the database and if possible propagated using
+ * socket.io.
+ *
+ */
 interface NotificationService {
     notifyBuyerById: (id: string, notification: UserNotification) => Promise<void>
     notifyShopperById: (id: string, notification: UserNotification) => Promise<void>

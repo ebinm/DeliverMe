@@ -6,12 +6,17 @@ import bcrypt from "bcrypt";
 import {validate} from "email-validator"
 
 
+/**
+ * The data stored in the JWT.
+ */
 type JWTPayload = {
     id: string,
     type: CustomerType
 }
 
-
+/**
+ * Signs up a new user.
+ */
 async function signup(req: Request, res: Response, customerType: CustomerType) {
     // In large parts based on https://dev.to/jeffreythecoder/setup-jwt-authentication-in-mern-from-scratch-ib4
 
@@ -73,6 +78,9 @@ async function login(req: Request, res: Response, customerType: CustomerType) {
     sendJWT(res, customer.id, customerType)
 }
 
+/**
+ * Utility for sending the jwt token via the response.
+ */
 function sendJWT(res: Response, customerId: string, type: CustomerType) {
     const jwtPayload: JWTPayload = {
         id: customerId,

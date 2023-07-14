@@ -223,37 +223,6 @@ export async function removeOrder(buyerId: string, orderId: string) {
 
 }
 
-export async function changeStatus(buyerId: string, orderId: string, status: string) {
-
-    const order = await getOrderById(orderId)
-
-    if (!order) {
-        new Error("Order with orderId does not exist")
-    } else if (order.createdBy.toString() !== buyerId.toString()) {
-        new Error("You are not allowed to change this order")
-    } else {
-        switch (status) {
-            case "Open":
-                order.status = OrderStatus.Open;
-                break
-            case "In Delivery":
-                order.status = OrderStatus.InDelivery;
-                break
-            case "In Payment":
-                order.status = OrderStatus.InPayment;
-                break
-            case "Finished":
-                order.status = OrderStatus.Finished;
-                break
-            default:
-                throw new Error("Order status is not valid")
-        }
-
-        return updateOrder(orderId, order);
-    }
-
-}
-
 export async function getOrderByBid(bidId: string) {
     return OrderModel
         .findOne({bids: {$elemMatch: {_id: bidId}}});

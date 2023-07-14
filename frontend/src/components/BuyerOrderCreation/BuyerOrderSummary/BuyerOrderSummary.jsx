@@ -23,6 +23,17 @@ import {useJsApiLoader} from '@react-google-maps/api';
 import {useSnackbar} from 'notistack';
 import {GuardCustomerType} from "../../util/GuardCustomerType";
 
+/**
+ * Displays a summary of buyer's order
+ *
+ * @param items The ordered items
+ * @param to The lates delivery time or undefined
+ * @param from The earliest delivery time or undefined
+ * @param notes Additional Notes or undefined
+ * @param shop The selected shop or undefined
+ * @param onGoBack A function called when the user wants to go back
+ * @param onSubmit A function called on submit.
+ */
 export function BuyerOrderSummary({
                                       items,
                                       to, from, notes,
@@ -172,7 +183,8 @@ export function BuyerOrderSummary({
                     <Typography align="center" sx={{"padding": "16px"}}>Are you sure you want to place the
                         order?</Typography>
 
-                    <Stack direction={{"xs": "column", "sm": "row"}} width={"100%"} justifyContent={"flex-end"} gap={"16px"}>
+                    <Stack direction={{"xs": "column", "sm": "row"}} width={"100%"} justifyContent={"flex-end"}
+                           gap={"16px"}>
 
                         <OutlinedButton onClick={() => setConfirmModalOpen(false)}>Cancel</OutlinedButton>
 
@@ -201,7 +213,12 @@ export function BuyerOrderSummary({
                                 credentials: 'include',
                                 body: JSON.stringify(
                                     {
-                                        items, latestDeliveryDate: to, earliestDeliveryDate: from, additionalNotes: notes, groceryShop: shop, destination: destination
+                                        items,
+                                        latestDeliveryDate: to,
+                                        earliestDeliveryDate: from,
+                                        additionalNotes: notes,
+                                        groceryShop: shop,
+                                        destination: destination
                                     }
                                 )
                             })
