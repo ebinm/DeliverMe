@@ -72,7 +72,6 @@ export async function sendMessage(customerId: string, senderType: CustomerType, 
 }
 
 
-
 export async function uploadReceipt(customerId, orderId: string, receipt: Receipt) {
     const order = await OrderModel.findById(orderId)
     if (customerId !== order?.selectedBid?.createdBy?.toString()) {
@@ -108,6 +107,28 @@ export async function getOpenOrders(shopperId: string): Promise<Order[]> {
         createdBy: {$arrayElemAt: ["$createdBy", 0]} // extracts user from list
     }).project({
         "createdBy.password": 0
+    }).lookup({
+        "from": "reviews",
+        "let": {"customer": "$createdBy._id"},
+        "pipeline": [
+            {"$match": {"$expr": {"$eq": ["$customer", "$$customer"]}}},
+            {
+                "$lookup": {
+                    "from": "shoppers",
+                    "let": {"createdBy": "$createdBy"},
+                    "pipeline": [
+                        {"$match": {"$expr": {"$eq": ["$_id", "$$createdBy"]}}}
+                    ],
+                    "as": "createdBy"
+                }
+            },
+            {
+                "$addFields": {
+                    createdBy: {$arrayElemAt: ["$createdBy", 0]} // extracts user from list
+                }
+            }
+        ],
+        "as": "createdBy.reviews"
     }).addFields({
         "bids": {
             "$filter": {

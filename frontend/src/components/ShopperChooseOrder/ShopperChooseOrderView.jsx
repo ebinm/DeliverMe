@@ -14,6 +14,7 @@ import {useSnackbar} from 'notistack';
 import Stack from "@mui/material/Stack";
 import {useTheme} from "@mui/system";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import {ReviewsModal} from "../util/ReviewsModal";
 
 
 const ShopperChooseOrderView = () => {
@@ -24,8 +25,10 @@ const ShopperChooseOrderView = () => {
 
     const [map, setMap] = useState(null);
     const [showOrderDetailsModal, setShowOrderDetailsModal] = useState(false);
+    const [showReviewsModal, setShowReviewsModal] = useState(false);
     const [showBidOnOrderModal, setShowBidOnOrderModal] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
+    const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [orders, setOrders] = useState([]);
     const [filteredOrders, setFilteredOrders] = useState([]);
     const [directions, setDirections] = useState(null);
@@ -111,6 +114,14 @@ const ShopperChooseOrderView = () => {
         setShowOrderDetailsModal(false);
     };
 
+    const handleOpenReviewsModal = () => {
+        setShowReviewsModal(true);
+    };
+
+    const handleCloseReviewsModal = () => {
+        setShowReviewsModal(false);
+    };
+
     const handleOpenBidOnOrderModal = () => {
         setShowBidOnOrderModal(true);
     };
@@ -128,6 +139,11 @@ const ShopperChooseOrderView = () => {
         }
     }
 
+    const handleSelection = (order) => {
+        setSelectedOrder(order);
+        setSelectedCustomer(order.createdBy);
+    }
+
     return (
         <GuardCustomerType requiredType={"SHOPPER"}>{() =>
             <>
@@ -142,6 +158,11 @@ const ShopperChooseOrderView = () => {
                     handleCloseBidOnOrderModal={handleCloseBidOnOrderModal}
                     order={selectedOrder}
                     handleCloseOrderDetailsModal={handleCloseOrderDetailsModal}
+                />
+                <ReviewsModal
+                    open={showReviewsModal}
+                    onClose={() => handleCloseReviewsModal()}
+                    customer={selectedCustomer}
                 />
 
 
@@ -162,8 +183,9 @@ const ShopperChooseOrderView = () => {
                                 {filteredOrders.map((order) => (
                                     <OrderListItem key={order._id} order={order}
                                                    handleOpenOrderDetailsModal={handleOpenOrderDetailsModal}
+                                                   handleOpenReviewsModal={handleOpenReviewsModal}
                                                    selectedOrder={selectedOrder}
-                                                   setSelectedOrder={setSelectedOrder}/>
+                                                   setSelectedOrder={handleSelection}/>
                                 ))}
                             </List>
                         </Stack>
