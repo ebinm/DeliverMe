@@ -36,8 +36,8 @@ We use dotenv. Create the files `./frontend/.env` and  `./.env` and set the foll
 
 | Name              | Description                                                                                                                 |
 |-------------------|-----------------------------------------------------------------------------------------------------------------------------|
-| MONGO_URL         | The url to connect to MongoDB . For example: "mongodb+srv://deliver-me:VQrcNNkTuK0Kv9Mg@delivermeprod.di6io6m.mongodb.net/" |
-| JWT_SECRET        | The secret used for signing JWT tokens. For example: "9cf49be9c2b84412a99afec0b01f9ccd"                                     |
+| MONGO_URL         | The url to connect to MongoDB . For example: `mongodb+srv://deliver-me:VQrcNNkTuK0Kv9Mg@delivermeprod.di6io6m.mongodb.net/` |
+| JWT_SECRET        | The secret used for signing JWT tokens. For example: `9cf49be9c2b84412a99afec0b01f9ccd`                                     |
 | https             | Optional: `true` if you want https                                                                                          |
 | SSL_CRT_FILE      | Optional: The location of the SSL certificate, e.g., `./.cert/deliver.me.crt`                                               |
 | SSL_KEY_FILE      | Optional: The location of the SSL key, e.g., `./.cert/deliver.me.key`                                                       |
