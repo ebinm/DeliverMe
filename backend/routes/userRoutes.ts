@@ -4,6 +4,9 @@ import {clearNotificationsForBuyerById, findBuyerById, updateBuyer} from "../con
 import {clearNotificationsForShopperById, findShopperById, updateShopper} from "../controllers/shopperController";
 import {findBidOrdersByShopper, findOrdersByBuyer, findOrdersByShopper} from "../controllers/orderController";
 
+/**
+ * These are the routes that shoppers and buyers have in common.
+ */
 
 const router = express.Router();
 

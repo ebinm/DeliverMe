@@ -103,9 +103,9 @@ function useCacheLocalStorageForCustomer(key, initialState = null, storageCondit
     const clear = useCallback(() => {
         if (customer?._id) {
             window.localStorage.setItem(`${key}-${customer._id}`, null)
-        } else {
-            window.localStorage.setItem(`${key}-default`, null)
         }
+        window.localStorage.setItem(`${key}-default`, null)
+
     }, [key, customer?._id])
 
     return [value, setValue, clear]

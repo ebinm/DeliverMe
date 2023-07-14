@@ -3,6 +3,9 @@ import {CustomerContext} from "../../util/context/CustomerContext";
 import {AuthenticationFormContainer} from "./AuthenticationFormContainer";
 import {TextField} from "@mui/material";
 import {CustomFileInput} from "../util/CustomFileUpload";
+import {Show} from "../util/ControlFlow";
+import {InfoPopover} from "../util/InfoPopover";
+import Typography from "@mui/material/Typography";
 
 
 /**
@@ -18,12 +21,13 @@ export function Signup({type}) {
     const [password2, setPassword2] = useState("")
     const [email, setEmail] = useState("")
     const [profilePicture, setProfilePicture] = useState("")
+    const [paypalAccount, setPaypalAccount] = useState("")
 
 
     const {signup} = useContext(CustomerContext)
 
     return <AuthenticationFormContainer title={`Sign up as a ${type === "buyer" ? "Buyer" : "Shopper"}`}
-                                        onSubmit={async () => signup(email, password1, firstName, lastName, profilePicture, type)}
+                                        onSubmit={async () => signup(email, password1, firstName, lastName, profilePicture, paypalAccount, type)}
                                         altText={"...or login instead"}
                                         altLink={"/login"}
                                         actionText={"Signup"}>
@@ -56,6 +60,17 @@ export function Signup({type}) {
             value={email}
         />
 
+        <Show when={type === "shopper"}>
+            <TextField
+                required={true}
+                variant="standard"
+                value={paypalAccount} label={"PayPal Account"}
+                onChange={e => setPaypalAccount(e.target.value)} InputProps={{
+                endAdornment: <InfoPopover><Typography variant={"body1"}>This will be used to pay your fee
+                    to you.</Typography></InfoPopover>
+            }}/>
+        </Show>
+
         <TextField
             id="password-input"
             label="Password"
@@ -78,7 +93,9 @@ export function Signup({type}) {
             value={password2}
         />
 
-        <CustomFileInput defaultLabel={"Upload or drop your profile picture here."} img={profilePicture} setImg={setProfilePicture}/>
+
+        <CustomFileInput defaultLabel={"Upload or drop your profile picture here."} img={profilePicture}
+                         setImg={setProfilePicture}/>
 
     </AuthenticationFormContainer>
 

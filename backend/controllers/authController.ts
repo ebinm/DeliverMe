@@ -22,7 +22,7 @@ async function signup(req: Request, res: Response, customerType: CustomerType) {
 
     // Note: the password used here is the actual password. The password stored in the Buyer/Shopper Document
     // is obviously hashed
-    const {firstName, lastName, email: emailRaw, password, profilePicture}: Partial<Customer> = req.body;
+    const {firstName, lastName, email: emailRaw, password, profilePicture, paypalAccount}: Partial<Customer> = req.body;
     const email = emailRaw.toLowerCase()
 
     if(!validate(email)){
@@ -49,7 +49,7 @@ async function signup(req: Request, res: Response, customerType: CustomerType) {
     const passwordHash = await bcrypt.hash(password, salt)
 
     const newUser = new document({
-        email, password: passwordHash, firstName, lastName, profilePicture: newProfilePicture
+        email, password: passwordHash, firstName, lastName, profilePicture: newProfilePicture, paypalAccount
     })
 
     await newUser.save()
