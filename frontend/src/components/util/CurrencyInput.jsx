@@ -27,7 +27,7 @@ export function CurrencyInput({amount, setAmount, currency, setCurrency, sx, lab
             required={true}
             label={label}
             id={"total-amount-spent-input"}
-            value={displayedAmount}
+            value={displayedAmount === 0 ? "" : displayedAmount}
             inputProps={{
                 "step": "0.01",
                 "min": "0.0"

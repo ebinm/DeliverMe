@@ -123,7 +123,7 @@ const ShopperChooseOrderView = () => {
                 setOrders(data);
                 setFilteredOrders(data);
                 console.log('Orders successfully fetched!');
-                enqueueSnackbar('Bid successfully created!', {variant: 'success'});
+                // enqueueSnackbar('Bid successfully created!', {variant: 'success'});
             } catch (error) {
                 console.error('Error fetching orders:', error);
             }

@@ -8,13 +8,15 @@ import {DateDisplay} from "./DateDisplay";
 import {OrderItemsOverview} from "./OrderItemsOverview";
 import Stack from "@mui/material/Stack";
 import {useContext, useEffect, useMemo, useRef} from "react";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {ChatOverlay} from "../chat/ChatOverlay";
 import Button from "@mui/material/Button";
 import ChatIcon from '@mui/icons-material/Chat';
 import {CustomerContext} from "../../util/context/CustomerContext";
 import {DarkButton} from "../util/Buttons";
+import {RatingModal} from "../util/RatingModal";
 
+import StarsIcon from '@mui/icons-material/Stars';
 
 export function SingleOrderViewCommon({order, contact, buttons, bidView, orderName, showDeliveryAddress = false}) {
     const iconSx = {
@@ -30,14 +32,16 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
     const {customer} = useContext(CustomerContext)
 
     const ref = useRef()
-    const {pathname} = useLocation()
     const navigate = useNavigate()
     const params = useParams()
 
     const chatOpen = useMemo(() => {
-        return params.id === order._id && (pathname.endsWith("/chat") || pathname.endsWith("/chat/"))
-    }, [pathname, params.id, order._id])
+        return params.id === order._id && params.action === "chat"
+    }, [params.id, order._id, params.action])
 
+    const reviewOpen = useMemo(() => {
+        return params.id === order._id && params.action === "review"
+    }, [params.id, order._id, params.action])
 
     useEffect(() => {
         // onMount
@@ -45,12 +49,8 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
             ref.current.scrollIntoView({behavior: "smooth"})
         }
 
-        if (pathname.endsWith("/chat") || pathname.endsWith("/chat/")) {
-            if (params.id === order._id) {
-                // setChatOpen(true)
-            } else if (params.id === undefined) {
-                navigate(`/${customer.type.toLowerCase()}/my-orders/`)
-            }
+        if (params.action !== undefined && params.id === undefined) {
+            navigate(`/${customer?.type?.toLowerCase()}/my-orders/`)
         }
 
     }, [])
@@ -58,6 +58,11 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
 
     return <Box ref={ref} boxShadow={3} borderRadius={"8px"} padding={"16px"} mt={"16px"} display={"flex"}
                 flexDirection={"column"} backgroundColor={"white"}>
+
+        <RatingModal order={order} open={reviewOpen} onClose={() => {
+            navigate(`/${customer?.type?.toLowerCase()}/my-orders/`)
+        }} buyer={customer?.type !== "BUYER"}/>
+
         <Stack direction={{sm: "row", xs: "column"}} justifyContent={"space-between"} alignItems={{
             sm: "center",
             xs: "start"
@@ -74,6 +79,17 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
             </Stack>
 
             <Stack gap={"8px"} display={"flex"} flexDirection={"row"} alignItems={"start"}>
+                <Show when={order?.selectedBid?.createdBy}>{() =>
+                    <Button onClick={() => navigate(`/${customer?.type?.toLowerCase()}/my-orders/${order._id}/review`)}
+                            sx={{
+                                "padding": "0",
+                                "minWidth": 0,
+                            }}>
+                        <StarsIcon sx={iconSx}/>
+                    </Button>
+                }</Show>
+
+
                 <Show when={contact?.phoneNumber}>{phoneNumber =>
                     <Link href={`tel:${phoneNumber}`}>
                         <PhoneIcon sx={iconSx}/>
@@ -86,7 +102,8 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
                     </Link>
                 }</Show>
 
-                <Show when={order?.selectedBid?.createdBy}>{() =>
+                <Show
+                    when={customer.type === "BUYER" ? (order?.status === "In Payment") : (order?.status === "Finished" || order?.status === "In Payment")}>{() =>
                     <Button onClick={() => navigate(`/${customer.type.toLowerCase()}/my-orders/${order._id}/chat`)}
                             sx={{
                                 "padding": "0",
@@ -95,7 +112,6 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
                         <ChatIcon sx={iconSx}/>
                     </Button>
                 }</Show>
-
             </Stack>
         </Stack>
 
@@ -141,10 +157,10 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
 
         <Show when={order?.selectedBid?.createdBy}>{() =>
             <ChatOverlay order={order} open={chatOpen} onClose={() => {
-                navigate(`/${customer.type.toLowerCase()}/my-orders/`)
+                navigate(`/${customer?.type?.toLowerCase()}/my-orders/`)
             }}/>
         }</Show>
-        <Show when={order.status === "In Payment" && customer.type.toLowerCase() === 'buyer'} sx={{
+        <Show when={order.status === "In Payment" && customer?.type?.toLowerCase() === 'buyer'} sx={{
             "padding": "0",
             "minWidth": 0,
         }}>
