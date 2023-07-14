@@ -1,5 +1,6 @@
 import React from 'react';
-import {Box, ListItem, ListItemAvatar, ListItemButton} from '@mui/material';
+import {Box, IconButton, ListItem, ListItemAvatar, ListItemButton} from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -12,7 +13,7 @@ import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 import Rating from "@mui/material/Rating";
 
 
-const OrderListItem = ({order, handleOpenOrderDetailsModal, selectedOrder, setSelectedOrder}) => {
+const OrderListItem = ({order, handleOpenReviewsModal, handleOpenOrderDetailsModal, selectedOrder, setSelectedOrder}) => {
 
     const stars = order.createdBy.avgRating
 
@@ -39,9 +40,12 @@ const OrderListItem = ({order, handleOpenOrderDetailsModal, selectedOrder, setSe
                         </Box>
                         <Box>
                             <Stack direction={"row"} flexWrap={"wrap"} gap={"10px"} sx={{mb: 2}}>
-                                <Typography variant={"h6"}
+                                <Typography sx={{mt: "6px"}} variant={"h6"}
                                             fontWeight="bold">{order?.createdBy?.firstName} {order?.createdBy?.lastName}</Typography>
-                                <Rating readOnly defaultValue={stars || null} precision={0.5}/>
+                                <Rating sx={{mt: "8px"}} readOnly defaultValue={stars || null} precision={0.5}/>
+                                <IconButton aria-label="info" onClick={handleOpenReviewsModal}>
+                                    <InfoIcon />
+                                </IconButton>
                             </Stack>
                             <Box display={"grid"} gridTemplateColumns={"min-content auto"} gap={"10px"}>
                                 <ShoppingCartOutlinedIcon/>

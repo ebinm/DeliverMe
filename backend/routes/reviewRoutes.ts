@@ -1,6 +1,7 @@
 import express from 'express';
 import {authenticated, AuthenticatedRequest} from "../middleware/auth";
-import {createReview, deleteReview, getAllReviews, getReviewById, updateReview} from "../controllers/reviewController";
+import {createReview, deleteReview, getAllReviews, getReviewById, getReviewsOfBuyer, getReviewsOfShopper, updateReview
+} from "../controllers/reviewController";
 
 const
     router = express.Router();
@@ -44,6 +45,24 @@ router.put("/:id", authenticated, async (req: AuthenticatedRequest, res, next) =
 router.delete("/:id", authenticated, async (req: AuthenticatedRequest, res, next) => {
     try {
         res.json(await deleteReview(req.params.id))
+    } catch (e) {
+        console.log(e)
+        next(e.message)
+    }
+})
+
+router.get("/buyer/:id", authenticated, async (req: AuthenticatedRequest, res, next) => {
+    try {
+        res.json(await getReviewsOfBuyer(req.params.id));
+    } catch (e) {
+        console.log(e)
+        next(e.message)
+    }
+})
+
+router.get("/shopper/:id", authenticated, async (req: AuthenticatedRequest, res, next) => {
+    try {
+        res.json(await getReviewsOfShopper(req.params.id));
     } catch (e) {
         console.log(e)
         next(e.message)

@@ -1,5 +1,5 @@
 import {getOrderById} from "./orderController";
-import {Types} from "mongoose";
+import mongoose, {Types} from "mongoose";
 import {Review, ReviewModel} from "../models/review";
 import {Shopper} from "../models/customer";
 import {findShopperById, updateShopper} from "./shopperController";
@@ -36,8 +36,38 @@ export async function deleteReview(reviewId: string) {
 
 }
 
-export async function getReviewsOfCustomer(_type: string, _customer: string): Promise<Review[]> {
+export async function getReviewsOfCustomerTyped(_type: string, _customer: string): Promise<Review[]> {
     return ReviewModel.find( {type: _type, customer: _customer} );
+}
+
+export async function getReviewsOfBuyer(buyer: string): Promise<Review[]> {
+
+    return ReviewModel.aggregate()
+        .match({"customer": new mongoose.Types.ObjectId(buyer)})
+        .lookup({
+            from: "shoppers", localField: "createdBy",
+            foreignField: "_id", as: "createdBy"
+        }).addFields({
+            createdBy: {$arrayElemAt: ["$createdBy", 0]} // extracts user from list
+        }).project({
+            "createdBy.password": 0, "createdBy.notifications": 0
+        });
+
+}
+
+export async function getReviewsOfShopper(shopper: string): Promise<Review[]> {
+
+    return ReviewModel.aggregate()
+        .match({"customer": new mongoose.Types.ObjectId(shopper)})
+        .lookup({
+            from: "buyers", localField: "createdBy",
+            foreignField: "_id", as: "createdBy"
+        }).addFields({
+            createdBy: {$arrayElemAt: ["$createdBy", 0]} // extracts user from list
+        }).project({
+            "createdBy.password": 0, "createdBy.notifications": 0
+        });
+
 }
 
 export async function rateBuyer(shopperId: string, orderId: string, review: Review): Promise<Review> {

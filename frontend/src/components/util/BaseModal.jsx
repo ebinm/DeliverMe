@@ -21,6 +21,7 @@ export function BaseModal(props) {
                 "display": "flex",
                 "padding": "30px",
                 "minHeight": "30%",
+                "minWidth": "30%",
                 "justifyContent": "space-between",
                 "flexDirection": "column",
                 "maxHeight": "90vh",

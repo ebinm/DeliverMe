@@ -1,7 +1,7 @@
 import express from "express";
 import {login, signup} from "../controllers/authController";
 import {authenticated, AuthenticatedRequest} from "../middleware/auth";
-import {getReviewsOfCustomer} from "../controllers/reviewController";
+import {getReviewsOfCustomerTyped} from "../controllers/reviewController";
 
 
 const router = express.Router();
@@ -28,7 +28,7 @@ router.post("/login", async (req, res, next) => {
 
 router.get("/:id/reviews", authenticated, async (req: AuthenticatedRequest, res, next) => {
     try {
-        res.json(await getReviewsOfCustomer("Buyer", req.params.id));
+        res.json(await getReviewsOfCustomerTyped("Buyer", req.params.id));
     } catch (e) {
         console.log(e)
         next(e.message)

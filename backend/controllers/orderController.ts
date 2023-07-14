@@ -6,7 +6,6 @@ import {Message} from "../models/message";
 import {CustomerType, Shopper} from "../models/customer";
 import mongoose from "mongoose";
 
-
 export async function getAllOrders(): Promise<Order[]> {
 
     return OrderModel.find()
@@ -74,7 +73,6 @@ export async function sendMessage(customerId: string, senderType: CustomerType, 
 }
 
 
-
 export async function uploadReceipt(customerId, orderId: string, receipt: Receipt) {
     const order = await OrderModel.findById(orderId)
     if (customerId !== order?.selectedBid?.createdBy?.toString()) {
@@ -100,6 +98,7 @@ export async function uploadReceipt(customerId, orderId: string, receipt: Receip
 
 export async function getOpenOrders(shopperId: string): Promise<Order[]> {
     const shopperPromise = Shopper.findById(shopperId)
+        .select("-password -notifications -__v")
 
     const orders = await OrderModel.aggregate().match({
         "status": "Open"
@@ -109,7 +108,7 @@ export async function getOpenOrders(shopperId: string): Promise<Order[]> {
     }).addFields({
         createdBy: {$arrayElemAt: ["$createdBy", 0]} // extracts user from list
     }).project({
-        "createdBy.password": 0
+        "createdBy.password": 0, "createdBy.notifications": 0
     }).addFields({
         "bids": {
             "$filter": {
@@ -121,6 +120,7 @@ export async function getOpenOrders(shopperId: string): Promise<Order[]> {
             }
         }
     })
+
 
     const shopper = await shopperPromise
 

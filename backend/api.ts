@@ -6,6 +6,7 @@ import buyerRoutes from "./routes/buyerRoutes";
 import userRoutes from "./routes/userRoutes";
 import orderRoutes from "./routes/orderRoutes";
 import bidRoutes from "./routes/bidRoutes";
+import reviewRoutes from "./routes/reviewRoutes";
 
 const api = express();
 // TODO this is a very large limit to allow for images to be uploaded. Still,
@@ -42,6 +43,8 @@ api.use("/api/me", userRoutes);
 api.use("/api/orders", orderRoutes);
 
 api.use("/api/bids", bidRoutes);
+
+api.use("/api/reviews", reviewRoutes);
 
 // Error handling
 api.use((err, req, res, next) => {
