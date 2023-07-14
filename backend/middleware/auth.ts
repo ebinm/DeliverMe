@@ -8,6 +8,10 @@ import {ExtendedError} from "socket.io/dist/namespace";
 import cookie from "cookie"
 
 
+/**
+ * Use this type for the request if the authentication middleware was used.
+ * It provides the verified customerId and type from the JWT
+ */
 type AuthenticatedRequest = Request & {
     customerId: string,
     customerType: CustomerType

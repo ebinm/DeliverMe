@@ -2,7 +2,6 @@ import express from 'express';
 import {authenticated, AuthenticatedRequest} from "../middleware/auth";
 import {
     changeOrder,
-    changeStatus,
     getOpenOrders,
     getOrderById,
     getOrdersForBuyer,
@@ -122,18 +121,6 @@ router.put("/:id/selectBid", authenticated, async (req: AuthenticatedRequest, re
     }
 })
 
-router.put("/:id/changeStatus", authenticated, async (req: AuthenticatedRequest, res, next) => {
-    try {
-        if (req.customerType === "BUYER") {
-            res.json(await changeStatus(req.customerId, req.params.id, req.body.status))
-        } else {
-            res.json({msg: "This call is only for buyers"})
-        }
-    } catch (e) {
-        console.log(e)
-        next(e.message)
-    }
-})
 
 router.post("/:id/chat", authenticated, async (req: AuthenticatedRequest, res, next) => {
     try {
