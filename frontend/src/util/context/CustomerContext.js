@@ -1,6 +1,14 @@
-import {createContext, useState} from "react";
+import {createContext, useCallback, useState} from "react";
 import {useFetch} from "../hooks";
 import {PUT_FETCH_OPTIONS} from "../util";
+
+/**
+ * The customer context and provider provide the logged in customer and offer methods for login in and
+ * signing up new users.
+ *
+ * @type {React.Context<{logout: undefined, ready: boolean, invalidate: undefined, login: undefined, signup: undefined, customer: undefined}>}
+ */
+
 
 // @type Context<{login: () => Promise<{msg: string}> | undefined, signup: () => Promise<{msg: string} | undefined, customer: {firstName: string, lastName: string, email: string, type: "BUYER" | "SHOPPER"} | undefined }>}>
 const CustomerContext = createContext({
@@ -29,11 +37,14 @@ function CustomerProvider({children}) {
     // I am sorry for this. Endpoint is technically static but we change it to trigger a refetch
     const [endpoint, setEndpoint] = useState(`${process.env.REACT_APP_BACKEND}/api/me`)
 
+
     const [finishedOnce, setFinishedOnce] = useState(false)
+
+    const onFinallyFetch = useCallback(() => setFinishedOnce(true), [setFinishedOnce])
     const [customer, setCustomer, loading] = useFetch(endpoint, {
         credentials: "include",
         withCredentials: true
-    }, undefined, () => setFinishedOnce(true))
+    }, undefined, onFinallyFetch)
 
 
     // type: "shopper" | "buyer"

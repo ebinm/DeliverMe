@@ -23,6 +23,17 @@ import {useJsApiLoader} from '@react-google-maps/api';
 import {useSnackbar} from 'notistack';
 import {GuardCustomerType} from "../../util/GuardCustomerType";
 
+/**
+ * Displays a summary of buyer's order
+ *
+ * @param items The ordered items
+ * @param to The lates delivery time or undefined
+ * @param from The earliest delivery time or undefined
+ * @param notes Additional Notes or undefined
+ * @param shop The selected shop or undefined
+ * @param onGoBack A function called when the user wants to go back
+ * @param onSubmit A function called on submit.
+ */
 export function BuyerOrderSummary({
                                       items,
                                       to, from, notes,

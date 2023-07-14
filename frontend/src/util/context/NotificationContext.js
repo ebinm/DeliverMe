@@ -1,7 +1,7 @@
 import {createContext, useContext, useEffect, useState} from "react";
 import {CustomerContext} from "./CustomerContext";
 import {io} from "socket.io-client";
-
+import {useSnackbar} from 'notistack';
 
 const NotificationContext = createContext({
     notifications: [],
@@ -15,6 +15,7 @@ function NotificationProvider({children}) {
     // Represents only new notifications -> clear on read
     const [notifications, setNotifications] = useState([])
     const {customer} = useContext(CustomerContext)
+    const {enqueueSnackbar} = useSnackbar();
 
 
     // We store all messages that we have received since this context was created
@@ -26,11 +27,17 @@ function NotificationProvider({children}) {
 
 
     useEffect(() => {
+
         const ws = io(process.env.REACT_APP_WEBSOCKET, {
             withCredentials: true
         })
 
         ws.on("notification", (event) => {
+            enqueueSnackbar("New Notification Received!", {variant: 'info'})
+            setNotifications(prev => [JSON.parse(event), ...prev])
+        })
+
+        ws.on("initial_notification", (event) => {
             setNotifications(prev => [JSON.parse(event), ...prev])
         })
 

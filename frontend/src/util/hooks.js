@@ -4,6 +4,7 @@ import {CustomerContext} from "./context/CustomerContext";
 
 
 /**
+ * Important: Memoize the onSuccess and onFinally methods.
  *
  * @returns An array of the items, a local set state function, the loading state, an error object, a refetch function
  */
@@ -19,39 +20,39 @@ function useFetch(endpoint, options = {}, onSuccess = undefined, onFinally = und
 
     const abortControllerRef = useRef()
 
-    async function callFetch(){
-        if (!endpoint) {
-            return
-        }
-
-        abortControllerRef.current?.abort()
-        const ac = new AbortController()
-        abortControllerRef.current = ac
-        setLoading(true)
-        setError(undefined)
-        await fetch(endpoint, {signal: ac.signal, ...options})
-            .then(res => {
-                if (res.ok) {
-                    return res.json()
-                } else {
-                    return res.json()
-                        .then(err => setError(err))
-                        .then(() => Promise.reject())
-                }
-            }).then(res => {
-            setItem(res)
-            onSuccess && onSuccess()
-            setError(undefined)
-            setLoading(false)
-        }).catch(err => {
-            setError(err)
-            if (!ac.signal.aborted) {
-                setLoading(false)
+    const callFetch = useCallback(async function callFetch() {
+            if (!endpoint) {
+                return
             }
-        }).finally(() => {
-            onFinally && onFinally()
-        })
-    }
+
+            abortControllerRef.current?.abort()
+            const ac = new AbortController()
+            abortControllerRef.current = ac
+            setLoading(true)
+            setError(undefined)
+            await fetch(endpoint, {signal: ac.signal, ...options})
+                .then(res => {
+                    if (res.ok) {
+                        return res.json()
+                    } else {
+                        return res.json()
+                            .then(err => setError(err))
+                            .then(() => Promise.reject())
+                    }
+                }).then(res => {
+                    setItem(res)
+                    onSuccess && onSuccess()
+                    setError(undefined)
+                    setLoading(false)
+                }).catch(err => {
+                    setError(err)
+                    if (!ac.signal.aborted) {
+                        setLoading(false)
+                    }
+                }).finally(() => {
+                    onFinally && onFinally()
+                })
+        }, [endpoint, onFinally, onSuccess, JSON.stringify(options)])
 
     useEffect(() => {
         callFetch()
@@ -61,7 +62,7 @@ function useFetch(endpoint, options = {}, onSuccess = undefined, onFinally = und
             setLoading(false)
             setError({msg: "Aborted fetch"})
         }
-    }, [endpoint, JSON.stringify(options)])
+    }, [endpoint, JSON.stringify(options), callFetch])
 
     return [
         item,
@@ -110,7 +111,7 @@ function useCacheLocalStorageForCustomer(key, initialState = null, storageCondit
     return [value, setValue, clear]
 }
 
-function useExternalScripts(url, channelId, token,  id){
+function useExternalScripts(url, channelId, token, id) {
     useEffect(() => {
         const head = document.querySelector("head");
         const script = document.createElement("script");

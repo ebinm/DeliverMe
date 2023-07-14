@@ -1,5 +1,5 @@
-import React, {useContext, useMemo} from "react";
-import {Avatar, Box, Typography} from "@mui/material";
+import React, {useContext, useMemo, useState} from "react";
+import {Avatar, Box, IconButton, Typography} from "@mui/material";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import AccessAlarmOutlinedIcon from "@mui/icons-material/AccessAlarmOutlined";
 import Rating from "@mui/material/Rating";
@@ -10,6 +10,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+import InfoIcon from "@mui/icons-material/Info";
+import {ReviewsModal} from "../util/ReviewsModal";
 
 export function SingleBidView({bid, selected = false, setSelected = () => undefined, highlightOnHover = true}) {
 
@@ -35,6 +37,9 @@ export function SingleBidView({bid, selected = false, setSelected = () => undefi
 
 
 function MobileSingleBidView({currencyFormatter, customer, stars, selected, setSelected, bid}) {
+
+    const [showReviewsModal, setShowReviewsModal] = useState(false);
+
     return <Paper onClick={() => setSelected(bid._id)} sx={{
         "padding": "8px", backgroundColor: bid._id === selected ? "selected.main" : undefined
     }}>
@@ -42,16 +47,31 @@ function MobileSingleBidView({currencyFormatter, customer, stars, selected, setS
             <Avatar imgProps={{sx: {padding: '0px'}}} alt={bid.createdBy.firstName + " " + bid.createdBy.lastName}
                     src={bid.createdBy.profilePicture}/>
             <Stack direction={"column"}>
-                <Typography variant={"h6"}
+                <Typography sx={{mt: "6px"}} variant={"h6"}
                             component={"h4"}
-                            sx={{
-                                "gridColumn": "span 2",
-                                "mt": "8px"
-                            }}>{bid.createdBy.firstName} {bid.createdBy.lastName}</Typography>
-                <Rating readOnly defaultValue={stars || null} precision={0.5}/>
+                            style={{"gridColumn": "span 2"}}>{bid.createdBy.firstName} {bid.createdBy.lastName}
+                </Typography>
+
+                <Stack direction={"row"}>
+                    <Rating sx={{mt: "8px"}} readOnly defaultValue={stars || null} precision={0.5}/>
+
+                    <IconButton aria-label="info" onClick={() => {
+                        setShowReviewsModal(true)
+                    }}>
+                        <InfoIcon/>
+                    </IconButton>
+                </Stack>
 
                 <Box display={"grid"} gridTemplateColumns={"min-content auto"} alignItems={"center"} columnGap={"8px"}
                      mt={"8px"}>
+
+                    <ReviewsModal
+                        open={showReviewsModal}
+                        onClose={() => setShowReviewsModal(false)}
+                        customer={bid.createdBy}
+                        type={"shopper"}
+                    />
+
                     <LightbulbOutlinedIcon sx={{"gridRow": "span 2"}}/>
                     <Typography sx={{color: "text.light"}}>Bid offered:</Typography>
                     <Typography>{currencyFormatter.format(customer.type === "BUYER" ? bid.moneyBidWithFee.amount : bid.moneyBid.amount)}</Typography>
@@ -74,6 +94,9 @@ function MobileSingleBidView({currencyFormatter, customer, stars, selected, setS
 }
 
 function DesktopSingleBidView({currencyFormatter, customer, stars, selected, setSelected, bid, highlightOnHover}) {
+
+    const [showReviewsModal, setShowReviewsModal] = useState(false);
+
     return <Box onClick={() => setSelected(bid._id)}
                 margin={"8px 0"} flexGrow={1}
                 display={"flex"} flexDirection={"row"}
@@ -89,12 +112,29 @@ function DesktopSingleBidView({currencyFormatter, customer, stars, selected, set
         <Avatar imgProps={{sx: {padding: '0px'}}} alt={bid.createdBy.firstName + " " + bid.createdBy.lastName}
                 src={bid.createdBy.profilePicture}/>
         <Box display={"flex"} flexDirection={"column"}>
-            <Box display={"grid"} gridTemplateColumns={"min-content auto auto"} gap={"8px"}>
-                <Typography variant={"h6"}
-                            component={"h4"}
-                            style={{"gridColumn": "span 2"}}>{bid.createdBy.firstName} {bid.createdBy.lastName}</Typography>
 
-                <Rating readOnly defaultValue={stars || null} precision={0.5}/>
+            <Stack direction={"row"} flexWrap={"wrap"} gap={"10px"} sx={{mb: 2}}>
+                <Typography sx={{mt: "6px"}} variant={"h6"}
+                            component={"h4"}
+                            style={{"gridColumn": "span 2"}}>{bid.createdBy.firstName} {bid.createdBy.lastName}
+                </Typography>
+
+                <Rating sx={{mt: "8px"}} readOnly defaultValue={stars || null} precision={0.5}/>
+
+                <IconButton aria-label="info" onClick={() => {
+                    setShowReviewsModal(true)
+                }}>
+                    <InfoIcon/>
+                </IconButton>
+            </Stack>
+
+            <Box display={"grid"} gridTemplateColumns={"min-content auto auto"} gap={"8px"}>
+                <ReviewsModal
+                    open={showReviewsModal}
+                    onClose={() => setShowReviewsModal(false)}
+                    customer={bid.createdBy}
+                    type={"shopper"}
+                />
 
                 <LightbulbOutlinedIcon/>
                 <Typography mr={"64px"}>Bid offered:</Typography>

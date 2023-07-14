@@ -13,7 +13,7 @@ import {InfoPopover} from "../util/InfoPopover";
 import Typography from "@mui/material/Typography";
 
 
-const BidOnOrderModal = ({showBidOnOrderModal, handleCloseBidOnOrderModal, handleCloseOrderDetailsModal, order}) => {
+const BidOnOrderModal = ({showBidOnOrderModal, handleCloseBidOnOrderModal, handleCloseOrderDetailsModal, order, getOpenOrders}) => {
 
     const [bidAmount, setBidAmount] = useState(0);
     const [bidCurrency, setBidCurrency] = useState("EUR");
@@ -42,6 +42,7 @@ const BidOnOrderModal = ({showBidOnOrderModal, handleCloseBidOnOrderModal, handl
             // We keep the currency
             setBidDate(null)
             setBidNotes("")
+            getOpenOrders()
         } else {
             enqueueSnackbar('Could not place bid. Make sure you have bid a positive amount.', {variant: 'error'});
         }

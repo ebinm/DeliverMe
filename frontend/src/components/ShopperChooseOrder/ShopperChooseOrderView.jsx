@@ -14,6 +14,7 @@ import {useSnackbar} from 'notistack';
 import Stack from "@mui/material/Stack";
 import {useTheme} from "@mui/system";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import {ReviewsModal} from "../util/ReviewsModal";
 
 
 const ShopperChooseOrderView = () => {
@@ -24,8 +25,10 @@ const ShopperChooseOrderView = () => {
 
     const [map, setMap] = useState(null);
     const [showOrderDetailsModal, setShowOrderDetailsModal] = useState(false);
+    const [showReviewsModal, setShowReviewsModal] = useState(false);
     const [showBidOnOrderModal, setShowBidOnOrderModal] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
+    const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [orders, setOrders] = useState([]);
     const [filteredOrders, setFilteredOrders] = useState([]);
     const [directions, setDirections] = useState(null);
@@ -103,12 +106,46 @@ const ShopperChooseOrderView = () => {
     }, [selectedOrder]);
 
 
+    const getOpenOrders = () => {
+        const abortController = new AbortController()
+
+        const fetchOrders = async () => {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/open`,
+                    {
+                        credentials: "include",
+                        withCredentials: true,
+                        signal: abortController.signal
+                    }
+                );
+                const data = await response.json();
+                console.log('Orders:', data);
+                setOrders(data);
+                setFilteredOrders(data);
+                console.log('Orders successfully fetched!');
+                enqueueSnackbar('Bid successfully created!', {variant: 'success'});
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+            }
+        };
+
+        fetchOrders()
+    }
+
     const handleOpenOrderDetailsModal = () => {
         setShowOrderDetailsModal(true);
     };
 
     const handleCloseOrderDetailsModal = () => {
         setShowOrderDetailsModal(false);
+    };
+
+    const handleOpenReviewsModal = () => {
+        setShowReviewsModal(true);
+    };
+
+    const handleCloseReviewsModal = () => {
+        setShowReviewsModal(false);
     };
 
     const handleOpenBidOnOrderModal = () => {
@@ -128,6 +165,11 @@ const ShopperChooseOrderView = () => {
         }
     }
 
+    const handleSelection = (order) => {
+        setSelectedOrder(order);
+        setSelectedCustomer(order.createdBy);
+    }
+
     return (
         <GuardCustomerType requiredType={"SHOPPER"}>{() =>
             <>
@@ -142,6 +184,13 @@ const ShopperChooseOrderView = () => {
                     handleCloseBidOnOrderModal={handleCloseBidOnOrderModal}
                     order={selectedOrder}
                     handleCloseOrderDetailsModal={handleCloseOrderDetailsModal}
+                    getOpenOrders ={getOpenOrders}
+                />
+                <ReviewsModal
+                    open={showReviewsModal}
+                    onClose={() => handleCloseReviewsModal()}
+                    customer={selectedCustomer}
+                    type={"buyer"}
                 />
 
 
@@ -153,7 +202,7 @@ const ShopperChooseOrderView = () => {
                            maxHeight={{"sm": "auto", "md": "70lvh"}}>
 
                         <Stack direction={"column"} flex={1}>
-                            <Typography variant="h4" sx={{paddingLeft: '16px'}}>Open Orders</Typography>
+                            <Typography variant="h4" sx={{paddingLeft: '16px', mb:1}}>Open Orders</Typography>
                             <OrderFilter orders={orders} setFilteredOrders={setFilteredOrders}/>
 
                             <Divider/>
@@ -162,8 +211,9 @@ const ShopperChooseOrderView = () => {
                                 {filteredOrders.map((order) => (
                                     <OrderListItem key={order._id} order={order}
                                                    handleOpenOrderDetailsModal={handleOpenOrderDetailsModal}
+                                                   handleOpenReviewsModal={handleOpenReviewsModal}
                                                    selectedOrder={selectedOrder}
-                                                   setSelectedOrder={setSelectedOrder}/>
+                                                   setSelectedOrder={handleSelection}/>
                                 ))}
                             </List>
                         </Stack>
