@@ -6,7 +6,7 @@ import {Show} from "../../util/ControlFlow";
 import SpeakerNotesOutlinedIcon from '@mui/icons-material/SpeakerNotesOutlined';
 import AccessAlarmsOutlinedIcon from '@mui/icons-material/AccessAlarmsOutlined';
 import {DateTimePicker} from "@mui/x-date-pickers";
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {useCallback, useMemo, useRef, useState} from "react";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -176,10 +176,6 @@ function NextButton({fromErr, toErr, items, onClick}) {
     const [anchorEl, setAnchorEl] = useState(null);
 
     const disabled = useMemo(() => fromErr || toErr || items.length === 0, [items, fromErr, toErr])
-
-    useEffect(() => console.log(disabled), [disabled])
-    useEffect(() => console.log(anchorEl), [anchorEl])
-    useEffect(() => console.log(fromErr, toErr), [fromErr, toErr])
 
     return <>
         <Popover sx={{

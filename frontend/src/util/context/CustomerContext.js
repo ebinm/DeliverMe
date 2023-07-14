@@ -35,13 +35,10 @@ function fetchUser(setCustomer) {
 function CustomerProvider({children}) {
 
     // I am sorry for this. Endpoint is technically static but we change it to trigger a refetch
-    const [endpoint, setEndpoint] = useState(`${process.env.REACT_APP_BACKEND}/api/me`)
-
-
     const [finishedOnce, setFinishedOnce] = useState(false)
 
     const onFinallyFetch = useCallback(() => setFinishedOnce(true), [setFinishedOnce])
-    const [customer, setCustomer, loading] = useFetch(endpoint, {
+    const [customer, setCustomer, loading,, refetch] = useFetch(`${process.env.REACT_APP_BACKEND}/api/me`, {
         credentials: "include",
         withCredentials: true
     }, undefined, onFinallyFetch)
@@ -65,11 +62,11 @@ function CustomerProvider({children}) {
         await fetchUser(setCustomer)
     }
 
-    async function signup(email, password, firstName, lastName, profilePicture, type) {
+    async function signup(email, password, firstName, lastName, profilePicture, paypalAccount, type) {
         const res = await fetch(`${process.env.REACT_APP_BACKEND}/api/${type}/signup`, {
             ...PUT_FETCH_OPTIONS,
             method: "POST", body: JSON.stringify({
-                email, password, firstName, lastName, profilePicture
+                email, password, firstName, lastName, profilePicture, paypalAccount
             })
         })
 
@@ -91,12 +88,7 @@ function CustomerProvider({children}) {
         signup,
         customer,
         logout,
-        invalidate: () => {
-            // Seems a bit weird but endpoint is captured so it should be fine
-            setEndpoint(undefined)
-            // I do not like this
-            setTimeout(() => setEndpoint(endpoint))
-        },
+        invalidate: refetch,
         ready: finishedOnce && !loading
     }}>
         {children}

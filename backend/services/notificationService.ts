@@ -41,7 +41,7 @@ export function createNotificationService(server: io.Server): NotificationServic
 
         customerModelByType(customerType).findById(customerId).select("notifications")
             .then((res) => {
-                res.notifications?.forEach((it) => {
+                res?.notifications?.forEach((it) => {
                     if (socket !== undefined) {
                         socket.emit("initial_notification", JSON.stringify(it))
                     }
