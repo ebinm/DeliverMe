@@ -106,6 +106,32 @@ const ShopperChooseOrderView = () => {
     }, [selectedOrder]);
 
 
+    const getOpenOrders = () => {
+        const abortController = new AbortController()
+
+        const fetchOrders = async () => {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/open`,
+                    {
+                        credentials: "include",
+                        withCredentials: true,
+                        signal: abortController.signal
+                    }
+                );
+                const data = await response.json();
+                console.log('Orders:', data);
+                setOrders(data);
+                setFilteredOrders(data);
+                console.log('Orders successfully fetched!');
+                enqueueSnackbar('Bid successfully created!', {variant: 'success'});
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+            }
+        };
+
+        fetchOrders()
+    }
+
     const handleOpenOrderDetailsModal = () => {
         setShowOrderDetailsModal(true);
     };
@@ -158,6 +184,7 @@ const ShopperChooseOrderView = () => {
                     handleCloseBidOnOrderModal={handleCloseBidOnOrderModal}
                     order={selectedOrder}
                     handleCloseOrderDetailsModal={handleCloseOrderDetailsModal}
+                    getOpenOrders ={getOpenOrders}
                 />
                 <ReviewsModal
                     open={showReviewsModal}
@@ -175,7 +202,7 @@ const ShopperChooseOrderView = () => {
                            maxHeight={{"sm": "auto", "md": "70lvh"}}>
 
                         <Stack direction={"column"} flex={1}>
-                            <Typography variant="h4" sx={{paddingLeft: '16px'}}>Open Orders</Typography>
+                            <Typography variant="h4" sx={{paddingLeft: '16px', mb:1}}>Open Orders</Typography>
                             <OrderFilter orders={orders} setFilteredOrders={setFilteredOrders}/>
 
                             <Divider/>
