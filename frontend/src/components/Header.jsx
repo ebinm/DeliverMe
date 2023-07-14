@@ -25,6 +25,7 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import ClearIcon from '@mui/icons-material/Clear';
 import PaymentIcon from '@mui/icons-material/Payment';
+import PaidIcon from '@mui/icons-material/Paid';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import MessageIcon from '@mui/icons-material/Message';
@@ -354,6 +355,7 @@ function notificationTypeToLink(type, orderId, customerType) {
         case "PaymentRequired":
             // TODO actual path
             return [false, `/buyer/my-orders/${orderId}/checkout`]
+        case "TransactionCompleted":
         default:
             return [false, undefined]
     }
@@ -369,6 +371,8 @@ function notificationTypeToIcon(type) {
             return <GradeIcon/>
         case "ChatMessageReceived":
             return <MessageIcon/>
+        case "TransactionCompleted":
+            return <PaidIcon/>
         default:
             return <></>
     }
