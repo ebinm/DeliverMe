@@ -10,7 +10,7 @@ import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 import {formatUnitNumerusClausus} from "../../../util/util";
 import {DarkButton} from "../../util/Buttons";
-import {InfoPopover} from "../../util/InfoPopover";
+import {InfoPopper} from "../../util/HoverPopper";
 
 export function MobileItemTable({items, setItemsSimple}) {
 
@@ -118,10 +118,10 @@ function ModalEditContent({item, setSelf, onClose}) {
                    onChange={(e) => setSelf(prev => ({...prev, note: e.currentTarget?.value}), item.localId)}
                    InputProps={{
                        endAdornment:
-                           <InfoPopover><Typography>Here you can specify for example an upper bound
+                           <InfoPopper><Typography>Here you can specify for example an upper bound
                                on
                                the price or what to do when the item is
-                               not available.</Typography></InfoPopover>
+                               not available.</Typography></InfoPopper>
 
                    }}
         />

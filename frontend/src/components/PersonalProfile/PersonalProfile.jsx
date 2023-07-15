@@ -8,7 +8,7 @@ import TextField from "@mui/material/TextField";
 import {CustomFileInput} from "../util/CustomFileUpload";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
-import {InfoPopover} from "../util/InfoPopover";
+import {InfoPopper} from "../util/HoverPopper";
 import {PUT_FETCH_OPTIONS} from "../../util/util";
 import {DarkButton} from "../util/Buttons";
 import {Show} from "../util/ControlFlow";
@@ -71,17 +71,17 @@ export function PersonalProfile() {
                                     defaultCountry={"de"}
                                     onChange={v => setPhoneNumber(v)}
                                     onlyCountries={["de", "gb"]} InputProps={{
-                        endAdornment: <InfoPopover><Typography variant={"body1"}>Adding a phone number will
+                        endAdornment: <InfoPopper><Typography variant={"body1"}>Adding a phone number will
                             allow {otherGroup}s to contact you more easily if questions
-                            arise.</Typography></InfoPopover>
+                            arise.</Typography></InfoPopper>
                     }}/>
 
                     <Show when={customer.type === "SHOPPER"}>
                         <TextField
                             value={paypalAccount} label={"PayPal Account"}
                             onChange={e => setPaypalAccount(e.target.value)} InputProps={{
-                            endAdornment: <InfoPopover><Typography variant={"body1"}>This will be used to pay your fee
-                                to you.</Typography></InfoPopover>
+                            endAdornment: <InfoPopper><Typography variant={"body1"}>This will be used to pay your fee
+                                to you.</Typography></InfoPopper>
                         }}/>
                     </Show>
 

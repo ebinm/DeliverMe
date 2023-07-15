@@ -15,8 +15,8 @@ import ChatIcon from '@mui/icons-material/Chat';
 import {CustomerContext} from "../../util/context/CustomerContext";
 import {DarkButton} from "../util/Buttons";
 import {RatingModal} from "../util/RatingModal";
-
 import StarsIcon from '@mui/icons-material/Stars';
+import {HelperText, HoverPopper} from "../util/HoverPopper";
 
 export function SingleOrderViewCommon({order, contact, buttons, bidView, orderName, showDeliveryAddress = false}) {
     const iconSx = {
@@ -55,6 +55,10 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
 
     }, [])
 
+    const ratedCustomer = useMemo(() =>
+            customer?.type === "SHOPPER" ? order?.createdBy : order?.selectedBid?.createdBy
+        , [customer?.type, order?.createdBy, order?.selectedBid?.createdBy])
+
 
     return <Box ref={ref} boxShadow={3} borderRadius={"8px"} padding={"16px"} mt={"16px"} display={"flex"}
                 flexDirection={"column"} backgroundColor={"white"}>
@@ -81,36 +85,49 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
             <Stack gap={"8px"} display={"flex"} flexDirection={"row"} alignItems={"start"}>
                 <Show
                     when={customer?.type === "BUYER" ? (order?.status === "Finished") : (order?.status === "Finished" || order?.status === "In Payment")}>{() =>
-                    <Button onClick={() => navigate(`/${customer?.type?.toLowerCase()}/my-orders/${order._id}/review`)}
+
+                    <HoverPopper delay={"1000ms"} overlay={
+                        <HelperText>Rate {ratedCustomer?.firstName} {ratedCustomer?.lastName}</HelperText>}>
+                        <Button
+                            onClick={() => navigate(`/${customer?.type?.toLowerCase()}/my-orders/${order._id}/review`)}
                             sx={{
                                 "padding": "0",
                                 "minWidth": 0,
                             }}>
-                        <StarsIcon sx={iconSx}/>
-                    </Button>
+                            <StarsIcon sx={iconSx}/>
+                        </Button>
+                    </HoverPopper>
                 }</Show>
 
 
                 <Show when={contact?.phoneNumber}>{phoneNumber =>
-                    <Link href={`tel:${phoneNumber}`}>
-                        <PhoneIcon sx={iconSx}/>
-                    </Link>
+                    <HoverPopper delay={"1000ms"} overlay={
+                        <HelperText>Call {ratedCustomer?.firstName} {ratedCustomer?.lastName}</HelperText>}>
+                        <Link href={`tel:${phoneNumber}`}>
+                            <PhoneIcon sx={iconSx}/>
+                        </Link>
+                    </HoverPopper>
                 }</Show>
 
                 <Show when={contact?.email}>{email =>
-                    <Link href={`mailto:${email}`}>
-                        <EmailIcon sx={iconSx}/>
-                    </Link>
+                    <HoverPopper delay={"1000ms"} overlay={<HelperText>Send an email to {ratedCustomer?.firstName} {ratedCustomer?.lastName}</HelperText>}>
+                        <Link href={`mailto:${email}`}>
+                            <EmailIcon sx={iconSx}/>
+                        </Link>
+                    </HoverPopper>
                 }</Show>
 
                 <Show when={order?.selectedBid?.createdBy}>{() =>
-                    <Button onClick={() => navigate(`/${customer.type.toLowerCase()}/my-orders/${order._id}/chat`)}
+                    <HoverPopper delay={"1000ms"} overlay={<HelperText>Open chat</HelperText>}>
+                        <Button
+                            onClick={() => navigate(`/${customer?.type?.toLowerCase()}/my-orders/${order._id}/chat`)}
                             sx={{
                                 "padding": "0",
                                 "minWidth": 0,
                             }}>
-                        <ChatIcon sx={iconSx}/>
-                    </Button>
+                            <ChatIcon sx={iconSx}/>
+                        </Button>
+                    </HoverPopper>
                 }</Show>
             </Stack>
         </Stack>
