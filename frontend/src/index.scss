@@ -1,0 +1,49 @@
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  background-color: #F0F3EB;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex-grow: 1;
+  padding: 32px;
+}
+
+// Sets Google Maps Autocomplete z-index to 100000
+.pac-container {
+  z-index: 100000 !important;
+}
+
+::-webkit-scrollbar {
+  width: 0.6em;
+  margin-right: 0.2em;
+}
+
+
+::-webkit-scrollbar-track {
+  border-radius: 0.5em;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(107, 107, 107, 0.3);
+  border-radius: 0.5em;
+  transition: 0.4s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 107, 107, 0.5);
+  transition: 0.4s;
+}
