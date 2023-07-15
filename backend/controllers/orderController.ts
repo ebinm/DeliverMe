@@ -49,7 +49,6 @@ export async function getOrdersForShopper(shopperId: string) {
     return orders
 }
 
-
 export async function sendMessage(customerId: string, senderType: CustomerType, orderId: string, messageContent: string) {
     if (typeof messageContent !== "string") {
         throw Error("Message content must be a string")
@@ -198,15 +197,14 @@ export async function changeOrder(buyerId: string, orderId: string, order: Order
     const oldOrder = await getOrderById(orderId)
 
     if (!oldOrder) {
-        new Error("Order with orderId does not exist")
+        throw new Error("Order with orderId does not exist")
     } else if (oldOrder.createdBy.toString() !== buyerId.toString()) {
-        new Error("You are not allowed to change this order")
+        throw new Error("You are not allowed to change this order")
     } else if (order.createdBy.toString() !== buyerId.toString()) {
         throw new Error("Order is unsupported: createdBy is not equal to customerId")
     } else {
         return updateOrder(orderId, order);
     }
-
 }
 
 export async function removeOrder(buyerId: string, orderId: string) {
@@ -214,9 +212,11 @@ export async function removeOrder(buyerId: string, orderId: string) {
     const oldOrder = await getOrderById(orderId)
 
     if (!oldOrder) {
-        new Error("Order with orderId does not exist")
+        throw new Error("Order with orderId does not exist")
     } else if (oldOrder.createdBy.toString() !== buyerId.toString()) {
-        new Error("You are not allowed to delete this order")
+        throw new Error("You are not allowed to delete this order")
+    } else if (oldOrder.selectedBid) {
+        throw new Error("You may not delete an order with a selected bid.")
     } else {
         return deleteOrder(orderId);
     }
