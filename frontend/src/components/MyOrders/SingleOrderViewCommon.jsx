@@ -79,7 +79,8 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
             </Stack>
 
             <Stack gap={"8px"} display={"flex"} flexDirection={"row"} alignItems={"start"}>
-                <Show when={order?.selectedBid?.createdBy}>{() =>
+                <Show
+                    when={customer?.type === "BUYER" ? (order?.status === "Finished") : (order?.status === "Finished" || order?.status === "In Payment")}>{() =>
                     <Button onClick={() => navigate(`/${customer?.type?.toLowerCase()}/my-orders/${order._id}/review`)}
                             sx={{
                                 "padding": "0",
@@ -102,8 +103,7 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
                     </Link>
                 }</Show>
 
-                <Show
-                    when={customer.type === "BUYER" ? (order?.status === "In Payment") : (order?.status === "Finished" || order?.status === "In Payment")}>{() =>
+                <Show when={order?.selectedBid?.createdBy}>{() =>
                     <Button onClick={() => navigate(`/${customer.type.toLowerCase()}/my-orders/${order._id}/chat`)}
                             sx={{
                                 "padding": "0",
