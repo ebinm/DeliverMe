@@ -65,7 +65,6 @@ export async function bidOnOrder(shopperId: string, orderId: string, bid: Bid): 
     }
 
 
-
     //@ts-ignore
     bid.createdBy = shopperId.toString()
     // TODO move the rate to some constants file

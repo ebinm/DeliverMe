@@ -1,4 +1,4 @@
-import {Box, Divider, Link, Typography} from "@mui/material";
+import {Box, CircularProgress, Divider, Link, Typography} from "@mui/material";
 import {Show} from "../util/ControlFlow";
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
@@ -7,18 +7,41 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import {DateDisplay} from "./DateDisplay";
 import {OrderItemsOverview} from "./OrderItemsOverview";
 import Stack from "@mui/material/Stack";
-import {useContext, useEffect, useMemo, useRef} from "react";
+import React, {useContext, useEffect, useMemo, useRef, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {ChatOverlay} from "../chat/ChatOverlay";
 import Button from "@mui/material/Button";
 import ChatIcon from '@mui/icons-material/Chat';
 import {CustomerContext} from "../../util/context/CustomerContext";
-import {DarkButton} from "../util/Buttons";
+import {DarkButton, OutlinedButton} from "../util/Buttons";
 import {RatingModal} from "../util/RatingModal";
-import StarsIcon from '@mui/icons-material/Stars';
 import {HelperText, HoverPopper} from "../util/HoverPopper";
+import {BaseModal} from "../util/BaseModal";
+import DeleteIcon from '@mui/icons-material/Delete';
+import StarIcon from '@mui/icons-material/Star';
 
-export function SingleOrderViewCommon({order, contact, buttons, bidView, orderName, showDeliveryAddress = false}) {
+/**
+ * A base component for both the buyers and the shoppers order view
+ *
+ * @param order The order.
+ * @param contact The person to be listed as contact (the shopper for the buyer view and vice versa)
+ * @param buttons The buttons at the bottom of the view.
+ * @param bidView The view showing the bids.
+ * @param orderName The name of the order.
+ * @param showDeliveryAddress A boolean indicating of the deliveryAddress should be shown.
+ * @param deleteSelf An optional function for deleting the order.
+ * @returns {JSX.Element}
+ * @constructor
+ */
+export function SingleOrderViewCommon({
+                                          order,
+                                          contact,
+                                          buttons,
+                                          bidView,
+                                          orderName,
+                                          showDeliveryAddress = false,
+                                          deleteSelf
+                                      }) {
     const iconSx = {
         "padding": "8px",
         "borderRadius": "50%",
@@ -43,6 +66,11 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
         return params.id === order._id && params.action === "review"
     }, [params.id, order._id, params.action])
 
+    const deleteOpen = useMemo(() => {
+        return params.id === order._id && params.action === "delete"
+    }, [params.id, order._id, params.action])
+
+
     useEffect(() => {
         // onMount
         if (params.id === order._id) {
@@ -55,17 +83,16 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
 
     }, [])
 
-    const ratedCustomer = useMemo(() =>
-            customer?.type === "SHOPPER" ? order?.createdBy : order?.selectedBid?.createdBy
-        , [customer?.type, order?.createdBy, order?.selectedBid?.createdBy])
-
-
     return <Box ref={ref} boxShadow={3} borderRadius={"8px"} padding={"16px"} mt={"16px"} display={"flex"}
                 flexDirection={"column"} backgroundColor={"white"}>
 
         <RatingModal order={order} open={reviewOpen} onClose={() => {
             navigate(`/${customer?.type?.toLowerCase()}/my-orders/`)
         }} buyer={customer?.type !== "BUYER"}/>
+
+        <DeletionModal open={deleteOpen && deleteSelf} deleteOrder={deleteSelf} onClose={() => {
+            navigate(`/${customer?.type?.toLowerCase()}/my-orders/`)
+        }} orderName={orderName}/>
 
         <Stack direction={{sm: "row", xs: "column"}} justifyContent={"space-between"} alignItems={{
             sm: "center",
@@ -87,14 +114,14 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
                     when={customer?.type === "BUYER" ? (order?.status === "Finished") : (order?.status === "Finished" || order?.status === "In Payment")}>{() =>
 
                     <HoverPopper delay={"1000ms"} overlay={
-                        <HelperText>Rate {ratedCustomer?.firstName} {ratedCustomer?.lastName}</HelperText>}>
+                        <HelperText>Rate {contact?.firstName} {contact?.lastName}</HelperText>}>
                         <Button
                             onClick={() => navigate(`/${customer?.type?.toLowerCase()}/my-orders/${order._id}/review`)}
                             sx={{
                                 "padding": "0",
                                 "minWidth": 0,
                             }}>
-                            <StarsIcon sx={iconSx}/>
+                            <StarIcon sx={iconSx}/>
                         </Button>
                     </HoverPopper>
                 }</Show>
@@ -102,7 +129,7 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
 
                 <Show when={contact?.phoneNumber}>{phoneNumber =>
                     <HoverPopper delay={"1000ms"} overlay={
-                        <HelperText>Call {ratedCustomer?.firstName} {ratedCustomer?.lastName}</HelperText>}>
+                        <HelperText>Call {contact?.firstName} {contact?.lastName}</HelperText>}>
                         <Link href={`tel:${phoneNumber}`}>
                             <PhoneIcon sx={iconSx}/>
                         </Link>
@@ -110,7 +137,8 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
                 }</Show>
 
                 <Show when={contact?.email}>{email =>
-                    <HoverPopper delay={"1000ms"} overlay={<HelperText>Send an email to {ratedCustomer?.firstName} {ratedCustomer?.lastName}</HelperText>}>
+                    <HoverPopper delay={"1000ms"} overlay={<HelperText>Send an email
+                        to {contact?.firstName} {contact?.lastName}</HelperText>}>
                         <Link href={`mailto:${email}`}>
                             <EmailIcon sx={iconSx}/>
                         </Link>
@@ -129,6 +157,22 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
                         </Button>
                     </HoverPopper>
                 }</Show>
+
+
+                <Show when={deleteSelf && customer?.type === "BUYER" && !order?.selectedBid}>{() =>
+                    <HoverPopper delay={"1000ms"} overlay={<HelperText>Delete this order</HelperText>}>
+                        <Button
+                            onClick={() => navigate(`/${customer?.type?.toLowerCase()}/my-orders/${order._id}/delete`)}
+                            sx={{
+                                "padding": "0",
+                                "minWidth": 0,
+                            }}>
+                            <DeleteIcon sx={iconSx}/>
+                        </Button>
+                    </HoverPopper>
+                }</Show>
+
+
             </Stack>
         </Stack>
 
@@ -187,6 +231,30 @@ export function SingleOrderViewCommon({order, contact, buttons, bidView, orderNa
         </Show>
     </Box>
 }
+
+function DeletionModal({open, deleteOrder, orderName, onClose}) {
+    const [loading, setLoading] = useState(false)
+    return <BaseModal open={open} title={"Are you sure you want to delete this order?"}>
+        <Typography>This will permanently delete {orderName}</Typography>
+        <Stack direction={{"xs": "column", "sm": "row"}} width={"100%"} justifyContent={"flex-end"} gap={"16px"}>
+            <OutlinedButton onClick={onClose}>Cancel</OutlinedButton>
+            <DarkButton onClick={async () => {
+                setLoading(true)
+                await deleteOrder()
+                setLoading(false)
+                onClose()
+            }}>
+                <Show when={!loading} fallback={<CircularProgress size={"1.5rem"}/>}>
+                    Delete
+                </Show>
+
+
+            </DarkButton>
+        </Stack>
+    </BaseModal>
+
+}
+
 
 function getStatusColor(status) {
     switch (status) {
