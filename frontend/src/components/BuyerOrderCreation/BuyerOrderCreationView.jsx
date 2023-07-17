@@ -1,8 +1,10 @@
 import {BuyerChooseShopView} from "./BuyerChooseShop/BuyerChooseShopView";
-import {Route, Routes, useNavigate} from "react-router-dom";
+import {Navigate, Route, Routes, useNavigate} from "react-router-dom";
 import {BuyerChooseItems} from "./BuyerChooseItems/BuyerChooseItems";
 import {BuyerOrderSummary} from "./BuyerOrderSummary/BuyerOrderSummary";
 import {useCacheLocalStorageForCustomer} from "../../util/hooks";
+import {useContext} from "react";
+import {CustomerContext} from "../../util/context/CustomerContext";
 
 
 export function BuyerOrderCreationView() {
@@ -14,6 +16,13 @@ export function BuyerOrderCreationView() {
     const [to, setTo, clearTo] = useCacheLocalStorageForCustomer("to-cache", null)
     const [notes, setNotes, clearNotes] = useCacheLocalStorageForCustomer("notes-cache", "")
     const [items, setItems, clearItems] = useCacheLocalStorageForCustomer("items-cache", [], it => !!it?.length)
+
+
+    const {ready, customer} = useContext(CustomerContext)
+
+    if(ready && customer?.type === "SHOPPER"){
+        return <Navigate to={"/shopper/browseorders"}/>
+    }
 
 
     return (
