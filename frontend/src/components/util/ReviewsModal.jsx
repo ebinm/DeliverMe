@@ -21,10 +21,10 @@ export function ReviewsModal({open, onClose, customer, type}) {
         return null
     }
 
-    return <BaseModal open={open} onClose={onClose}
+    return <BaseModal  open={open} onClose={onClose}
                       title={"Reviews of " + customer.firstName + " " + customer.lastName}>
 
-        <Box sx={{maxHeight: "70vH", overflow: "auto"}}>
+        <Box sx={{maxHeight: "70vH", overflow: "auto", justifyItems: 'center'}}>
             {loading && <CircularProgress sx={{ml:"50%"}}/>}
             {(reviews && (reviews.length === 0)) && !loading &&
                 <Typography variant={"h6"}
@@ -48,8 +48,8 @@ function SingleReview(props) {
     const desktop = useMediaQuery(theme.breakpoints.up("md"))
 
     return (
-        <Paper elevation={4} sx={{
-            padding: "5%", marginTop: "2%", flexGrow: 1, backgroundColor: 'white', width: '100%'
+        <Paper elevation={6} sx={{
+            padding: "3%", margin: "2%", flexGrow: 1, backgroundColor: 'white', width: '95%'
         }}>
             <Stack direction={"row"} alignItems={"center"} gap={"5%"} sx={{"alignItems": "center"}} mb={"5%"}>
                 <Avatar alt={props.item.createdBy.firstName + " " + props.item.createdBy.lastName}
