@@ -5,17 +5,17 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
+import { Show } from '../util/ControlFlow';
 import Divider from '@mui/material/Divider';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
-import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import MopedOutlinedIcon from '@mui/icons-material/MopedOutlined';
 import Rating from "@mui/material/Rating";
 
 
-const OrderListItem = ({ order, handleOpenReviewsModal, handleOpenOrderDetailsModal, selectedOrder, setSelectedOrder }) => {
+const OrderListItem = ({ order, handleOpenReviewsModal, handleOpenOrderDetailsModal, selectedOrder, setSelectedOrder, userLocation }) => {
 
     const stars = order.createdBy.avgRating
 
@@ -26,9 +26,9 @@ const OrderListItem = ({ order, handleOpenReviewsModal, handleOpenOrderDetailsMo
                 onClick={() => {
                     setSelectedOrder(order);
                 }}
-                sx={{ bgcolor: "white", borderRadius: '10px', boxShadow: 3}}
+                sx={{ bgcolor: "white", borderRadius: '10px', boxShadow: 3 }}
             >
-                <Box sx={{ width: "100%", m:2}}>
+                <Box sx={{ width: "100%", m: 2 }}>
                     <Box>
                         <Box display={"grid"} gridTemplateColumns={"min-content auto"} gap={"8px"}>
                             <ListItemAvatar>
@@ -63,33 +63,36 @@ const OrderListItem = ({ order, handleOpenReviewsModal, handleOpenOrderDetailsMo
 
                             <MopedOutlinedIcon />
                             <Box>
-                            <Typography variant={"body1"}><b>Travel Planer:</b></Typography>
-                                <Box sx={{ml:1}} display={"grid"} gridTemplateColumns={"max-content max-content max-content max-content max-content"}>
-                                    
-                                    <Typography sx={{mr:1}} variant={"body1"}>Current Location</Typography>
-                                    <Typography sx={{mr:1}} variant={"body1"}>-{'>'}</Typography>
-                                    <Typography sx={{mr:1}} variant={"body1"}>Shop</Typography>
-                                    <Typography sx={{mr:1}} variant={"body1"}>= {order?.directions?.legs[0].distance.text}</Typography>
-                                    <Typography variant={"body1"}>| {order?.directions?.legs[0].duration.text}</Typography>
+                                <Typography variant={"body1"}><b>Travel Planer:</b></Typography>
+                                <Show when={userLocation} fallback={<Typography sx={{ ml: 1 }} variant={"body1"}>Activate location tracking to use this feature!</Typography>}>
+                                    <Show when={order?.directions != null} fallback={<Typography sx={{ ml: 1 }} variant={"body1"}>No shop specified!</Typography>}>
 
+                                        <Box sx={{ ml: 1 }} display={"grid"} gridTemplateColumns={"max-content max-content max-content max-content max-content"} columnGap={1}>
+                                            <Typography variant={"body1"}>Current Location</Typography>
+                                            <Typography variant={"body1"}>-{'>'}</Typography>
+                                            <Typography variant={"body1"}>Shop</Typography>
+                                            <Typography variant={"body1"}>= {order?.directions?.routes[0]?.legs[0].distance.text}</Typography>
+                                            <Typography variant={"body1"}>| {order?.directions?.routes[0]?.legs[0].duration.text}</Typography>
 
-                                    <Typography sx={{mr:1}} variant={"body1"}>Shop</Typography>
-                                    <Typography sx={{mr:1}} variant={"body1"}>-{'>'}</Typography>
-                                    <Typography sx={{mr:1}} variant={"body1"}>Customer</Typography>
-                                    <Typography sx={{mr:1}} variant={"body1"}>= {order?.directions?.legs[1].distance.text}</Typography>
-                                    <Typography variant={"body1"}>| {order?.directions?.legs[1].duration.text}</Typography>
+                                            <Typography variant={"body1"}>Shop</Typography>
+                                            <Typography variant={"body1"}>-{'>'}</Typography>
+                                            <Typography variant={"body1"}>Customer</Typography>
+                                            <Typography variant={"body1"}>= {order?.directions?.routes[0]?.legs[1].distance.text}</Typography>
+                                            <Typography variant={"body1"}>| {order?.directions?.routes[0]?.legs[1].duration.text}</Typography>
 
-                                    <Typography sx={{mr:1}} variant={"body1"}>Customer</Typography>
-                                    <Typography sx={{mr:1}} variant={"body1"}>-{'>'}</Typography>
-                                    <Typography sx={{mr:1}} variant={"body1"}>Current Location</Typography>
-                                    <Typography sx={{mr:1}} variant={"body1"}>= {order?.directions?.legs[1].distance.text}</Typography>
-                                    <Typography variant={"body1"}>| {order?.directions?.legs[1].duration.text}</Typography>
-                                </Box>
+                                            <Typography variant={"body1"}>Customer</Typography>
+                                            <Typography variant={"body1"}>-{'>'}</Typography>
+                                            <Typography variant={"body1"}>Current Location</Typography>
+                                            <Typography variant={"body1"}>= {order?.directions?.routes[0]?.legs[2].distance.text}</Typography>
+                                            <Typography variant={"body1"}>| {order?.directions?.routes[0]?.legs[2].duration.text}</Typography>
+                                        </Box>
+                                    </Show>
+                                </Show>
                             </Box>
                         </Box>
                     </Box>
 
-                    <Divider sx={{m:2}} />
+                    <Divider sx={{ m: 2 }} />
 
                     <Button sx={{
                         width: '100%',

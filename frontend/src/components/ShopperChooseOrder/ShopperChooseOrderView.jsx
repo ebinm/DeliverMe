@@ -5,7 +5,7 @@ import { CircularProgress, List, ListItem } from '@mui/material';
 import OrderDetailsModal from './OrderDetailsModal';
 import BidOnOrderModal from './BidOnOrderModal';
 import { Show } from '../util/ControlFlow';
-import { DirectionsRenderer, GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { DirectionsRenderer, GoogleMap, MarkerF, useJsApiLoader } from '@react-google-maps/api';
 import { OrderFilter } from './OrderFilter';
 import { OrderListItem } from './OrderListItem';
 import { GuardCustomerType } from "../util/GuardCustomerType";
@@ -15,13 +15,12 @@ import Stack from "@mui/material/Stack";
 import { useTheme } from "@mui/system";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { ReviewsModal } from "../util/ReviewsModal";
-import { set } from 'mongoose';
+
 
 const ShopperChooseOrderView = () => {
 
     const theme = useTheme();
     const desktop = useMediaQuery(theme.breakpoints.up("md"))
-
 
     const [map, setMap] = useState(null);
     const [showOrderDetailsModal, setShowOrderDetailsModal] = useState(false);
@@ -34,7 +33,8 @@ const ShopperChooseOrderView = () => {
     const [directions, setDirections] = useState(null);
     const [mapKey, setMapKey] = useState(0);
     const [userLocation, setUserLocation] = useState(null);
-    const [ordersLoaded, setOrdersLoaded] = useState(false);
+    const [basicOrdersDataLoaded, setBasicOrdersDataLoaded] = useState(false);
+    const [holeOrdersDataLoaded, setHoleOrdersDataLoaded] = useState(false);
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -55,9 +55,18 @@ const ShopperChooseOrderView = () => {
                         const currentUserLocation = { lat: latitude, lng: longitude };
                         map.setCenter(currentUserLocation);
                         setUserLocation(currentUserLocation);
+
+                        // if a order is selected, center the map on the grocery shop
+                        if (selectedOrder?.destination) {
+                            console.log('Setting center to grocery shop.');
+                            map?.setCenter(selectedOrder.destination.geometry.location);
+                        }
                     },
                     error => {
                         console.error('Error getting current location:', error);
+                        console.info('Setting default location to Munich.');
+                        const defaultCenter = { lat: 48.137154, lng: 11.576124 }
+                        map.setCenter(defaultCenter);
                     }
                 );
             } else {
@@ -69,7 +78,7 @@ const ShopperChooseOrderView = () => {
     }, [map]);
 
     useEffect(() => {
-        setOrdersLoaded(false);
+        setBasicOrdersDataLoaded(false);
         console.log('Fetching orders from backend...');
         const abortController = new AbortController()
         const fetchOrders = async () => {
@@ -81,17 +90,18 @@ const ShopperChooseOrderView = () => {
                         signal: abortController.signal
                     }
                 );
-                const data = await response.json();
-                console.log('Orders:', data);
-                setOrders(data);
-                setOrdersLoaded(true);
-                setFilteredOrders(data);
-                console.log('Orders successfully fetched!');
+                const orders = await response.json();
+                setOrders(orders);
+                setFilteredOrders(orders);
+                console.log('Orders successfully fetched!', orders);
+                setBasicOrdersDataLoaded(true);
             } catch (error) {
                 console.error('Error fetching orders:', error);
             }
         };
+
         fetchOrders();
+
         return () => {
             abortController.abort()
         }
@@ -99,45 +109,77 @@ const ShopperChooseOrderView = () => {
 
 
     useEffect(() => {
+        const fetchDirections = async () => {
+            if (basicOrdersDataLoaded && !holeOrdersDataLoaded && userLocation) {
+                const fetchDirection = (givenOrder) =>
+                    new Promise((resolve, reject) => {
+                        const DirectionsService = new window.google.maps.DirectionsService();
+                        DirectionsService.route(
+                            {
+                                origin: userLocation,
+                                destination: userLocation,
+                                travelMode: 'DRIVING',
+                                waypoints: [
+                                    {
+                                        location: givenOrder.groceryShop?.geometry?.location,
+                                        stopover: true,
+                                    },
+                                    {
+                                        location: givenOrder.destination.geometry.location,
+                                        stopover: true,
+                                    },
+                                ],
+                            },
+                            (result, status) => {
+                                if (status === 'OK') {
+                                    resolve(result);
+                                } else {
+                                    reject(new Error(`Directions request failed with status: ${status}`));
+                                }
+                            }
+                        );
+                    });
+                if (userLocation) {
+                    for (let i = 0; i < orders.length; i++) {
+                        if (orders[i].groceryShop) {
+                            const directions = await fetchDirection(orders[i]);
+                            orders[i].directions = directions;
+                        } else {
+                            orders[i].directions = null;
+                        }
+                    }
+                    setOrders([...orders]);
+                    console.log('Orders directions successfully added!', orders);
+                }
+                setHoleOrdersDataLoaded(true);
+            }
+        };
+        fetchDirections();
+
+    }, [userLocation, orders, basicOrdersDataLoaded, holeOrdersDataLoaded]);
+
+
+    useEffect(() => {
+        if (!selectedOrder){
+            return
+        }
         setDirections(null);
         setMapKey(prevKey => prevKey + 1);
 
-        if (selectedOrder && selectedOrder.groceryShop && selectedOrder.destination?.geometry) {
-            const DirectionsService = new window.google.maps.DirectionsService();
-            DirectionsService.route(
-                {
-                    origin: userLocation,
-                    destination: userLocation,
-                    travelMode: 'DRIVING',
-                    waypoints: [
-                        {
-                            location: selectedOrder.groceryShop.geometry.location,
-                            stopover: true,
-                        },
-                        {
-                            location: selectedOrder.destination.geometry.location,
-                            stopover: true,
-                        }
+        console.log('Selected order changed:', selectedOrder);
 
-                    ]
-                },
-                (result, status) => {
-                    if (status === 'OK') {
-                        console.log('Directions:', result);
-                        setDirections(result);
-                        selectedOrder.directions = result.routes[0];
-                        setSelectedOrder(selectedOrder)
-                        console.log('Directions successfully fetched!: selectedOrder', selectedOrder);
-                    }
-                }
-            );
+        if (selectedOrder?.groceryShop) {
+            console.log('Directions:', directions);
+            setDirections(selectedOrder?.directions);
         }
+
     }, [selectedOrder]);
 
 
     const getOpenOrders = () => {
-        const abortController = new AbortController()
+        setBasicOrdersDataLoaded(false);
 
+        const abortController = new AbortController()
         const fetchOrders = async () => {
             try {
                 const response = await fetch(`${process.env.REACT_APP_BACKEND}/api/orders/open`,
@@ -149,15 +191,15 @@ const ShopperChooseOrderView = () => {
                 );
                 const data = await response.json();
                 console.log('Orders:', data);
-                setOrders(data);
-                setFilteredOrders(data);
-                console.log('Orders successfully fetched!');
-                // enqueueSnackbar('Bid successfully created!', {variant: 'success'});
+                setOrders([...data]);
+                setFilteredOrders([...data]);
+                console.log('Updated orders successfully fetched!');
+                setBasicOrdersDataLoaded(true);
+                setHoleOrdersDataLoaded(false);
             } catch (error) {
                 console.error('Error fetching orders:', error);
             }
         };
-
         fetchOrders()
     }
 
@@ -237,19 +279,20 @@ const ShopperChooseOrderView = () => {
 
                             <Divider />
 
-                            <Show when={ordersLoaded} fallback={<ListItem sx={{ justifyContent: 'center' }}>
+                            <Show when={holeOrdersDataLoaded} fallback={<ListItem sx={{ justifyContent: 'center' }}>
                                 <CircularProgress sx={{ color: "primary.dark" }} />
                             </ListItem>}>
 
-                            <List sx={{ overflow: 'auto' }}>
-                                {filteredOrders.map((order) => (
-                                    <OrderListItem key={order._id} order={order}
-                                        handleOpenOrderDetailsModal={handleOpenOrderDetailsModal}
-                                        handleOpenReviewsModal={handleOpenReviewsModal}
-                                        selectedOrder={selectedOrder}
-                                        setSelectedOrder={handleSelection} />
-                                ))}
-                            </List>
+                                <List sx={{ overflow: 'auto' }}>
+                                    {filteredOrders.map((order) => (
+                                        <OrderListItem key={order._id} order={order}
+                                            handleOpenOrderDetailsModal={handleOpenOrderDetailsModal}
+                                            handleOpenReviewsModal={handleOpenReviewsModal}
+                                            selectedOrder={selectedOrder}
+                                            setSelectedOrder={handleSelection}
+                                            userLocation={userLocation} />
+                                    ))}
+                                </List>
                             </Show>
                         </Stack>
 
@@ -267,7 +310,7 @@ const ShopperChooseOrderView = () => {
                                     onLoad={map => setMap(map)}
                                 >
                                     {userLocation && (
-                                        <Marker
+                                        <MarkerF 
                                             key={"userLocation"}
                                             position={userLocation}
                                             defaultAnimation={2}
@@ -279,18 +322,17 @@ const ShopperChooseOrderView = () => {
                                             }}
                                         />)}
 
-
-                                    {directions && ( //TODO: show travel time, choose between car and bike
+                                    {selectedOrder && (
                                         <>
-                                            <DirectionsRenderer
+                                            {directions && ( <DirectionsRenderer
                                                 options={{
                                                     directions: directions,
                                                     suppressMarkers: true,
                                                     preserveViewport: false,
                                                 }}
-                                            />
+                                            />)}
 
-                                            {selectedOrder.groceryShop && (<Marker
+                                            {selectedOrder.groceryShop && (<MarkerF 
                                                 key={selectedOrder.groceryShop.place_id}
                                                 position={selectedOrder.groceryShop.geometry.location}
                                                 label={{
@@ -301,7 +343,7 @@ const ShopperChooseOrderView = () => {
                                                 }}
                                             />)}
 
-                                            {selectedOrder.destination.geometry && (<Marker
+                                            {selectedOrder.destination.geometry && (<MarkerF 
                                                 key={selectedOrder.destination.place_id}
                                                 position={selectedOrder.destination.geometry.location}
                                                 label={{
@@ -311,22 +353,6 @@ const ShopperChooseOrderView = () => {
                                                     fontWeight: "bold",
                                                 }}
                                             />)}
-
-                                            {userLocation && (
-                                                <Marker
-                                                    key={"userLocation"}
-                                                    position={userLocation}
-                                                    defaultAnimation={2}
-                                                    label={{
-                                                        text: "Your Location",
-                                                        color: 'black',
-                                                        fontSize: "17px",
-                                                        fontWeight: "bold",
-                                                        background: "black",
-                                                        bgcolor: "black",
-                                                        className: "custom-marker-label"
-                                                    }}
-                                                />)}
                                         </>
                                     )}
                                 </GoogleMap>
@@ -334,7 +360,7 @@ const ShopperChooseOrderView = () => {
                         </Stack>
                     </Stack>
 
-                    <DarkButton onClick={() => handleSelectOrder()} alignSelf={"end"}>Select Order</DarkButton>
+                    <DarkButton onClick={() => handleSelectOrder()}>Select Order</DarkButton>
                 </Stack>
             </>
         }</GuardCustomerType>

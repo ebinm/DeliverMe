@@ -36,6 +36,7 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
 
     useEffect(() => {
         setSearchLocation(false);
+        const defaultCenter = { lat: 48.137154, lng: 11.576124 }
         if (map) {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
@@ -49,11 +50,13 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
                     },
                     error => {
                         console.error('Error getting current location:', error);
+                        map.setCenter(defaultCenter);
+                        setMapCenter(defaultCenter);
+                        setSearchLocation(defaultCenter);
                     }
                 );
             } else {
                 console.error('Geolocation is not supported by this browser.');
-                const defaultCenter = { lat: 48.137154, lng: 11.576124 }
                 map.setCenter(defaultCenter);
                 setMapCenter(defaultCenter);
                 setSearchLocation(defaultCenter);
@@ -76,7 +79,7 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
             const placesService = new window.google.maps.places.PlacesService(map);
             const request = {
                 location: mapCenter,
-                radius: 1300,
+                radius: 4000,
                 type: 'grocery_or_supermarket'
             };
 
@@ -84,7 +87,7 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
                 setShops(results);
                 console.log("Successfully Fetched Shops: ", results);
 
-                if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+                if (results !== [] && status === window.google.maps.places.PlacesServiceStatus.OK) {
                     // Fetch operating hours for each shop
                     const shopPromises = results.map((place) => {
                         return new Promise((resolve) => {
@@ -108,6 +111,8 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
                         setShopsLoaded(true);
                         console.log("Successfully Fetched opening hours: ", updatedShops);
                     });
+                } else {
+                    setShopsLoaded(true);
                 }
             });
         }
@@ -157,9 +162,6 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
         shop.city = city;
         shop.street = street;
         setSelectedShop(shop);
-        // TODO: 
-        // map.setCenter(shop.geometry.location);
-        // setMapCenter(shop.geometry.location);
     };
 
     const handleOpenModal = () => {
@@ -300,7 +302,14 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
                             {searchLocation && (<Marker
                                 key={"searchLocation"}
                                 position={searchLocation}
-                                label="Search Location"
+                                label={{
+                                    text: "Search Location",
+                                    color: 'black',
+                                    fontSize: "17px",
+                                    fontWeight: "bold",
+                                    zIndex: 100,
+                                    backgroundColor: "#7fffd4"
+                                }}
                             />)}
 
                         </GoogleMap>
