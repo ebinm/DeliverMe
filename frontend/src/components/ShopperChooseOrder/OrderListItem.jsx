@@ -1,19 +1,21 @@
 import React from 'react';
-import {Box, IconButton, ListItem, ListItemAvatar, ListItemButton} from '@mui/material';
+import { Box, IconButton, ListItem, ListItemAvatar, ListItemButton } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
+import { Show } from '../util/ControlFlow';
 import Divider from '@mui/material/Divider';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
+import MopedOutlinedIcon from '@mui/icons-material/MopedOutlined';
 import Rating from "@mui/material/Rating";
 
 
-const OrderListItem = ({order, handleOpenReviewsModal, handleOpenOrderDetailsModal, selectedOrder, setSelectedOrder}) => {
+const OrderListItem = ({ order, handleOpenReviewsModal, handleOpenOrderDetailsModal, selectedOrder, setSelectedOrder, userLocation }) => {
 
     const stars = order.createdBy.avgRating
 
@@ -24,50 +26,74 @@ const OrderListItem = ({order, handleOpenReviewsModal, handleOpenOrderDetailsMod
                 onClick={() => {
                     setSelectedOrder(order);
                 }}
-                sx={{bgcolor: "white", borderRadius: '10px', boxShadow: 3}}
+                sx={{ bgcolor: "white", borderRadius: '10px', boxShadow: 3 }}
             >
-                <Box sx={{width: "100%"}}>
-                    <Stack
-                        direction={{xs: 'column', sm: 'row'}}
-                        spacing={{xs: 1, sm: 1, md: 1}}
-                        sx={{mb: 2, mt: 2}}
-                    >
-                        <Box display='flex' alignItems='center'>
+                <Box sx={{ width: "100%", m: 2 }}>
+                    <Box>
+                        <Box display={"grid"} gridTemplateColumns={"min-content auto"} gap={"8px"}>
                             <ListItemAvatar>
                                 <Avatar alt={order?.createdBy?.firstName + " " + order?.createdBy?.lastName}
-                                        src={order?.createdBy?.profilePicture}/>
+                                    src={order?.createdBy?.profilePicture} />
                             </ListItemAvatar>
-                        </Box>
-                        <Box>
-                            <Stack direction={"row"} flexWrap={"wrap"} gap={"10px"} sx={{mb: 2}}>
-                                <Typography sx={{mt: "6px"}} variant={"h6"}
-                                            fontWeight="bold">{order?.createdBy?.firstName} {order?.createdBy?.lastName}</Typography>
-                                <Rating sx={{mt: "8px"}} readOnly defaultValue={stars || null} precision={0.5}/>
+                            <Stack direction={"row"} flexWrap={"wrap"} gap={"10px"} sx={{ mb: 2 }}>
+                                <Typography sx={{ mt: "6px" }} variant={"h6"}
+                                    fontWeight="bold">{order?.createdBy?.firstName} {order?.createdBy?.lastName}</Typography>
+                                <Rating sx={{ mt: "8px" }} readOnly defaultValue={stars || null} precision={0.5} />
                                 <IconButton aria-label="info" onClick={handleOpenReviewsModal}>
                                     <InfoIcon />
                                 </IconButton>
                             </Stack>
-                            <Box display={"grid"} gridTemplateColumns={"min-content auto"} gap={"10px"}>
-                                <ShoppingCartOutlinedIcon/>
-                                {(order?.groceryShop) ?
-                                    <Typography
-                                        variant={"body1"}><b>Shop:</b> {order?.groceryShop?.name}, {order?.groceryShop?.street}, {order?.groceryShop?.city}
-                                    </Typography>
-                                    :
-                                    <Typography variant={"body1"}><b>Shop:</b> No Shop Specified</Typography>
-                                }
 
-                                <LocationOnOutlinedIcon/>
+                            <ShoppingCartOutlinedIcon />
+                            {(order?.groceryShop) ?
                                 <Typography
-                                    variant={"body1"}><b>Destination:</b> {order?.destination?.street}, {order?.destination?.city}
+                                    variant={"body1"}><b>Shop:</b> {order?.groceryShop?.name}, {order?.groceryShop?.street}, {order?.groceryShop?.city}
                                 </Typography>
-                                <ListOutlinedIcon/>
-                                <Typography variant={"body1"}><b>Number Items:</b> {order?.items.length}</Typography>
+                                :
+                                <Typography variant={"body1"}><b>Shop:</b> No Shop Specified</Typography>
+                            }
+
+                            <LocationOnOutlinedIcon />
+                            <Typography
+                                variant={"body1"}><b>Destination:</b> {order?.destination?.street}, {order?.destination?.city}
+                            </Typography>
+
+                            <ListOutlinedIcon />
+                            <Typography variant={"body1"}><b>Number Items:</b> {order?.items.length}</Typography>
+
+                            <MopedOutlinedIcon />
+                            <Box>
+                                <Typography variant={"body1"}><b>Travel Planer:</b></Typography>
+                                <Show when={userLocation} fallback={<Typography sx={{ ml: 1 }} variant={"body1"}>Activate location tracking to use this feature!</Typography>}>
+                                    <Show when={order?.directions != null} fallback={<Typography sx={{ ml: 1 }} variant={"body1"}>No shop specified!</Typography>}>
+
+                                        <Box sx={{ ml: 1 }} display={"grid"} gridTemplateColumns={"max-content max-content max-content max-content max-content"} columnGap={1}>
+                                            <Typography variant={"body1"}>Current Location</Typography>
+                                            <Typography variant={"body1"}>-{'>'}</Typography>
+                                            <Typography variant={"body1"}>Shop</Typography>
+                                            <Typography variant={"body1"}>= {order?.directions?.routes[0]?.legs[0].distance.text}</Typography>
+                                            <Typography variant={"body1"}>| {order?.directions?.routes[0]?.legs[0].duration.text}</Typography>
+
+                                            <Typography variant={"body1"}>Shop</Typography>
+                                            <Typography variant={"body1"}>-{'>'}</Typography>
+                                            <Typography variant={"body1"}>Customer</Typography>
+                                            <Typography variant={"body1"}>= {order?.directions?.routes[0]?.legs[1].distance.text}</Typography>
+                                            <Typography variant={"body1"}>| {order?.directions?.routes[0]?.legs[1].duration.text}</Typography>
+
+                                            <Typography variant={"body1"}>Customer</Typography>
+                                            <Typography variant={"body1"}>-{'>'}</Typography>
+                                            <Typography variant={"body1"}>Current Location</Typography>
+                                            <Typography variant={"body1"}>= {order?.directions?.routes[0]?.legs[2].distance.text}</Typography>
+                                            <Typography variant={"body1"}>| {order?.directions?.routes[0]?.legs[2].duration.text}</Typography>
+                                        </Box>
+                                    </Show>
+                                </Show>
                             </Box>
                         </Box>
-                    </Stack>
+                    </Box>
 
-                    <Divider/>
+                    <Divider sx={{ m: 2 }} />
+
                     <Button sx={{
                         width: '100%',
                         color: 'gray',
@@ -75,7 +101,7 @@ const OrderListItem = ({order, handleOpenReviewsModal, handleOpenOrderDetailsMod
                         justifyContent: 'space-between',
                         mt: 1,
                         mb: 2
-                    }} endIcon={<ArrowForwardIosIcon/>} onClick={handleOpenOrderDetailsModal}>
+                    }} endIcon={<ArrowForwardIosIcon />} onClick={handleOpenOrderDetailsModal}>
                         <Typography variant="body1">See more details & place bid</Typography>
                     </Button>
                 </Box>
@@ -84,4 +110,4 @@ const OrderListItem = ({order, handleOpenReviewsModal, handleOpenOrderDetailsMod
     )
 };
 
-export {OrderListItem};
+export { OrderListItem };
