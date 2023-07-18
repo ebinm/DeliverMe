@@ -5,6 +5,7 @@ import {NotificationType} from "../models/notification";
 import {Message} from "../models/message";
 import {CustomerType, Shopper} from "../models/customer";
 import mongoose from "mongoose";
+import {populateProfilePicture} from "../services/profilePictureService";
 
 export async function getAllOrders(): Promise<Order[]> {
 
@@ -13,14 +14,25 @@ export async function getAllOrders(): Promise<Order[]> {
 }
 
 export async function getOrdersForBuyer(buyerId: string): Promise<Order[]> {
-    return OrderModel.find({"createdBy": buyerId})
+    const orders = await OrderModel.find({"createdBy": buyerId})
         .populate({path: "bids.createdBy", select: "firstName lastName avgRating profilePicture email phoneNumber"})
         .populate({
             path: "selectedBid.createdBy",
-            select: "firstName lastName avgRating profilePicture email phoneNumber"
+            select: "firstName lastName avgRating email phoneNumber"
         })
         .select("-groceryBill")
         .sort({creationDate: -1});
+
+    orders?.forEach(order => {
+        order.bids?.forEach(bid =>
+            //@ts-ignore
+            populateProfilePicture("BUYER", bid.createdBy)
+        )
+
+        //@ts-ignore
+        populateProfilePicture("SHOPPER", order.selectedBid.createdBy)
+    })
+    return orders
 }
 
 export async function getOrdersForShopper(shopperId: string) {
@@ -30,20 +42,31 @@ export async function getOrdersForShopper(shopperId: string) {
             {"selectedBid.createdBy": shopperId}
         ]
     })
-        .populate({path: "createdBy", select: "firstName lastName _id profilePicture phoneNumber email"})
-        .populate({path: "bids.createdBy", select: "firstName lastName avgRating profilePicture email phoneNumber"})
+        .populate({path: "createdBy", select: "firstName lastName _id phoneNumber email"})
+        .populate({path: "bids.createdBy", select: "firstName lastName avgRating email phoneNumber"})
         .populate({
             path: "selectedBid.createdBy",
-            select: "firstName lastName avgRating profilePicture email phoneNumber"
+            select: "firstName lastName avgRating email phoneNumber"
         })
         .select("-groceryBill")
         .sort({creationDate: -1});
 
 
-    // TODO figure out how to do this in the query
     orders.forEach(order => {
         // @ts-ignore
         order.bids = order.bids.filter(bid => bid.createdBy._id === shopperId)
+
+        //@ts-ignore
+        populateProfilePicture("BUYER", order.createdBy)
+
+        order.bids?.forEach(bid =>
+            //@ts-ignore
+            populateProfilePicture("BUYER", bid.createdBy)
+        )
+
+        //@ts-ignore
+        populateProfilePicture("SHOPPER", order.selectedBid.createdBy)
+
     })
 
     return orders
@@ -97,17 +120,17 @@ export async function uploadReceipt(customerId, orderId: string, receipt: Receip
 
 export async function getOpenOrders(shopperId: string): Promise<Order[]> {
     const shopperPromise = Shopper.findById(shopperId)
-        .select("-password -notifications -__v")
+        .select("-password -notifications -__v -profilePicture")
 
     const orders = await OrderModel.aggregate().match({
         "status": "Open"
     }).lookup({
         from: "buyers", localField: "createdBy",
-        foreignField: "_id", as: "createdBy"
+        foreignField: "_id", as: "createdBy",
     }).addFields({
         createdBy: {$arrayElemAt: ["$createdBy", 0]} // extracts user from list
     }).project({
-        "createdBy.password": 0, "createdBy.notifications": 0
+        "createdBy.password": 0, "createdBy.notifications": 0, "createdBy.__v": 0, "createdBy.profilePicture": 0
     }).addFields({
         "bids": {
             "$filter": {
@@ -122,10 +145,12 @@ export async function getOpenOrders(shopperId: string): Promise<Order[]> {
 
 
     const shopper = await shopperPromise
+    populateProfilePicture("SHOPPER", shopper)
 
     // Doing this in the query is non-trivial, so we do it separately
     // (we only select our own bids, so we can do this)
     orders.forEach(order => {
+        populateProfilePicture("BUYER", order.createdBy)
         order.bids?.forEach(bid => {
             bid.createdBy = shopper
         })

@@ -2,6 +2,8 @@
 
 ## Development Setup
 
+TLDR: `npm run tldr `
+
 ### Things to do
 
 Make sure your ip is whitelisted on AtlasDB. Else the backend can not connect with the instance.
@@ -19,6 +21,9 @@ for automatic restarts.
 The frontend can simply be run using the `start` script.
 
 ### Environment Variables
+
+Note: For ease of use we have provided `.env` files in the repository. This does not reflect
+best practice. We have decided for it makes setup easier and all secrets used here are of minor value.
 
 We use dotenv. Create the files `./frontend/.env` and  `./.env` and set the following values:
 
