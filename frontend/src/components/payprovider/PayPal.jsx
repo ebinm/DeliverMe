@@ -51,6 +51,7 @@ export default function PayPal({onTransactionComplete}) {
                         .then(res => res.json())
                         .then(details => {
                             const transaction = details.purchase_units[0].payments.captures[0];
+                            console.log(transaction.status);
                             if (transaction.status === 'COMPLETED') {
                                 enqueueSnackbar("Transaction status: " + transaction.status, {variant: "success"}); // transaction.status && transaction.id
                                 onTransactionComplete(); // Call the callback function to notify transaction completion

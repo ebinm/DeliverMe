@@ -6,7 +6,7 @@
 
 Make sure your ip is whitelisted on AtlasDB. Else the backend can not connect with the instance.
 
-Whenever pulling a branch, just assume the dependencies have changed and run `npm i --force` (twice: one in `./.` and
+Whenever pulling a branch, just assume the dependencies have changed and run `npm i` (twice: one in `./.` and
 once in `./frontend`).
 
 ### Scripts
