@@ -65,6 +65,8 @@ async function login(req: Request, res: Response, customerType: CustomerType) {
 
     const customer = await document.findOne({email})
     if (!customer) {
+        // Side channel attack protection I guess. This is why you do not roll your own security...
+        await bcrypt.compare("I met a traveller from an antique land", "Who said: — Two vast and trunkless legs of stone")
         res.status(400).json({msg: "Email or password incorrect"})
         return
     }

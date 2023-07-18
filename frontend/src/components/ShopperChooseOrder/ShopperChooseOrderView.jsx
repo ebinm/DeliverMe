@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import { CircularProgress, List, ListItem } from '@mui/material';
+import {CircularProgress, List, ListItem} from '@mui/material';
 import OrderDetailsModal from './OrderDetailsModal';
 import BidOnOrderModal from './BidOnOrderModal';
-import { Show } from '../util/ControlFlow';
-import { DirectionsRenderer, GoogleMap, MarkerF, useJsApiLoader } from '@react-google-maps/api';
-import { OrderFilter } from './OrderFilter';
-import { OrderListItem } from './OrderListItem';
-import { GuardCustomerType } from "../util/GuardCustomerType";
-import { DarkButton } from "../util/Buttons";
-import { useSnackbar } from 'notistack';
+import {Show} from '../util/ControlFlow';
+import {DirectionsRenderer, GoogleMap, MarkerF, useJsApiLoader} from '@react-google-maps/api';
+import {OrderFilter} from './OrderFilter';
+import {OrderListItem} from './OrderListItem';
+import {GuardCustomerType} from "../util/GuardCustomerType";
+import {DarkButton} from "../util/Buttons";
+import {useSnackbar} from 'notistack';
 import Stack from "@mui/material/Stack";
-import { useTheme } from "@mui/system";
+import {useTheme} from "@mui/system";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { ReviewsModal } from "../util/ReviewsModal";
+import {ReviewsModal} from "../util/ReviewsModal";
 
 
 const ShopperChooseOrderView = () => {
@@ -41,7 +41,7 @@ const ShopperChooseOrderView = () => {
     // We use useState as a way of handling a constant here to stop useJsApiLoader from triggering more than once.
     const [googleLibraries] = useState(["places"]);
     const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: "AIzaSyCAiDt2WyuMhekA25EMEQgx_wVO_WQW8Ok",
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
         libraries: googleLibraries
     });
 
