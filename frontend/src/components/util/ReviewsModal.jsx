@@ -24,7 +24,7 @@ export function ReviewsModal({open, onClose, customer, type}) {
     return <BaseModal  open={open} onClose={onClose}
                       title={"Reviews of " + customer.firstName + " " + customer.lastName}>
 
-        <Box sx={{maxHeight: "70vH", overflow: "auto", justifyItems: 'center', display: 'flex'}}>
+        <Box sx={{maxHeight: "70vH", overflow: "auto", justifyItems: 'center', display: 'flex', flexDirection: 'column'}}>
             {loading && <CircularProgress sx={{ml:"50%"}}/>}
             {(reviews && (reviews.length === 0)) && !loading &&
                 <Typography variant={"h6"}
