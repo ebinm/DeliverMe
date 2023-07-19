@@ -9,7 +9,7 @@
     "prestart": "npx tsc",
     "watchCompileTS": "npx tsc --watch",
     "watchRunNode": "nodemon ./build/index.js",
-    "tldr": "npm i && cd ./frontend && npm i && cd .. && concurrently \"npm run watchCompileTS\" \"npm run watchRunNode\" \"cd ./frontend && npm start\" -n \"compile backend,run backend,frontend\" -c \"auto\""
+    "tldr": "npm i && cd ./frontend && npm i && cd .. && npx tsc && concurrently \"npm run watchCompileTS\" \"npm run watchRunNode\" \"cd ./frontend && npm start\" -n \"compile backend,run backend,frontend\" -c \"auto\""
   },
   "repository": {
     "type": "git",
