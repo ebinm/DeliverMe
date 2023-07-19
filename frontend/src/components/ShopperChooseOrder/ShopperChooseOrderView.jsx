@@ -34,7 +34,7 @@ const ShopperChooseOrderView = () => {
     const [mapKey, setMapKey] = useState(0);
     const [userLocation, setUserLocation] = useState(null);
     const [basicOrdersDataLoaded, setBasicOrdersDataLoaded] = useState(false);
-    const [holeOrdersDataLoaded, setHoleOrdersDataLoaded] = useState(false);
+    const [orderDirectionsLoaded, setOrderDirectionsLoaded] = useState(false);
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -44,6 +44,12 @@ const ShopperChooseOrderView = () => {
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
         libraries: googleLibraries
     });
+
+    const setDefaultMapCenter = () => {
+        console.info('Setting default location to Munich.');
+        const defaultCenter = { lat: 48.137154, lng: 11.576124 }
+        map.setCenter(defaultCenter);
+    }
 
     useEffect(() => {
         if (map) {
@@ -56,7 +62,7 @@ const ShopperChooseOrderView = () => {
                         map.setCenter(currentUserLocation);
                         setUserLocation(currentUserLocation);
 
-                        // if a order is selected, center the map on the grocery shop
+                        // if a order is selected, center the map on the grocery shop of the order
                         if (selectedOrder?.destination) {
                             console.log('Setting center to grocery shop.');
                             map?.setCenter(selectedOrder.destination.geometry.location);
@@ -64,15 +70,12 @@ const ShopperChooseOrderView = () => {
                     },
                     error => {
                         console.error('Error getting current location:', error);
-                        console.info('Setting default location to Munich.');
-                        const defaultCenter = { lat: 48.137154, lng: 11.576124 }
-                        map.setCenter(defaultCenter);
+                        setDefaultMapCenter()
                     }
                 );
             } else {
                 console.error('Geolocation is not supported by this browser.');
-                const defaultCenter = { lat: 48.137154, lng: 11.576124 }
-                map.setCenter(defaultCenter);
+                setDefaultMapCenter()
             }
         }
     }, [map]);
@@ -101,7 +104,6 @@ const ShopperChooseOrderView = () => {
         };
 
         fetchOrders();
-
         return () => {
             abortController.abort()
         }
@@ -110,7 +112,9 @@ const ShopperChooseOrderView = () => {
 
     useEffect(() => {
         const fetchDirections = async () => {
-            if (basicOrdersDataLoaded && !holeOrdersDataLoaded && userLocation) {
+            // Once the basic orders data is loaded / changes, we can fetch the directions for each order.
+            // In order to save api costs, we do this only once
+            if (basicOrdersDataLoaded && !orderDirectionsLoaded && userLocation) {
                 const fetchDirection = (givenOrder) =>
                     new Promise((resolve, reject) => {
                         const DirectionsService = new window.google.maps.DirectionsService();
@@ -139,28 +143,26 @@ const ShopperChooseOrderView = () => {
                             }
                         );
                     });
-                if (userLocation) {
-                    for (let i = 0; i < orders.length; i++) {
-                        if (orders[i].groceryShop) {
-                            const directions = await fetchDirection(orders[i]);
-                            orders[i].directions = directions;
-                        } else {
-                            orders[i].directions = null;
-                        }
+                for (let i = 0; i < orders.length; i++) {
+                    if (orders[i].groceryShop) {
+                        const directions = await fetchDirection(orders[i]);
+                        orders[i].directions = directions;
+                    } else {
+                        orders[i].directions = null;
                     }
-                    setOrders([...orders]);
-                    console.log('Orders directions successfully added!', orders);
                 }
-                setHoleOrdersDataLoaded(true);
+                setOrders([...orders]);
+                console.log('Orders directions successfully added!', orders);
+                setOrderDirectionsLoaded(true);
             }
         };
         fetchDirections();
 
-    }, [userLocation, orders, basicOrdersDataLoaded, holeOrdersDataLoaded]);
+    }, [userLocation, orders, basicOrdersDataLoaded, orderDirectionsLoaded]);
 
 
     useEffect(() => {
-        if (!selectedOrder){
+        if (!selectedOrder) {
             return
         }
         setDirections(null);
@@ -195,7 +197,7 @@ const ShopperChooseOrderView = () => {
                 setFilteredOrders([...data]);
                 console.log('Updated orders successfully fetched!');
                 setBasicOrdersDataLoaded(true);
-                setHoleOrdersDataLoaded(false);
+                setOrderDirectionsLoaded(false);
             } catch (error) {
                 console.error('Error fetching orders:', error);
             }
@@ -279,10 +281,9 @@ const ShopperChooseOrderView = () => {
 
                             <Divider />
 
-                            <Show when={holeOrdersDataLoaded} fallback={<ListItem sx={{ justifyContent: 'center' }}>
+                            <Show when={basicOrdersDataLoaded} fallback={<ListItem sx={{ justifyContent: 'center' }}>
                                 <CircularProgress sx={{ color: "primary.dark" }} />
                             </ListItem>}>
-
                                 <List sx={{ overflow: 'auto' }}>
                                     {filteredOrders.map((order) => (
                                         <OrderListItem key={order._id} order={order}
@@ -290,12 +291,12 @@ const ShopperChooseOrderView = () => {
                                             handleOpenReviewsModal={handleOpenReviewsModal}
                                             selectedOrder={selectedOrder}
                                             setSelectedOrder={handleSelection}
-                                            userLocation={userLocation} />
+                                            userLocation={userLocation}
+                                            orderDirectionsLoaded={orderDirectionsLoaded} />
                                     ))}
                                 </List>
                             </Show>
                         </Stack>
-
 
                         <Stack direction={"column"} flex={2} gap={"16px"}>
                             <Show when={isLoaded} fallback={<CircularProgress sx={{ color: "primary.dark" }} />}>
@@ -310,7 +311,7 @@ const ShopperChooseOrderView = () => {
                                     onLoad={map => setMap(map)}
                                 >
                                     {userLocation && (
-                                        <MarkerF 
+                                        <MarkerF
                                             key={"userLocation"}
                                             position={userLocation}
                                             defaultAnimation={2}
@@ -324,7 +325,7 @@ const ShopperChooseOrderView = () => {
 
                                     {selectedOrder && (
                                         <>
-                                            {directions && ( <DirectionsRenderer
+                                            {directions && (<DirectionsRenderer
                                                 options={{
                                                     directions: directions,
                                                     suppressMarkers: true,
@@ -332,7 +333,7 @@ const ShopperChooseOrderView = () => {
                                                 }}
                                             />)}
 
-                                            {selectedOrder.groceryShop && (<MarkerF 
+                                            {selectedOrder.groceryShop && (<MarkerF
                                                 key={selectedOrder.groceryShop.place_id}
                                                 position={selectedOrder.groceryShop.geometry.location}
                                                 label={{
@@ -343,7 +344,7 @@ const ShopperChooseOrderView = () => {
                                                 }}
                                             />)}
 
-                                            {selectedOrder.destination.geometry && (<MarkerF 
+                                            {selectedOrder.destination.geometry && (<MarkerF
                                                 key={selectedOrder.destination.place_id}
                                                 position={selectedOrder.destination.geometry.location}
                                                 label={{

@@ -26,11 +26,13 @@ export async function getOrdersForBuyer(buyerId: string): Promise<Order[]> {
     orders?.forEach(order => {
         order.bids?.forEach(bid =>
             //@ts-ignore
-            populateProfilePicture("BUYER", bid.createdBy)
+            populateProfilePicture("SHOPPER", bid.createdBy)
         )
 
-        //@ts-ignore
-        populateProfilePicture("SHOPPER", order.selectedBid.createdBy)
+        if (order.selectedBid) {
+            //@ts-ignore
+            populateProfilePicture("SHOPPER", order.selectedBid.createdBy)
+        }
     })
     return orders
 }
@@ -64,8 +66,10 @@ export async function getOrdersForShopper(shopperId: string) {
             populateProfilePicture("BUYER", bid.createdBy)
         )
 
-        //@ts-ignore
-        populateProfilePicture("SHOPPER", order.selectedBid.createdBy)
+        if (order.selectedBid?.createdBy) {
+            //@ts-ignore
+            populateProfilePicture("SHOPPER", order.selectedBid.createdBy)
+        }
 
     })
 
