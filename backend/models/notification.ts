@@ -6,7 +6,7 @@ enum NotificationType {
     BidPlacedOnOrder = "BidPlacedOnOrder",
     PaymentRequired = "PaymentRequired",
     BidAccepted = "BidAccepted",
-    TransactionCompleted = "Transaction Completed"
+    TransactionCompleted = "TransactionCompleted"
 }
 
 // Redundant User prefix to avoid naming collision
