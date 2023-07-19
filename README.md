@@ -62,15 +62,20 @@ If you message Lukas Rossi he can also send you a root certificate and signed ce
 then install/ add to trust store.
 I would not recommend this option though as it in theory poses a security risk.
 
-## Simons
-
-Backend: npm run watchCompileTS & npm run watchRunNode
-
-Install: npm i --force
-
-Frontend: npm start
+## MongoDB
 
 Mongo: https://cloud.mongodb.com/v2/646b6578d7b432020c271dab#/clusters
 
 - Name: l.rossi@tum.de
 - pw: Ne5?eyDKcPReet*
+
+## Test Accounts
+
+- Buyer:
+    - Email: betty.zhang@gmail.com
+    - Password: Betty
+
+
+- Shopper:
+    - Email: simon.brumer@gmail.com
+    - Password: Simon
