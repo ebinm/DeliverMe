@@ -9,7 +9,7 @@ import {CurrencyInput} from "../util/CurrencyInput";
 import {GuardCustomerType} from "../util/GuardCustomerType";
 import {DarkButton, OutlinedButton} from "../util/Buttons";
 import {PUT_FETCH_OPTIONS} from "../../util/util";
-import {InfoPopover} from "../util/InfoPopover";
+import {InfoPopper} from "../util/HoverPopper";
 import Typography from "@mui/material/Typography";
 
 
@@ -61,9 +61,9 @@ const BidOnOrderModal = ({showBidOnOrderModal, handleCloseBidOnOrderModal, handl
             <CurrencyInput sx={{"width": "100%"}} align="center" label={"Bid Amount"} amount={bidAmount}
                            setAmount={setBidAmount}
                            textFieldInputProps={{
-                               endAdornment: <InfoPopover><Typography>Here you specify your personal fee for completing
+                               endAdornment: <InfoPopper><Typography>Here you specify your personal fee for completing
                                    this purchase. You will receive this fee in addition to the actual cost of the
-                                   purchase from the shopper.</Typography></InfoPopover>
+                                   purchase from the shopper.</Typography></InfoPopper>
 
                            }}
                            currency={bidCurrency} setCurrency={setBidCurrency}/>

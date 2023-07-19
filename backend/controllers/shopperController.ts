@@ -28,6 +28,10 @@ export async function updateShopper(shopperId: string, shopper: Partial<Customer
 
 }
 
+export async function findShopperProfilePicture(shopperId: string): Promise<string | undefined>{
+    return (await Shopper.findById(shopperId).select("profilePicture"))?.profilePicture
+}
+
 export async function clearNotificationsForShopperById(id: string, notificationId?: string) {
     await clearNotificationsById(Shopper, id, notificationId)
 }

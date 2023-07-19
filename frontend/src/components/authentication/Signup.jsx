@@ -4,7 +4,7 @@ import {AuthenticationFormContainer} from "./AuthenticationFormContainer";
 import {TextField} from "@mui/material";
 import {CustomFileInput} from "../util/CustomFileUpload";
 import {Show} from "../util/ControlFlow";
-import {InfoPopover} from "../util/InfoPopover";
+import {InfoPopper} from "../util/HoverPopper";
 import Typography from "@mui/material/Typography";
 
 
@@ -66,8 +66,8 @@ export function Signup({type}) {
                 variant="standard"
                 value={paypalAccount} label={"PayPal Account"}
                 onChange={e => setPaypalAccount(e.target.value)} InputProps={{
-                endAdornment: <InfoPopover><Typography variant={"body1"}>This will be used to pay your fee
-                    to you.</Typography></InfoPopover>
+                endAdornment: <InfoPopper><Typography variant={"body1"}>This will be used to pay your fee
+                    to you.</Typography></InfoPopper>
             }}/>
         </Show>
 

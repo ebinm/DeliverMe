@@ -50,7 +50,7 @@ export function RatingModal({open, onClose, order, buyer}) {
                 alt={ratedCustomer?.firstName + " " + ratedCustomer?.lastName}
                 src={ratedCustomer?.profilePicture}
                 sx={{width: "100px", height: "100px"}}/>
-            <Typography variant={"h5"} component={"h2"}>{buyer ? order?.createdBy?.firstName :
+            <Typography variant={"h5"} textAlign={"center"} component={"h2"}>{buyer ? order?.createdBy?.firstName :
                 order?.selectedBid?.createdBy?.firstName} {buyer ? order?.createdBy?.lastName : order?.selectedBid?.createdBy?.lastName}</Typography>
             <Rating
                 size={"large"}
@@ -66,8 +66,7 @@ export function RatingModal({open, onClose, order, buyer}) {
             <TextField sx={{width: "100%"}} label={"Additional notes"} onChange={e => setNote(e.target.value)}
                        value={note}/>
 
-
-            <Stack direction={"row"} sx={{"alignSelf": "end"}} gap={"8px"}>
+            <Stack direction={{"xs": "column", "sm": "row"}} width={"100%"} justifyContent={"flex-end"} gap={"16px"}>
                 <OutlinedButton onClick={() => {
                     onClose()
                 }}>Cancel</OutlinedButton>
@@ -91,7 +90,6 @@ export function RatingModal({open, onClose, order, buyer}) {
                     <Show when={!loading} fallback={<CircularProgress sx={{"alignSelf": "center"}}/>}>
                         Submit
                     </Show>
-
                 </DarkButton>
             </Stack>
         </Stack>

@@ -28,7 +28,6 @@ build/
 
 package-lock.json
 
-.env
 
 # Node
 node_modules

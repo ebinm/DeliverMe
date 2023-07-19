@@ -16,14 +16,21 @@ const PORT = process.env.PORT || 8443;
 
 let server: http.Server | https.Server | undefined
 
-try {
-    const privateKey = fs.readFileSync('./frontend/.cert/deliver.me.key', 'utf8');
-    const certificate = fs.readFileSync('./frontend/.cert/deliver.me.crt', 'utf8');
-    const credentials = {key: privateKey, cert: certificate};
+if (process.env.https === "true") {
+    try {
+        const privateKey = fs.readFileSync('./frontend/.cert/deliver.me.key', 'utf8');
+        const certificate = fs.readFileSync('./frontend/.cert/deliver.me.crt', 'utf8');
+        const credentials = {key: privateKey, cert: certificate};
 
-    server = https.createServer(credentials, api);
-} catch (e) {
+        server = https.createServer(credentials, api);
+        console.log("Using SSL")
+    } catch (e) {
+        server = http.createServer(api)
+        console.log("Using plain http as no cert files were found")
+    }
+} else {
     server = http.createServer(api)
+        console.log("Using plain http")
 }
 
 

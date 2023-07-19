@@ -30,6 +30,10 @@ export async function updateBuyer(buyerId: string, buyer: Partial<Customer>) {
 
 }
 
+export async function findBuyerProfilePicture(buyerId: string): Promise<string | undefined>{
+    return (await Buyer.findById(buyerId).select("profilePicture"))?.profilePicture
+}
+
 export async function clearNotificationsForBuyerById(id: string, notificationId?: string): Promise<void> {
     await clearNotificationsById(Buyer, id, notificationId)
 }

@@ -53,7 +53,6 @@ export async function performCheckout(customerId: string, orderId: string) {
 
     // We are currently working with floats to represent currency. This is obviously bad and would
     // have to be fixed before we go to production.
-    const costForBuyer = (costReceipt + costBid).toFixed(2)
 
 
     const accessToken = await generateAccessToken();
@@ -69,11 +68,19 @@ export async function performCheckout(customerId: string, orderId: string) {
                     intent: 'CAPTURE',
                     purchase_units: [
                         {
-                            reference_id: orderId,
+                            reference_id: "Receipt_" + orderId,
                             description: `Payment for order with id: ${orderId}`,
                             amount: {
                                 currency_code: currencyFromReceipt,
-                                value: costForBuyer
+                                value: costReceipt
+                            }
+                        },
+                        {
+                            reference_id: "Deliver_Fee_" + orderId,
+                            description: `Delivery fee for order with id: ${orderId}`,
+                            amount: {
+                                currency_code: currencyFromBid,
+                                value: costBid
                             }
                         }
                     ]

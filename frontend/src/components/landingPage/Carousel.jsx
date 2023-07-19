@@ -8,15 +8,19 @@ function Pictures() {
             alt: "DeliverMe",
         },
         {
-            src: "images/delivery2.jpg",
+            src: "images/carousel1.jpeg",
             alt: "DeliverMe",
         },
         {
-            src: "images/delivery3.jpg",
+            src: "images/carousel2.jpeg",
             alt: "DeliverMe",
         },
         {
-            src: "images/delivery4.jpeg",
+            src: "images/carousel3.jpeg",
+            alt: "DeliverMe",
+        },
+        {
+            src: "images/carousel4.jpeg",
             alt: "DeliverMe",
         }
 

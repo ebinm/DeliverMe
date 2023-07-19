@@ -11,7 +11,7 @@ import {DarkButton, OutlinedButton} from "../util/Buttons";
 import {PUT_FETCH_OPTIONS} from "../../util/util";
 import {useSnackbar} from "notistack";
 
-export function SingleOrderViewBuyer({order, orderName, setOrders}) {
+export function SingleOrderViewBuyer({order, orderName, setOrders, deleteSelf}) {
 
     const [selectedBid, setSelectedBid] = useState()
     const [confirmOrderModalOpen, setConfirmOrderModalOpen] = useState(false)
@@ -57,6 +57,7 @@ export function SingleOrderViewBuyer({order, orderName, setOrders}) {
         </BaseModal>
 
         <SingleOrderViewCommon
+            deleteSelf={deleteSelf}
             orderName={orderName}
             order={order} contact={order.selectedBid?.createdBy}
             buttons={<ButtonGroup sx={{"justifyContent": "end"}}>

@@ -65,6 +65,7 @@ async function login(req: Request, res: Response, customerType: CustomerType) {
 
     const customer = await document.findOne({email})
     if (!customer) {
+        // Side channel attack point I guess. This is why you do not roll your own security...
         res.status(400).json({msg: "Email or password incorrect"})
         return
     }

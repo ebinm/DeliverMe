@@ -8,13 +8,14 @@
     "start": "node ./build/index.js",
     "prestart": "npx tsc",
     "watchCompileTS": "npx tsc --watch",
-    "watchRunNode": "nodemon ./build/index.js"
+    "watchRunNode": "nodemon ./build/index.js",
+    "tldr": "npm i && cd ./frontend && npm i && cd .. && npx tsc && concurrently \"npm run watchCompileTS\" \"npm run watchRunNode\" \"cd ./frontend && npm start\" -n \"compile backend,run backend,frontend\" -c \"auto\" --kill-others"
   },
   "repository": {
     "type": "git",
     "url": "git@gitlab.lrz.de:seba-master-2023/team-06/prototype.git"
   },
-  "author": "",
+  "author": "Team 06",
   "license": "ISC",
   "dependencies": {
     "@emotion/styled": "^11.11.0",
@@ -32,6 +33,7 @@
     "ws": "^8.13.0"
   },
   "devDependencies": {
+    "concurrently": "^8.2.0",
     "@babel/core": "^7.21.0",
     "@babel/preset-env": "^7.19.4",
     "@babel/preset-typescript": "^7.21.5",

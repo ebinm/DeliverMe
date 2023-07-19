@@ -97,7 +97,7 @@ export function ChatOverlay({order, open, onClose}) {
 
                             <Stack direction={"row"}>
                                 <TextField value={text} onChange={e => setText(e.target.value)} multiline
-                                           sx={{"flexGrow": 1}}
+                                           sx={{"flexGrow": 1, "ml": "24px"}}
                                            onKeyDown={e => {
                                                if (e.key === "Enter" && !e.shiftKey && !e.ctrlKey) {
                                                    sendMessage()

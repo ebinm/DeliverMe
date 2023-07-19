@@ -13,23 +13,32 @@ function Reviews() {
             lastName: "Brumer",
             buyers: [
                 {
-                    firstName: "Betty",
-                    lastName: "Zhang",
+                    firstName: "Kate",
+                    lastName: "Abdo",
                     review: {
                         rating: 5,
-                        comment: "Simon is just perfect!",
-                        date: new Date(2023, 4, 30)
+                        comment: "Worked with him before. Always a pleasure!",
+                        date: new Date(2023, 6, 30)
                     }
                 },
                 {
                     firstName: "Ebin",
                     lastName: "Madan",
                     review: {
-                        rating: 1,
-                        comment: "Simon needs to take a shower!",
+                        rating: 4,
+                        comment: "He was very careful and quick with my delivery.",
                         date: new Date(2023, 4, 25)
                     }
-                }
+                },
+                {
+                    firstName: "Max",
+                    lastName: "Mustermann",
+                    review: {
+                        rating: 4,
+                        comment: "I wanted Bread and Milk, I got Bread and Milk.",
+                        date: new Date(2023, 2, 25)
+                    }
+                },
 
             ]
 
@@ -44,8 +53,8 @@ function Reviews() {
                     lastName: "Obama",
                     review: {
                         rating: 4,
-                        comment: "Micheal was so quick with my delivery.",
-                        date: new Date(2023, 2, 3)
+                        comment: "I placed the order and Micheal was already here.",
+                        date: new Date(2023, 5, 3)
                     }
                 },
                 {
@@ -53,8 +62,8 @@ function Reviews() {
                     lastName: "Lopez",
                     review: {
                         rating: 3,
-                        comment: "I wanted bread from Penny not Rewe!",
-                        date: new Date(2022, 0, 31)
+                        comment: "He did a great job. Can recommend!",
+                        date: new Date(2023, 5, 31)
                     }
                 }
 
