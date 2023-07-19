@@ -1,5 +1,7 @@
 import {OrderModel, OrderStatus} from '../models/order';
 import {Buyer, Shopper} from "../models/customer";
+import { NotificationType } from '../models/notification';
+import { notificationService } from '..';
 
 
 const baseURL = {
@@ -171,6 +173,13 @@ export async function capturePayment(orderId: string, customerId: string, transa
         }
 
         order.status = OrderStatus.Finished
+        // @ts-ignore
+        notificationService.notifyShopperById(order.selectedBid.createdBy._id.toString(), {
+            type: NotificationType.TransactionCompleted,
+            orderId: order._id,
+            date: new Date(),
+            msg: "Transaction was completed"
+        })
         await order.save()
 
         return captureParsedResult
