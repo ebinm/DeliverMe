@@ -46,9 +46,14 @@ const ShopperChooseOrderView = () => {
     });
 
     const setDefaultMapCenter = () => {
+        if (selectedOrder?.destination) {
+            console.log('Setting center to grocery shop.');
+            map?.setCenter(selectedOrder.destination.geometry.location);
+        } else {
         console.info('Setting default location to Munich.');
         const defaultCenter = { lat: 48.137154, lng: 11.576124 }
         map.setCenter(defaultCenter);
+        }
     }
 
     useEffect(() => {

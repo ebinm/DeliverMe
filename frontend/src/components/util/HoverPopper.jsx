@@ -48,6 +48,7 @@ export function HoverPopper({children, overlay, delay = "0ms", placement="bottom
                 transition={true}
                 placement={placement}
                 sx={{
+                    zIndex: 100000,
                     pointerEvents: 'none',
                 }}
                 open={!!anchorEl}

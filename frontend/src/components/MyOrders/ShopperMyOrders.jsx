@@ -15,7 +15,7 @@ export function ShopperMyOrders() {
             <Typography variant={"h4"} component={"h1"}>My Orders</Typography>
 
             <Show when={!loading} fallback={<CircularProgress sx={{color: "primary.dark"}}/>}>
-                <For fallback={<Typography>You have not placed bids on any orders yet.</Typography>}
+                <For fallback={<Typography>None of your bids have been accepted yet.</Typography>}
                      each={orders}>{(order, index) =>
                     <SingleOrderViewShopper key={order._id} order={order} orderName={`Order ${index}`}
                                             setOrders={setOrders}/>
