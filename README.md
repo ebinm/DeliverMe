@@ -3,8 +3,8 @@
 ## Authors (Team 06):
 
 - Ebin Madan / ge35qiq
-- Simon Burmer
-- Anxhela Maloku
+- Simon Burmer / ge48naw
+- Anxhela Maloku / ge83yuq
 - Lukas Rossi / ge93xax
 
 ## Development Setup
@@ -14,9 +14,13 @@ TLDR: `npm run tldr `
 
 ### Test accounts
 
-- Buyer: `lukas.rossi@t-online.de` pw: `123`
+- Buyer:
+  - Email: betty.zhang@gmail.com
+  - Password: Betty
 
-- Shopper: `lukas.rossi@t-online.de` pw: `123`
+- Shopper:
+  - Email: simon.brumer@gmail.com
+  - Password: Simon
 
 - Example PayPal sandbox accounts for paying and receiving money (login to https://www.sandbox.paypal.com/ to see transactions.
   Feel free to use your own sandbox accounts):
