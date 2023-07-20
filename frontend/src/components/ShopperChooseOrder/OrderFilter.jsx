@@ -25,7 +25,7 @@ const OrderFilter = ({ orders, setFilteredOrders, directions }) => {
         if (cityName && cityName.length > 0) {
             filtered = filtered.filter((order) =>
                 order.destination.city.toLowerCase().includes(cityName.toLowerCase()) ||
-                order.groceryShop.city.toLowerCase().includes(cityName.toLowerCase())
+                order.groceryShop?.city.toLowerCase().includes(cityName.toLowerCase())
             );
         }
 
