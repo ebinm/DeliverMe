@@ -279,9 +279,31 @@ const BuyerChooseShopView = ({ onSubmitShop, setSelectedShop, selectedShop }) =>
                         >
 
                             {selectedShop ? (
-                                <Marker key={selectedShop.place_id} position={selectedShop.geometry.location}></Marker>
+                                <Marker
+                                    key={selectedShop.place_id}
+                                    position={selectedShop.geometry.location}
+                                    defaultAnimation={2}
+                                    label={{
+                                        text: "Shop",
+                                        color: 'black',
+                                        fontSize: "17px",
+                                        fontWeight: "bold",
+                                        zIndex: 100,
+                                        backgroundColor: "#7fffd4"
+                                    }} />
                             ) : CustomShop ? (
-                                <Marker key={CustomShop.place_id} position={CustomShop.geometry.location}></Marker>
+                                <Marker
+                                    key={CustomShop.place_id}
+                                    position={CustomShop.geometry.location}
+                                    defaultAnimation={2}
+                                    label={{
+                                        text: "Shop",
+                                        color: 'black',
+                                        fontSize: "17px",
+                                        fontWeight: "bold",
+                                        zIndex: 100,
+                                        backgroundColor: "#7fffd4"
+                                    }} />
                             ) : null}
 
                             {userLocation && (
